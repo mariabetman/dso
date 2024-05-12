@@ -16,8 +16,5 @@ class Arbitro(Pessoa):
         if isinstance(num_partidas, int):
             self.__num_partidas = num_partidas
 
-    def adicionar_partida(self): # Ver se aqui vale a pena manter um registro das partidas ou somente a quantidade mesmo
-        self.__num_partidas += 1
-
-    def desempenho(self):
-        return 
+    '''def adicionar_partida(self): # Ver se aqui vale a pena manter um registro das partidas ou somente a quantidade mesmo
+        self.__num_partidas += 1'''

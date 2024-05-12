@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 
 
 class Pessoa(ABC):
+    @abstractmethod
     def __init__(self, nome: str, cpf: int, data_nasc: str):
         if isinstance(nome, str) and isinstance(cpf, int) and isinstance(data_nasc, str):
             self.__nome = nome
@@ -35,7 +36,5 @@ class Pessoa(ABC):
         if isinstance(data_nasc, str):
             self.__data_nasc = data_nasc
 
-    @abstractmethod 
-    def desempenho(self): # para aluno: gols e partidas; para árbitro: partidas. Ver se isso faz sentido... ou colocar um método "papel" (aluno ou árbitro)?
-        pass
+
 

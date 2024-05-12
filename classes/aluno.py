@@ -1,25 +1,16 @@
 from pessoa import Pessoa
 from curso import Curso
-from universidade import Universidade
+
 
 
 class Aluno(Pessoa):
-    def __init__(self, universidade: Universidade, curso: Curso, matricula: int, nome: str, cpf: int, data_nasc: str):
-        if isinstance(universidade, Universidade) and isinstance(curso, Curso) and isinstance(matricula, int) and isinstance(nome, str) and isinstance(cpf, int) and isinstance(data_nasc, str):
+    def __init__(self, matricula: int, curso: Curso, nome: str, cpf: int, data_nasc: str):
+        if isinstance(curso, Curso) and isinstance(matricula, int) and isinstance(nome, str) and isinstance(cpf, int) and isinstance(data_nasc, str):
             super().__init__(nome, cpf, data_nasc)
-            self.__universidade = universidade
-            self.__curso = curso
             self.__matricula = matricula
-
-    @property
-    def universidade(self):
-        return self.__universidade
-
-    @universidade.setter
-    def universidade(self, universidade):
-        if isinstance(universidade, Universidade):
-            self.__universidade = universidade
-
+            self.__curso = curso
+            self.__num_gols = 0
+            
     @property
     def curso(self):
         return self.__curso
@@ -38,5 +29,11 @@ class Aluno(Pessoa):
         if isinstance(matricula, int):
             self.__matricula = matricula
 
-    def desempenho(self):
-        return 
+    @property
+    def num_gols(self):
+        return self.__num_gols
+
+    @num_gols.setter
+    def num_gols(self, num_gols):
+        if isinstance(num_gols, int):
+            self.__num_gols = num_gols
