@@ -3,7 +3,7 @@ from abc import ABC, abstractmethod
 
 class Pessoa(ABC):
     @abstractmethod
-    def __init__(self, nome: str, cpf: int, data_nasc: str):
+    def __init__(self, nome: str, cpf: str, data_nasc: str):
         if isinstance(nome, str) and isinstance(cpf, int) and isinstance(data_nasc, str):
             self.__nome = nome
             self.__cpf = cpf
@@ -23,8 +23,8 @@ class Pessoa(ABC):
         return self.__cpf
 
     @cpf.setter
-    def cpf(self, cpf: int):
-        if isinstance(cpf, int):
+    def cpf(self, cpf: str):
+        if isinstance(cpf, str):
             self.__cpf = cpf
 
     @property
@@ -35,6 +35,3 @@ class Pessoa(ABC):
     def data_nasc(self, data_nasc: str):
         if isinstance(data_nasc, str):
             self.__data_nasc = data_nasc
-
-
-

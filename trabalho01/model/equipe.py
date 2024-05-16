@@ -1,10 +1,12 @@
 from curso import Curso
+from aluno import Aluno
 
 
 class Equipe:
     def __init__(self, curso: Curso, nome:str, codigo:int):
         if isinstance(curso, Curso) and isinstance(nome, str) and isinstance(codigo, int):
             self.__curso = curso
+            self.__alunos = []
             self.__nome = nome
             self.__codigo = codigo
             self.__pontos = 0
@@ -19,6 +21,15 @@ class Equipe:
     def curso(self, curso):
         if isinstance(curso, Curso):
             self.__curso = curso
+
+    @property
+    def alunos(self):
+        return self.__alunos
+    
+    @alunos.setter
+    def alunos(self, alunos):
+        if all(isinstance(aluno, Aluno) for aluno in alunos):
+            self.__aluno = alunos
 
     @property
     def codigo(self):
@@ -64,4 +75,3 @@ class Equipe:
     def gols_sofridos(self, gols_sofridos):
         if isinstance(gols_sofridos, int):
             self.__gols_sofridos = gols_sofridos
-            

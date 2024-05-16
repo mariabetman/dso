@@ -2,8 +2,8 @@ from pessoa import Pessoa
 
 
 class Arbitro(Pessoa):
-    def __init__(self, nome: str, cpf: int, data_nasc: str):
-        if isinstance(nome, str) and isinstance(cpf, int) and isinstance(data_nasc, str):
+    def __init__(self, nome: str, cpf: str, data_nasc: str):
+        if isinstance(nome, str) and isinstance(cpf, str) and isinstance(data_nasc, str):
             super().__init__(nome, cpf, data_nasc)
             self.__num_partidas = 0
 

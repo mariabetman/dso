@@ -31,4 +31,3 @@ class TelaArbitro:
     
     def mostra_mensagem(self, msg):
         print(msg)
-

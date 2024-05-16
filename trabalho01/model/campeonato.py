@@ -41,3 +41,8 @@ class Campeonato:
     @property
     def artilharia(self):
         return self.__artilharia
+
+    @artilharia.setter
+    def artilharia(sel, artilharia):
+        self.__artilharia = artilharia
+    ##VERIFICAR TIPAGEM

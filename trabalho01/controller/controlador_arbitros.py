@@ -5,10 +5,10 @@ from view.tela_arbitro import TelaArbitro
 class ControladorArbitro:
     def __init__(self, controlador_sistema):
         self.__arbitros = []
-        self.__tela_arbitro = TelaArbitro()
+        self.__tela_arbitro = TelaArbitro(self)
         self.__controlador_sistema = controlador_sistema
         
-    def pega_arbitro_por_cpf(self, cpf:int): ### cpf deveria ser str, não int
+    def pega_arbitro_por_cpf(self, cpf:str):
         for arbitro in self.__arbitros:
             if arbitro.cpf == cpf:
                 return arbitro
