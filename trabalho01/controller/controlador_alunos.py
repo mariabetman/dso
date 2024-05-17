@@ -42,7 +42,7 @@ class ControladorAluno:
             if isinstance(cpf, str):
                 aluno.cpf = novos_dados_aluno['cpf']
             if isinstance(data_nasc, str):
-            aluno.data_nasc = novos_dados_aluno['data_nasc']
+                aluno.data_nasc = novos_dados_aluno['data_nasc']
             self.listar_alunos()
         else:
             self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno não encontrado!')
