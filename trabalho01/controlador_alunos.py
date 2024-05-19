@@ -16,7 +16,7 @@ class ControladorAlunos:
     
     def listar_alunos(self):
         for aluno in self.__alunos:
-            self.__tela_aluno.mostra_aluno({'matricula': matricula, 'codigo_curso': codigo_curso, 'nome': aluno.nome, 'cpf': aluno.cpf, 'data_nasc': aluno.data_nasc})
+            self.__tela_aluno.mostra_aluno({'matricula': aluno.matricula, 'codigo_curso': aluno.codigo_curso, 'nome': aluno.nome, 'cpf': aluno.cpf, 'data_nasc': aluno.data_nasc})
     
     def incluir_aluno(self):
         dados_aluno = self.tela_aluno.pega_dados_aluno()
