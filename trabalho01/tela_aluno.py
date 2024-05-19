@@ -18,7 +18,7 @@ class TelaAluno:
         print('---------- DADOS ALUNO ----------')
         matricula = int(input('Matrícula: '))
         print('---------- CURSOS DISPONÍVEIS ----------')
-        curso = controlador_aluno.controlador_sistema.controlador_curso.pega_curso_por_codigo(int(input('Código do curso: ')))
+        curso = self.__controlador_aluno.__controlador_sistema.__controlador_curso.__tela_curso.seleciona_curso()
         nome = input('Nome: ')
         cpf = input('CPF: ')
         data_nasc = input('Data de Nascimento: ')

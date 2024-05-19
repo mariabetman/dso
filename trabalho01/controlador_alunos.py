@@ -19,7 +19,7 @@ class ControladorAlunos:
             self.__tela_aluno.mostra_aluno({'matricula': aluno.matricula, 'codigo_curso': aluno.codigo_curso, 'nome': aluno.nome, 'cpf': aluno.cpf, 'data_nasc': aluno.data_nasc})
     
     def incluir_aluno(self):
-        dados_aluno = self.tela_aluno.pega_dados_aluno()
+        dados_aluno = self.__tela_aluno.pega_dados_aluno()
         aluno =  Aluno(int(dados_aluno['matricula']), dados_aluno['curso'], dados_aluno['nome'], dados_aluno['cpf'], dados_aluno['data_nasc'])
         if not self.pega_aluno_por_cpf(aluno.cpf):
             self.__alunos.append(aluno)
@@ -27,7 +27,6 @@ class ControladorAlunos:
             self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno já cadastrado!')
     
     def alterar_aluno(self):
-        return
         self.listar_alunos()
         cpf_aluno =  self.__tela_aluno.seleciona_aluno()
         aluno = self.pega_aluno_por_cpf(cpf_aluno)
