@@ -18,6 +18,14 @@ class ControladorSistema:
         self.__controlador_campeonatos = ControladorCampeonato(self)
         self.__controlador_partidas = ControladorPartida(self)
 
+    @property
+    def controlador_alunos(self):
+        return self.__controlador_alunos
+
+    @property
+    def controlador_cursos(self):
+        return self.__controlador_cursos
+
     def inicializa_sistema(self):
         self.abre_tela()
 
@@ -39,8 +47,7 @@ class ControladorSistema:
     def tela_partidas(self):
         return self.__controlador_partidas.abre_tela()
 
-    def encerrar_programa(self):
-        self.__tela_sistema.mostra_mensagem('Até logo!')
+    def encerrar_programa():
         return quit()
          
 
@@ -57,11 +64,12 @@ class ControladorSistema:
 
         while True:
             opcao_escolhida = self.__tela_sistema.tela_opcoes()
-            if opcao_escolhida in lista_opcoes:
-                funcao_escolhida = lista_opcoes[opcao_escolhida]
-                funcao_escolhida()
-            else:
-                self.__tela_sistema.mostra_mensagem('\nERRO: Opção inválida!\n')
+            funcao_escolhida = lista_opcoes[opcao_escolhida]
+            funcao_escolhida()
 
 if __name__ == '__main__':
-    print(1)
+    ctrl = ControladorSistema()
+    print(ctrl.controlador_cursos)
+    print(ctrl.controlador_cursos.controlador_sistema)
+    print(ctrl.controlador_cursos.controlador_sistema.controlador_cursos)
+    print(ctrl.controlador_cursos.controlador_sistema.controlador_cursos.controlador_sistema)

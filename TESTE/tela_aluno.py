@@ -1,7 +1,7 @@
 class TelaAluno:
-    def __init__(self, controlador_sistema):
-        self.__controlador_sistema = controlador_sistema
-
+    def __init__(self, controlador_aluno):
+        self.__controlador_aluno = controlador_aluno
+        
     def tela_opcoes(self):
         print('---------- ALUNOS ----------')
         print('Escolha a opção')
@@ -17,15 +17,20 @@ class TelaAluno:
     def pega_dados_aluno(self):
         print('---------- DADOS ALUNO ----------')
         matricula = int(input('Matrícula: '))
-        print('---------- CURSOS DISPONÍVEIS ----------')
-        curso = self.__controlador_sistema.controlador_curso.pega_curso_por_codigo(int(input('Código do curso: ')))
-        nome = input('Nome: ')
+        self.__controlador_aluno.controlador_sistema.controlador_cursos.listar_cursos()
+        codigo = int(input('Digite o código do curso: '))
+        curso =  self.__controlador_aluno.controlador_sistema.controlador_cursos.pega_curso_por_codigo(codigo)
+        print(curso)
+        print(curso.nome)
+        print(type(curso))
+        nome = input('Nome do Aluno: ')
         cpf = input('CPF: ')
         data_nasc = input('Data de Nascimento: ')
         
         return {'matricula': matricula, 'curso': curso, 'nome': nome, 'cpf': cpf, 'data_nasc': data_nasc}
     
     def mostra_aluno(self, dados_aluno):
+        print(dados_aluno)
         print('Matrícula do Aluno: ', dados_aluno['matricula'])
         print('Curso do Aluno: ', dados_aluno['curso'])
         print('Nome do Aluno: ', dados_aluno['nome'])
@@ -39,3 +44,5 @@ class TelaAluno:
     
     def mostra_mensagem(self, msg):
         print(msg)
+
+
