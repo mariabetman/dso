@@ -1,13 +1,13 @@
-from partida import Partida
+from aluno import Aluno
 from equipe import Equipe
-from curso import Curso
+from partida import Partida
 
 
 class Campeonato:
-    def __init__(self, codigo:int, equipes:list[Equipe]):
-        if isinstance(codigo, int) and all(isinstance(equipe, Equipe) for equipe in equipes):
+    def __init__(self, codigo:int):
+        if isinstance(codigo, int):
             self.__codigo = codigo
-            self.__equipes = equipes
+            self.__equipes = []
             self.__partidas = []
             self.__artilharia = {}
             
@@ -23,26 +23,35 @@ class Campeonato:
     @property
     def equipes(self):
         return self.__equipes
-
-    @equipes.setter
-    def equipes(self, equipes):
-        if all(isinstance(equipe, Equipe) for equipe in equipes):
-            self.__equipes = equipes
+    
+    def adiciona_equipe(self, equipe:Equipe):
+        self.__equipes.append(equipe)
+    
+    def remove_equipe(self, equipe:Equipe):
+        self.__equipes.remove(equipe)
             
     @property
     def partidas(self):
         return self.__partidas
 
-    @partidas.setter
-    def partidas(self, partidas):
-        if all(isinstance(partida, Partida) for partida in partidas):
-            self.__partidas = partidas
+    def adiciona_partida(self, partida:Partida):
+        self.__partidas.append(partida)
+    
+    def remove_partida(self, partida:Partida):
+        self.__partidas.remove(partida)
             
     @property
     def artilharia(self):
         return self.__artilharia
 
-    @artilharia.setter
-    def artilharia(sel, artilharia):
-        self.__artilharia = artilharia
-    ##VERIFICAR TIPAGEM
+    def adiciona_gol_artilharia(self, gols:int, aluno:Aluno):
+        if self.__artilharia[aluno]:
+            gols_atuais = self.__artilharia[aluno]
+            self.__artilharia[aluno] = self.__artilharia[aluno] + gols
+        else:
+            self.__artilharia[aluno] = gols
+    
+    def remove_gol_artilharia(self, gols:int, aluno:Aluno):
+        if self.__artilharia[aluno]:
+            gols_atuais = self.__artilharia[aluno]
+            self.__artilharia[aluno] = self.__artilharia[aluno] - gols

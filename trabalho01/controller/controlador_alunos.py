@@ -8,7 +8,7 @@ class ControladorAluno:
         self.__tela_aluno = TelaAluno(self)
         self.__controlador_sistema = controlador_sistema
         
-    def pega_aluno_por_cpf(self, cpf:str)
+    def pega_aluno_por_cpf(self, cpf:str):
         for aluno in self.__alunos:
             if aluno.cpf == cpf:
                 return aluno

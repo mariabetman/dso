@@ -1,15 +1,17 @@
 from equipe import Equipe
+from arbitro import Arbitro
 
 
 class Partida:
-    def __init__(self, codigo:int, equipe_casa:Equipe, equipe_visitante:Equipe):
+    def __init__(self, codigo:int, data_partida:str, equipe_casa:Equipe, equipe_visitante:Equipe, arbitro:Arbitro):
         self.__codigo = codigo
-        self.__data_partida = None
+        self.__data_partida = data_partida
         self.__equipe_casa = equipe_casa
         self.__equipe_visitante = equipe_visitante
+        self.__arbitro = arbitro
         self.__gols_equipe_casa = None
         self.__gols_equipe_visitante = None
-        self.__resultado = None #Verificar
+        self.__resultado = None
         self.__partida_realizada = False
         
     @property
@@ -48,6 +50,15 @@ class Partida:
         if isinstance(equipe_visitante, Equipe):
             self.__equipe_visitante = equipe_visitante
     
+    @property      
+    def arbitro(self):
+        return self.__arbitro
+
+    @arbitro.setter
+    def arbitro(self, arbitro):
+        if isinstance(arbitro, Arbitro):
+            self.__arbitro = arbitro
+    
     @property     
     def gols_equipe_casa(self):
         return self.__gols_equipe_casa
@@ -69,6 +80,11 @@ class Partida:
     @property      
     def resultado(self):
         return self.__resultado
+    
+    @resultado.setter     
+    def resultado(self, resultado):
+        if isinstance(resultado, str):
+            self.__resultado = resultado
 
     @property
     def partida_realizada(self):
