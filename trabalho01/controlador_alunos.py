@@ -1,5 +1,7 @@
 from aluno import Aluno
 from tela_aluno import TelaAluno
+from curso import Curso
+from datetime import datetime
 
 
 class ControladorAlunos:
@@ -8,65 +10,89 @@ class ControladorAlunos:
         self.__tela_aluno = TelaAluno(self)
         self.__controlador_sistema = controlador_sistema
         
+    @property
+    def tela_aluno(self):
+        return self.__tela_aluno
+    
+    @property
+    def controlador_sistema(self):
+        return self.__controlador_sistema
+    
+    def lista_alunos(self):
+        if len(self.__alunos) == 0:
+            self.__tela_aluno.mostra_mensagem('Nenhum aluno cadastrado!')
+        else:
+            self.__tela_aluno.mostra_mensagem('----- ALUNOS CADASTRADOS -----')
+            for aluno in self.__alunos:
+                self.__tela_aluno.mostra_aluno({'matricula': aluno.matricula, 'curso': aluno.curso.nome, 'nome': aluno.nome, 'cpf': aluno.cpf, 'data_nasc': aluno.data_nasc})
+    
+    def inclui_aluno(self):
+        dados_aluno = self.__tela_aluno.pega_dados_aluno()
+        aluno =  Aluno(dados_aluno['matricula'], dados_aluno['curso'], dados_aluno['nome'], dados_aluno['cpf'], dados_aluno['data_nasc'])
+        if not self.pega_aluno_por_cpf(aluno.cpf):
+            self.__alunos.append(aluno)
+            self.__tela_aluno.mostra_mensagem('\nAluno cadastrado com sucesso!\n')
+        else:
+            self.__tela_aluno.mostra_mensagem('\nATENÇÃO: Aluno já cadastrado!\n')
+        
+    def altera_aluno(self):
+        cpf =  self.__tela_aluno.seleciona_aluno()
+        aluno = self.pega_aluno_por_cpf(cpf)
+        
+        if aluno:
+            novos_dados_aluno = self.__tela_aluno.pega_dados_aluno()
+            if isinstance(novos_dados_aluno['matricula'], int):
+                aluno.matricula = novos_dados_aluno['matricula']
+            if isinstance(novos_dados_aluno['curso'], Curso):
+                aluno.curso = novos_dados_aluno['curso']
+            if isinstance(novos_dados_aluno['nome'], str):
+                aluno.nome = novos_dados_aluno['nome']
+            if isinstance(novos_dados_aluno['cpf'], str):
+                aluno.cpf = novos_dados_aluno['cpf']
+            if isinstance(novos_dados_aluno['data_nasc'], datetime):
+                aluno.data_nasc = novos_dados_aluno['data_nasc']
+            self.lista_alunos()
+        else:
+            self.__tela_aluno.mostra_mensagem('\nATENÇÃO: Aluno não encontrado!\n')
+    
+    def exclui_aluno(self):
+        cpf = self.__tela_aluno.seleciona_aluno()
+        aluno = self.pega_aluno_por_cpf(cpf)
+        
+        if aluno:
+            self.__alunos.remove(aluno)
+            self.__tela_aluno.mostra_mensagem('\nAluno excluído com sucesso!\n')
+        else:
+            self.__tela_aluno.mostra_mensagem('\nATENÇÃO: Aluno não encontrado!\n')
+
     def pega_aluno_por_cpf(self, cpf:str):
         for aluno in self.__alunos:
             if aluno.cpf == cpf:
                 return aluno
-        return "Não existe aluno com esse cpf cadastrado"
+        return None
+
+    def adiciona_gol(self, cpf:str):
+        aluno = self.pega_aluno_por_cpf(cpf)
+        aluno.adiciona_gol()
     
-    def listar_alunos(self):
-        for aluno in self.__alunos:
-            self.__tela_aluno.mostra_aluno({'matricula': aluno.matricula, 'codigo_curso': aluno.codigo_curso, 'nome': aluno.nome, 'cpf': aluno.cpf, 'data_nasc': aluno.data_nasc})
+    def remove_gol(self, cpf:str):
+        aluno = self.pega_aluno_por_cpf(cpf)
+        aluno.remove_gol()
     
-    def incluir_aluno(self):
-        dados_aluno = self.__tela_aluno.pega_dados_aluno()
-        aluno =  Aluno(int(dados_aluno['matricula']), dados_aluno['curso'], dados_aluno['nome'], dados_aluno['cpf'], dados_aluno['data_nasc'])
-        if not self.pega_aluno_por_cpf(aluno.cpf):
-            self.__alunos.append(aluno)
-        else:
-            self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno já cadastrado!')
-    
-    def alterar_aluno(self):
-        self.listar_alunos()
-        cpf_aluno =  self.__tela_aluno.seleciona_aluno()
-        aluno = self.pega_aluno_por_cpf(cpf_aluno)
-        
-        if aluno:
-            novos_dados_aluno = self.__tela_aluno.pega_dados_aluno()
-            if isinstance(matricula, int):
-                aluno.matricula = novos_dados_aluno['matricula']
-            if isinstance(curso, Curso):
-                aluno.curso = novos_dados_aluno['curso']
-            if isinstance(nome, str):
-                aluno.nome = novos_dados_aluno['nome']
-            if isinstance(cpf, str):
-                aluno.cpf = novos_dados_aluno['cpf']
-            if isinstance(data_nasc, str):
-                aluno.data_nasc = novos_dados_aluno['data_nasc']
-            self.listar_alunos()
-        else:
-            self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno não encontrado!')
-    
-    def excluir_aluno(self):
-        self.listar_alunos()
-        cpf_aluno = self.__tela_aluno.seleciona_aluno()
-        aluno = self.pega_aluno_por_cpf(cpf_aluno)
-        
-        if aluno:
-            self.__alunos.remove(aluno)
-            self.listar_alunos()
-        else:
-            self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno não encontrado!')
-    
-    def retornar(self):
+    def retorna(self):
         self.__controlador_sistema.abre_tela()
     
     def abre_tela(self):
-        lista_opcoes = {1: self.incluir_aluno,
-                        2: self.alterar_aluno,
-                        3: self.listar_alunos,
-                        4: self.excluir_aluno,
-                        0: self.retornar}
+        lista_opcoes = {1: self.inclui_aluno,
+                        2: self.altera_aluno,
+                        3: self.lista_alunos,
+                        4: self.exclui_aluno,
+                        0: self.retorna}
         
         while True:
             lista_opcoes[self.__tela_aluno.tela_opcoes()]()
+
+
+if __name__ == '__main__':
+    ctrl = ControladorAlunos(1)
+    ctrl.inclui_aluno()

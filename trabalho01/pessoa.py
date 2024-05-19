@@ -1,10 +1,11 @@
 from abc import ABC, abstractmethod
+from datetime import datetime
 
 
 class Pessoa(ABC):
     @abstractmethod
-    def __init__(self, nome: str, cpf: str, data_nasc: str):
-        if isinstance(nome, str) and isinstance(cpf, int) and isinstance(data_nasc, str):
+    def __init__(self, nome: str, cpf: str, data_nasc: datetime):
+        if isinstance(nome, str) and isinstance(cpf, str) and isinstance(data_nasc, datetime):
             self.__nome = nome
             self.__cpf = cpf
             self.__data_nasc = data_nasc
@@ -32,6 +33,7 @@ class Pessoa(ABC):
         return self.__data_nasc
 
     @data_nasc.setter
-    def data_nasc(self, data_nasc: str):
-        if isinstance(data_nasc, str):
+    def data_nasc(self, data_nasc: datetime):
+        if isinstance(data_nasc, datetime):
             self.__data_nasc = data_nasc
+

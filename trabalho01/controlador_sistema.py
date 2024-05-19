@@ -11,34 +11,57 @@ from tela_sistema import TelaSistema
 class ControladorSistema:
     def __init__(self):
         self.__tela_sistema = TelaSistema(self)
-        self.__controlador_alunos = ControladorAlunos(self)
         self.__controlador_cursos = ControladorCursos(self)
-        self.__controlador_arbitros = ControladorArbitros(self)
+        self.__controlador_alunos = ControladorAlunos(self)
         self.__controlador_equipes = ControladorEquipes(self)
+        self.__controlador_arbitros = ControladorArbitros(self)
         self.__controlador_campeonatos = ControladorCampeonatos(self)
         self.__controlador_partidas = ControladorPartidas(self)
-        self.__tela_sistema = TelaSistema(self)
+
+    @property
+    def controlador_cursos(self):
+        return self.__controlador_cursos
+    
+    @property
+    def controlador_alunos(self):
+        return self.__controlador_alunos
+    
+    @property
+    def controlador_equipes(self):
+        return self.__controlador_equipes
+    
+    @property
+    def controlador_arbitros(self):
+        return self.__controlador_arbitros
+
+    @property
+    def controlador_campeonatos(self):
+        return self.__controlador_campeonatos
+    
+    @property
+    def controlador_partidas(self):
+        return self.__controlador_partidas
 
     def inicializa_sistema(self):
         self.abre_tela()
 
     def abre_tela_curso(self):
-        self.__controlador_cursos.abre_tela()
+        return self.__controlador_cursos.abre_tela()
     
     def abre_tela_aluno(self):
-        self.__controlador_alunos.abre_tela()
+        return self.__controlador_alunos.abre_tela()
     
     def abre_tela_equipe(self):
-        self.__controlador_equipes.abre_tela()
-
+        return self.__controlador_equipes.abre_tela()
+    
     def abre_tela_arbitro(self):
-        self.__controlador_arbitros.abre_tela()
-
+        return self.__controlador_arbitros.abre_tela()
+    
     def abre_tela_campeonato(self):
-        self.__controlador_campeonatos.abre_tela()
+        return self.__controlador_campeonatos.abre_tela()
     
     def abre_tela_partida(self):
-        self.__controlador_partidas.abre_tela()
+        return self.__controlador_partidas.abre_tela()
 
     def encerra_sistema(self):
         exit(0)
@@ -53,4 +76,8 @@ class ControladorSistema:
             funcao_escolhida()
 
 if __name__ == '__main__':
-    print(1)
+    ctrl = ControladorSistema()
+    print(ctrl.controlador_cursos)
+    print(ctrl.controlador_cursos.controlador_sistema)
+    print(ctrl.controlador_cursos.controlador_sistema.controlador_cursos)
+    print(ctrl.controlador_cursos.controlador_sistema.controlador_cursos.controlador_sistema)

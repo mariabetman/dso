@@ -1,21 +1,26 @@
+from datetime import datetime
+
+
 class TelaArbitro:
+    def __init__(self, controlador_arbitro):
+        self.__controlador_arbitro = controlador_arbitro
+
     def tela_opcoes(self):
-        print('---------- ÁRBITROS ----------')
-        print('Escolha a opção')
+        print('---------- Árbitros ----------')
         print('1 - Incluir Árbitro')
         print('2 - Editar Árbitro')
-        print('3 - Listrar Árbitros')
+        print('3 - Listar Árbitros')
         print('4 - Excluir Árbitro')
         print('0 - Retornar')
         
-        opcao = int(input('\nEscolha sua opção: '))
+        opcao = int(input('\nEscolha uma opção: '))
         return opcao
     
     def pega_dados_arbitro(self):
         print('---------- DADOS ÁRBITRO ----------')
         nome = input('Nome: ')
         cpf = input('CPF: ')
-        data_nasc = input('Data de Nascimento: ')
+        data_nasc = datetime.strptime(input('Data de Nascimento no formato DD/MM/AAAA: '), "%d/%m/%Y")
         
         return {'nome': nome, 'cpf': cpf, 'data_nasc': data_nasc}
     
@@ -26,6 +31,7 @@ class TelaArbitro:
         print()
         
     def seleciona_arbitro(self):
+        self.__controlador_arbitro.lista_arbitros()
         cpf = input('Digite o CPF do Árbitro que deseja selecionar: ')
         return cpf
     

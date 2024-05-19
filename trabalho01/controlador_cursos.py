@@ -5,25 +5,26 @@ from tela_curso import TelaCurso
 class ControladorCursos:
     def __init__(self, controlador_sistema):
         self.__cursos = []
-        self.__tela_curso = TelaCurso()
+        self.__tela_curso = TelaCurso(self)
         self.__controlador_sistema = controlador_sistema
         
-    def pega_curso_por_codigo(self, codigo:int):
-        for curso in self.__cursos:
-            if curso.codigo == codigo:
-                return curso
-        return None
+    @property
+    def tela_curso(self):
+        return self.__tela_curso
     
-    def listar_cursos(self):
+    @property
+    def controlador_sistema(self):
+        return self.__controlador_sistema
+    
+    def lista_cursos(self):
         if len(self.__cursos) == 0:
             self.__tela_curso.mostra_mensagem('Nenhum curso cadastrado!')
         else:
             self.__tela_curso.mostra_mensagem('----- CURSOS CADASTRADOS -----')
             for curso in self.__cursos:
                 self.__tela_curso.mostra_curso({'codigo': curso.codigo, 'nome': curso.nome})
-                
     
-    def incluir_curso(self):
+    def inclui_curso(self):
         dados_curso = self.__tela_curso.pega_dados_curso()
         curso =  Curso(dados_curso['codigo'], dados_curso['nome'])
         if not self.pega_curso_por_codigo(curso.codigo):
@@ -31,10 +32,8 @@ class ControladorCursos:
             self.__tela_curso.mostra_mensagem('\nCurso cadastrado com sucesso!\n')
         else:
             self.__tela_curso.mostra_mensagem('\nATENÇÃO: Curso já cadastrado!\n')
-        
     
-    def alterar_curso(self):
-        self.listar_cursos()
+    def altera_curso(self):
         codigo_curso =  self.__tela_curso.seleciona_curso()
         curso = self.pega_curso_por_codigo(codigo_curso)
         
@@ -44,12 +43,11 @@ class ControladorCursos:
                 curso.codigo = novos_dados_curso['codigo']
             if isinstance(novos_dados_curso['nome'], str):
                 curso.nome = novos_dados_curso['nome']
-            self.listar_cursos()
+            self.lista_cursos()
         else:
             self.__tela_curso.mostra_mensagem('\nATENÇÃO: Curso não encontrado!\n')
     
-    def excluir_curso(self):
-        self.listar_cursos()
+    def exclui_curso(self):
         codigo_curso = self.__tela_curso.seleciona_curso()
         curso = self.pega_curso_por_codigo(codigo_curso)
         
@@ -59,21 +57,27 @@ class ControladorCursos:
         else:
             self.__tela_curso.mostra_mensagem('\nATENÇÃO: Curso não encontrado!\n')
     
-    def retornar(self):
+    def pega_curso_por_codigo(self, codigo:int):
+        for curso in self.__cursos:
+            if curso.codigo == codigo:
+                return curso
+        return None
+    
+    def retorna(self):
         self.__controlador_sistema.abre_tela()
     
     def abre_tela(self):
-        lista_opcoes = {1: self.incluir_curso,
-                        2: self.alterar_curso,
-                        3: self.listar_cursos,
-                        4: self.excluir_curso,
-                        0: self.retornar}
+        lista_opcoes = {1: self.inclui_curso,
+                        2: self.altera_curso,
+                        3: self.lista_cursos,
+                        4: self.exclui_curso,
+                        0: self.retorna}
         
         while True:
             lista_opcoes[self.__tela_curso.tela_opcoes()]()
 
 if __name__ == '__main__':
-    ctrl = ControladorCurso(123)
+    ctrl = ControladorCursos(123)
     ctrl.listar_cursos()
     ctrl.incluir_curso()
     ctrl.incluir_curso()

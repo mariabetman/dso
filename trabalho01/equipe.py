@@ -26,10 +26,13 @@ class Equipe:
     def alunos(self):
         return self.__alunos
     
-    @alunos.setter
-    def alunos(self, alunos):
-        if all(isinstance(aluno, Aluno) for aluno in alunos):
-            self.__aluno = alunos
+    def adiciona_aluno(self, aluno: Aluno):
+        if isinstance(aluno, Aluno):
+            self.__alunos.append(aluno)
+    
+    def remove_aluno(self, aluno: Aluno):
+        if isinstance(aluno, Aluno):
+            self.__alunos.remove(aluno)
 
     @property
     def codigo(self):
@@ -53,25 +56,34 @@ class Equipe:
     def pontos(self):
         return self.__pontos
     
-    @pontos.setter
-    def pontos(self, pontos):
+    def adiciona_pontos(self, pontos:int):
         if isinstance(pontos, int):
-            self.__pontos = pontos
+            self.__pontos += pontos
+    
+    def remove_pontos(self, pontos:int):
+        if isinstance(pontos, int):
+            self.__pontos -= pontos
             
     @property
     def gols_marcados(self):
         return self.__gols_marcados
     
-    @gols_marcados.setter
-    def gols_marcados(self, gols_marcados):
-        if isinstance(gols_marcados, int):
-            self.__gols_marcados = gols_marcados
+    def adiciona_gols_marcados(self, gols:int):
+        if isinstance(gols, int):
+            self.__gols_marcados += gols
+    
+    def remove_gols_marcados(self, gols:int):
+        if isinstance(gols, int):
+            self.__gols_marcados -= gols
             
     @property
     def gols_sofridos(self):
         return self.__gols_sofridos
     
-    @gols_sofridos.setter
-    def gols_sofridos(self, gols_sofridos):
-        if isinstance(gols_sofridos, int):
-            self.__gols_sofridos = gols_sofridos
+    def adiciona_gols_sofridos(self, gols:int):
+        if isinstance(gols, int):
+            self.__gols_sofridos += gols
+    
+    def remove_gols_sofridos(self, gols:int):
+        if isinstance(gols, int):
+            self.__gols_sofridos -= gols

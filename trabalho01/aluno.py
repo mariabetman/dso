@@ -1,16 +1,16 @@
 from pessoa import Pessoa
 from curso import Curso
-
+from datetime import datetime
 
 
 class Aluno(Pessoa):
-    def __init__(self, matricula: int, curso: Curso, nome: str, cpf: str, data_nasc: str):
-        if isinstance(curso, Curso) and isinstance(matricula, int) and isinstance(nome, str) and isinstance(cpf, str) and isinstance(data_nasc, str):
+    def __init__(self, matricula: int, curso: Curso, nome: str, cpf: str, data_nasc: datetime):
+        if isinstance(curso, Curso) and isinstance(matricula, int) and isinstance(nome, str) and isinstance(cpf, str) and isinstance(data_nasc, datetime):
             super().__init__(nome, cpf, data_nasc)
             self.__matricula = matricula
             self.__curso = curso
             self.__num_gols = 0
-            
+          
     @property
     def matricula(self):
         return self.__matricula
@@ -33,7 +33,10 @@ class Aluno(Pessoa):
     def num_gols(self):
         return self.__num_gols
 
-    @num_gols.setter
-    def num_gols(self, num_gols):
-        if isinstance(num_gols, int):
-            self.__num_gols = num_gols
+    def adiciona_gols(self, gols:int):
+        if isinstance(gols, int):
+            self.__num_gols += gols
+    
+    def remove_gols(self, gols:int):
+        if isinstance(gols, int):
+            self.__num_gols -= gols

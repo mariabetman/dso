@@ -1,31 +1,34 @@
+from datetime import datetime
+
+
 class TelaAluno:
     def __init__(self, controlador_aluno):
         self.__controlador_aluno = controlador_aluno
-
+        
     def tela_opcoes(self):
         print('---------- ALUNOS ----------')
-        print('Escolha a opção')
         print('1 - Incluir Aluno')
         print('2 - Editar Aluno')
-        print('3 - Listrar Aluno')
+        print('3 - Listar Aluno')
         print('4 - Excluir Aluno')
         print('0 - Retornar')
         
-        opcao = int(input('\nEscolha sua opção: '))
+        opcao = int(input('\nEscolha uma opção: '))
         return opcao
     
     def pega_dados_aluno(self):
         print('---------- DADOS ALUNO ----------')
         matricula = int(input('Matrícula: '))
-        print('---------- CURSOS DISPONÍVEIS ----------')
-        curso = self.__controlador_aluno.__controlador_sistema.__controlador_curso.__tela_curso.seleciona_curso()
-        nome = input('Nome: ')
+        codigo_curso =  self.__controlador_aluno.controlador_sistema.controlador_cursos.tela_curso.seleciona_curso()
+        curso = self.__controlador_aluno.controlador_sistema.controlador_cursos.pega_curso_por_codigo(codigo_curso)
+        nome = input('Nome do Aluno: ')
         cpf = input('CPF: ')
-        data_nasc = input('Data de Nascimento: ')
+        data_nasc = datetime.strptime(input('Data de Nascimento no formato DD/MM/AAAA: '), "%d/%m/%Y")
         
         return {'matricula': matricula, 'curso': curso, 'nome': nome, 'cpf': cpf, 'data_nasc': data_nasc}
     
     def mostra_aluno(self, dados_aluno):
+        print(dados_aluno)
         print('Matrícula do Aluno: ', dados_aluno['matricula'])
         print('Curso do Aluno: ', dados_aluno['curso'])
         print('Nome do Aluno: ', dados_aluno['nome'])
@@ -34,8 +37,11 @@ class TelaAluno:
         print('-------------------------------------------------------')
         
     def seleciona_aluno(self):
+        self.__controlador_aluno.lista_alunos()
         cpf = input('Digite o CPF do Aluno que deseja selecionar: ')
         return cpf
     
     def mostra_mensagem(self, msg):
         print(msg)
+
+
