@@ -3,7 +3,7 @@ class TelaAluno:
         self.__controlador_aluno = controlador_aluno
 
     def tela_opcoes(self):
-        print('---------- ÁRBITROS ----------')
+        print('---------- ALUNOS ----------')
         print('Escolha a opção')
         print('1 - Incluir Aluno')
         print('2 - Editar Aluno')

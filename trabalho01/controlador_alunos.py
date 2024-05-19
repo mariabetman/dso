@@ -1,5 +1,5 @@
-from model.aluno import Aluno
-from view.tela_aluno import TelaAluno
+from aluno import Aluno
+from tela_aluno import TelaAluno
 
 
 class ControladorAluno:
@@ -8,7 +8,7 @@ class ControladorAluno:
         self.__tela_aluno = TelaAluno(self)
         self.__controlador_sistema = controlador_sistema
         
-    def pega_aluno_por_cpf(self, cpf:str)
+    def pega_aluno_por_cpf(self, cpf:str):
         for aluno in self.__alunos:
             if aluno.cpf == cpf:
                 return aluno
@@ -27,6 +27,7 @@ class ControladorAluno:
             self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno já cadastrado!')
     
     def alterar_aluno(self):
+        return
         self.listar_alunos()
         cpf_aluno =  self.__tela_aluno.seleciona_aluno()
         aluno = self.pega_aluno_por_cpf(cpf_aluno)
