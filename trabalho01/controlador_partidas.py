@@ -1,14 +1,14 @@
-from model.partida import Partida
-from view.tela_partida import TelaPartida
+from partida import Partida
+from tela_partida import TelaPartida
 
 
-class ControladorCurso:
+class ControladorPartidas:
     def __init__(self, controlador_sistema):
         self.__partidas = []
         self.__tela_partida = TelaPartida(self)
         self.__controlador_sistema = controlador_sistema
         
-    def pega_partida_por_codigo(self, codigo:int)
+    def pega_partida_por_codigo(self, codigo:int):
         for partida in self.__partidas:
             if partida.codigo == codigo:
                 return partida

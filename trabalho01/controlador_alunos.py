@@ -1,8 +1,8 @@
-from model.aluno import Aluno
-from view.tela_aluno import TelaAluno
+from aluno import Aluno
+from tela_aluno import TelaAluno
 
 
-class ControladorAluno:
+class ControladorAlunos:
     def __init__(self, controlador_sistema):
         self.__alunos = []
         self.__tela_aluno = TelaAluno(self)
@@ -27,6 +27,7 @@ class ControladorAluno:
             self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno já cadastrado!')
     
     def alterar_aluno(self):
+        return
         self.listar_alunos()
         cpf_aluno =  self.__tela_aluno.seleciona_aluno()
         aluno = self.pega_aluno_por_cpf(cpf_aluno)

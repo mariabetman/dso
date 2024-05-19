@@ -1,11 +1,11 @@
-from model.arbitro import Arbitro
-from view.tela_arbitro import TelaArbitro
+from arbitro import Arbitro
+from tela_arbitro import TelaArbitro
 
 
-class ControladorArbitro:
+class ControladorArbitros:
     def __init__(self, controlador_sistema):
         self.__arbitros = []
-        self.__tela_arbitro = TelaArbitro(self)
+        self.__tela_arbitro = TelaArbitro()
         self.__controlador_sistema = controlador_sistema
         
     def pega_arbitro_por_cpf(self, cpf:str):
@@ -14,7 +14,7 @@ class ControladorArbitro:
                 return arbitro
         return None
     
-    def incluir_arbitro(self):
+    def add_arbitro(self):
         dados_arbitro = TelaArbitro.pega_dados_arbitro()
         arbitro = Arbitro(dados_arbitro['nome'], dados_arbitro['cpf'], dados_arbitro['data_nasc'])
         if not self.pega_arbitro_por_cpf(arbitro.cpf):
@@ -22,7 +22,7 @@ class ControladorArbitro:
         else:
             self.__tela_arbitro.mostra_mensagem('ATENÇÃO: Árbitro já cadastrado!')
     
-    def alterar_arbitro(self):
+    def altera_arbitro(self):
         self.listar_arbitros()
         cpf_arbitro =  self.__tela_arbitro.seleciona_arbitro()
         arbitro = self.pega_arbitro_por_cpf(cpf_arbitro)
@@ -36,11 +36,11 @@ class ControladorArbitro:
         else:
             self.__tela_arbitro.mostra_mensagem('ATENÇÃO: Árbitro não encontrado!')
     
-    def listar_arbitros(self):
+    def lista_arbitros(self):
         for arbitro in self.__arbitros:
             self.__tela_arbitro.mostra_arbitro({'nome': arbitro.nome, 'cpf': arbitro.cpf, 'data_nasc': arbitro.data_nasc})
     
-    def excluir_arbitro(self):
+    def remove_arbitro(self):
         self.listar_arbitros()
         cpf_arbitro = self.__tela_arbitro.seleciona_arbitro()
         arbitro = self.pega_arbitro_por_cpf(cpf_arbitro)
@@ -55,12 +55,11 @@ class ControladorArbitro:
         self.__controlador_sistema.abre_tela()
     
     def abre_tela(self):
-        lista_opcoes = {1: self.incluir_arbitro,
-                        2: self.alterar_arbitro,
-                        3: self.listar_arbitros,
-                        4: self.excluir_arbitro,
+        lista_opcoes = {1: self.add_arbitro,
+                        2: self.altera_arbitro,
+                        3: self.lista_arbitros,
+                        4: self.remove_arbitro,
                         0: self.retornar}
         
         while True:
             lista_opcoes[self.__tela_arbitro.tela_opcoes()]()
-        

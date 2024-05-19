@@ -1,8 +1,8 @@
-from view.tela_campeonato import TelaCampeonato
-from model.campeonato import Campeonato
+from tela_campeonato import TelaCampeonato
+from campeonato import Campeonato
 
 
-class ControladorCampeonato:
+class ControladorCampeonatos:
     def __init__(self, controlador_sistema):
         self.__campeonatos = []
         self.__tela_campeonato = TelaCampeonato(self)

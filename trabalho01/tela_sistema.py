@@ -1,12 +1,20 @@
 class TelaSistema:
+    def __init__(self, controlador_sistema):
+        self.__controlador_sistema = controlador_sistema
+
     def tela_opcoes(self):
-        print("-------- Sistema Campeonatos ---------")
-        print("1 - Alunos")
-        print("2 - Cursos")
-        print("3 - Árbitros")
-        print("4 - Equipes")
-        print("5 - Campeonatos")
-        print("6 - Partidas")
-        print("0 - Finalizar sistema")
-        opcao = int(input("Escolha uma opção: "))
+        print('---------- MENU PRINCIPAL ----------')
+        print('Escolha a opção')
+        print('1 - Menu de Cursos')
+        print('2 - Menu de Alunos')
+        print('3 - Menu de Equipes')
+        print('4 - Menu de Árbitros')
+        print('5 - Menu de Campeonatos')
+        print('6 - Menu de Partidas')
+        print('0 - Encerrar Programa')
+
+        opcao = int(input('\nEscolha sua opção: '))
         return opcao
+        
+    def mostra_mensagem(self, msg):
+        print(msg)
