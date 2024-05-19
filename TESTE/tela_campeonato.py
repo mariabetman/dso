@@ -1,2 +1,0 @@
-class TelaCampeonato:
-    pass

@@ -8,15 +8,19 @@ class ControladorAluno:
         self.__tela_aluno = TelaAluno(self)
         self.__controlador_sistema = controlador_sistema
         
+    @property
+    def controlador_sistema(self):
+        return self.__controlador_sistema
+
     def pega_aluno_por_cpf(self, cpf:str):
         for aluno in self.__alunos:
             if aluno.cpf == cpf:
                 return aluno
-        return "Não existe aluno com esse cpf cadastrado"
+        return None
     
     def listar_alunos(self):
         for aluno in self.__alunos:
-            self.__tela_aluno.mostra_aluno({'matricula': matricula, 'codigo_curso': codigo_curso, 'nome': aluno.nome, 'cpf': aluno.cpf, 'data_nasc': aluno.data_nasc})
+            self.__tela_aluno.mostra_aluno({'matricula': aluno.matricula, 'curso': aluno.curso.nome, 'nome': aluno.nome, 'cpf': aluno.cpf, 'data_nasc': aluno.data_nasc})
     
     def incluir_aluno(self):
         dados_aluno = self.__tela_aluno.pega_dados_aluno()
@@ -71,3 +75,8 @@ class ControladorAluno:
         
         while True:
             lista_opcoes[self.__tela_aluno.tela_opcoes()]()
+
+
+if __name__ == '__main__':
+    ctrl = ControladorAluno(1)
+    ctrl.incluir_aluno()

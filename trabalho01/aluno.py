@@ -10,7 +10,7 @@ class Aluno(Pessoa):
             self.__matricula = matricula
             self.__curso = curso
             self.__num_gols = 0
-            
+          
     @property
     def matricula(self):
         return self.__matricula
@@ -37,3 +37,4 @@ class Aluno(Pessoa):
     def num_gols(self, num_gols):
         if isinstance(num_gols, int):
             self.__num_gols = num_gols
+

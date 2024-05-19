@@ -4,7 +4,7 @@ from abc import ABC, abstractmethod
 class Pessoa(ABC):
     @abstractmethod
     def __init__(self, nome: str, cpf: str, data_nasc: str):
-        if isinstance(nome, str) and isinstance(cpf, int) and isinstance(data_nasc, str):
+        if isinstance(nome, str) and isinstance(cpf, str) and isinstance(data_nasc, str):
             self.__nome = nome
             self.__cpf = cpf
             self.__data_nasc = data_nasc
@@ -35,3 +35,4 @@ class Pessoa(ABC):
     def data_nasc(self, data_nasc: str):
         if isinstance(data_nasc, str):
             self.__data_nasc = data_nasc
+

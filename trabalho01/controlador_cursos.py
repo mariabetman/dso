@@ -8,6 +8,10 @@ class ControladorCurso:
         self.__tela_curso = TelaCurso()
         self.__controlador_sistema = controlador_sistema
         
+    @property
+    def controlador_sistema(self):
+        return self.__controlador_sistema
+    
     def pega_curso_por_codigo(self, codigo:int):
         for curso in self.__cursos:
             if curso.codigo == codigo:
@@ -31,6 +35,7 @@ class ControladorCurso:
             self.__tela_curso.mostra_mensagem('\nCurso cadastrado com sucesso!\n')
         else:
             self.__tela_curso.mostra_mensagem('\nATENÇÃO: Curso já cadastrado!\n')
+            
         
     
     def alterar_curso(self):
