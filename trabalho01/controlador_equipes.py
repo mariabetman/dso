@@ -127,13 +127,13 @@ class ControladorEquipes:
         self.__controlador_sistema.abre_tela()
     
     def abre_tela(self):
-        lista_opcoes = {1: self.inclui_equipe,
-                        2: self.altera_equipe,
-                        3: self.lista_equipes,
-                        4: self.exclui_equipe,
-                        5: self.adiciona_aluno_na_equipe,
-                        6: self.remove_aluno_da_equipe,
-                        0: self.retorna}
+        lista_opcoes = {'1': self.inclui_equipe,
+                        '2': self.altera_equipe,
+                        '3': self.lista_equipes,
+                        '4': self.exclui_equipe,
+                        '5': self.adiciona_aluno_na_equipe,
+                        '6': self.remove_aluno_da_equipe,
+                        '0': self.retorna}
         
         while True:
             lista_opcoes[self.__tela_equipe.tela_opcoes()]()

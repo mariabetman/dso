@@ -13,7 +13,7 @@ class TelaArbitro:
         print('4 - Excluir Árbitro')
         print('0 - Retornar')
         
-        opcao = int(input('\nEscolha uma opção: '))
+        opcao = (input('\nEscolha uma opção: '))
         return opcao
     
     def pega_dados_arbitro(self):

@@ -11,7 +11,7 @@ class TelaPartida:
         print('4 - Excluir Partida')
         print('0 - Retornar')
         
-        opcao = int(input('\nEscolha sua opção: '))
+        opcao = input('\nEscolha sua opção: ')
         return opcao
     
     def pega_dados_partida(self):

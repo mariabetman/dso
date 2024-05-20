@@ -88,11 +88,11 @@ class ControladorCampeonatos:
         self.__controlador_sistema.abre_tela()
     
     def abre_tela(self):
-        lista_opcoes = {1: self.incluir_aluno,
-                        2: self.alterar_aluno,
-                        3: self.listar_alunos,
-                        4: self.excluir_aluno,
-                        0: self.retornar}
+        lista_opcoes = {'1': self.incluir_aluno,
+                        '2': self.alterar_aluno,
+                        '3': self.listar_alunos,
+                        '4': self.excluir_aluno,
+                        '0': self.retornar}
         
         while True:
             lista_opcoes[self.__tela_aluno.tela_opcoes()]()

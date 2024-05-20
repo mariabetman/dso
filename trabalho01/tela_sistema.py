@@ -4,7 +4,6 @@ class TelaSistema:
 
     def tela_opcoes(self):
         print('---------- MENU PRINCIPAL ----------')
-        print('Escolha a opção')
         print('1 - Menu de Cursos')
         print('2 - Menu de Alunos')
         print('3 - Menu de Equipes')
@@ -13,8 +12,8 @@ class TelaSistema:
         print('6 - Menu de Partidas')
         print('0 - Encerrar Programa')
 
-        opcao = int(input('\nEscolha sua opção: '))
+        opcao = (input('\nEscolha sua opção: '))
         return opcao
         
     def mostra_mensagem(self, msg):
-        print(msg)
+        print(f'\n{msg}')

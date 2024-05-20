@@ -70,11 +70,11 @@ class ControladorArbitros:
         self.__controlador_sistema.abre_tela()
     
     def abre_tela(self):
-        lista_opcoes = {1: self.inclui_arbitro,
-                        2: self.altera_arbitro,
-                        3: self.lista_arbitros,
-                        4: self.exclui_arbitro,
-                        0: self.retorna}
+        lista_opcoes = {'1': self.inclui_arbitro,
+                        '2': self.altera_arbitro,
+                        '3': self.lista_arbitros,
+                        '4': self.exclui_arbitro,
+                        '0': self.retorna}
         
         while True:
             lista_opcoes[self.__tela_arbitro.tela_opcoes()]()

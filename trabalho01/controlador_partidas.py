@@ -70,11 +70,11 @@ class ControladorPartidas:
         self.__controlador_sistema.abre_tela()
     
     def abre_tela(self):
-        lista_opcoes = {1: self.incluir_partida,
-                        2: self.alterar_partida,
-                        3: self.listar_partidas,
-                        4: self.excluir_partida,
-                        0: self.retornar}
+        lista_opcoes = {'1': self.incluir_partida,
+                        '2': self.alterar_partida,
+                        '3': self.listar_partidas,
+                        '4': self.excluir_partida,
+                        '0': self.retornar}
         
         while True:
             lista_opcoes[self.__tela_partida.tela_opcoes()]()
