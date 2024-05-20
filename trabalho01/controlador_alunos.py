@@ -29,15 +29,16 @@ class ControladorAlunos:
     def inclui_aluno(self):
         dados_aluno = self.__tela_aluno.pega_dados_aluno()
         aluno =  Aluno(dados_aluno['matricula'], dados_aluno['curso'], dados_aluno['nome'], dados_aluno['cpf'], dados_aluno['data_nasc'])
-        if not self.pega_aluno_por_cpf(aluno.cpf):
+        if not self.pega_aluno_por_matricula(aluno.matricula):
             self.__alunos.append(aluno)
             self.__tela_aluno.mostra_mensagem('Aluno cadastrado com sucesso!')
         else:
             self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno já cadastrado!')
         
     def altera_aluno(self):
-        cpf =  self.__tela_aluno.seleciona_aluno()
-        aluno = self.pega_aluno_por_cpf(cpf)
+        self.lista_alunos()
+        matricula =  self.__tela_aluno.seleciona_aluno()
+        aluno = self.pega_aluno_por_matricula(matricula)
         
         if aluno:
             novos_dados_aluno = self.__tela_aluno.pega_dados_aluno(editando=True)
@@ -50,8 +51,9 @@ class ControladorAlunos:
             self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno não encontrado!')
     
     def exclui_aluno(self):
-        cpf = self.__tela_aluno.seleciona_aluno()
-        aluno = self.pega_aluno_por_cpf(cpf)
+        self.lista_alunos()
+        matricula = self.__tela_aluno.seleciona_aluno()
+        aluno = self.pega_aluno_por_matricula(matricula)
         
         if aluno:
             self.__alunos.remove(aluno)
@@ -59,19 +61,21 @@ class ControladorAlunos:
         else:
             self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno não encontrado!')
 
-    def pega_aluno_por_cpf(self, cpf:str):
+    def pega_aluno_por_matricula(self, matricula:int):
         for aluno in self.__alunos:
-            if aluno.cpf == cpf:
+            if aluno.matricula == matricula:
                 return aluno
         return None
 
-    def adiciona_gol(self, cpf:str):
-        aluno = self.pega_aluno_por_cpf(cpf)
-        aluno.adiciona_gol()
+    def adiciona_gol(self, matricula:int):
+        aluno = self.pega_aluno_por_matricula(matricula)
+        if aluno:
+            aluno.adiciona_gol()
     
-    def remove_gol(self, cpf:str):
-        aluno = self.pega_aluno_por_cpf(cpf)
-        aluno.remove_gol()
+    def remove_gol(self, matricula:int):
+        aluno = self.pega_aluno_por_matricula(matricula)
+        if aluno:
+            aluno.remove_gol()
     
     def retorna(self):
         self.__controlador_sistema.abre_tela()

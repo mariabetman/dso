@@ -41,11 +41,8 @@ class TelaAluno:
         print('-------------------------------------------------------')
         
     def seleciona_aluno(self):
-        self.__controlador_alunos.lista_alunos()
-        cpf = input('Digite o CPF do Aluno que deseja selecionar: ')
-        return cpf
+        matricula = int(input('Digite a matrícula do Aluno que deseja selecionar: '))
+        return matricula
     
     def mostra_mensagem(self, msg):
         print(f'\n{msg}\n')
-
-

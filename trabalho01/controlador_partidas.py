@@ -18,13 +18,18 @@ class ControladorPartidas:
         return self.__controlador_sistema
 
     def lista_partidas(self):
-        for partida in self.__partidas:
-            self.__tela_partida.mostra_partida({'codigo': partida.codigo, 'data_partida': partida.data_partida, 'equipe_casa': partida.equipe_casa, 'equipe_visitante': partida.equipe_visitante, 'arbitro': partida.arbitro, 'gols_equipe_casa': partida.gols_equipe_casa, 'gols_equipe_visitante': partida.gols_equipe_visitante, 'resultado': partida.resultado, 'partida_realizada': partida.partida_realizada})
+        if len(self.__partidas) == 0:
+            self.__tela_partida.mostra_mensagem('Nenhuma Partida cadastrada!')
+        else:
+            self.__tela_partida.mostra_mensagem('----- PARTIDAS CADASTRADOS -----')
+            for partida in self.__partidas:
+                self.__tela_partida.mostra_partida({'codigo': partida.codigo, 'data_partida': partida.data_partida, 'equipe_casa': partida.equipe_casa.nome, 'equipe_visitante': partida.equipe_visitante.nome, 'arbitro': partida.arbitro.nome, 'gols_equipe_casa': partida.gols_equipe_casa, 'gols_equipe_visitante': partida.gols_equipe_visitante, 'resultado': partida.resultado, 'partida_realizada': partida.partida_realizada})
     
     def inclui_partida(self, dados_partida):
-        partida =  partida(dados_partida['codigo'], dados_partida['data_partida'], dados_partida['equipe_casa'], dados_partida['equipe_visitante'], dados_partida['arbitro'])
+        partida =  Partida(dados_partida['codigo'], dados_partida['data_partida'], dados_partida['equipe_casa'], dados_partida['equipe_visitante'], dados_partida['arbitro'])
         if not self.pega_partida_por_codigo(partida.codigo):
             self.__partidas.append(partida)
+            return partida
         
     def pega_partida_por_codigo(self, codigo:int):
         for partida in self.__partidas:
@@ -33,25 +38,30 @@ class ControladorPartidas:
         return None
     
     def adiciona_gols_partida(self):
-        partida = self.__tela_partida.seleciona_partida()
-        if not partida.partida_realizada():
-            gols_partida = self.tela_partida.pega_gols_partida()
-            gols_equipe_casa = gols_partida['gols_equipe_casa']
-            artilheiros_equipe_casa = gols_partida['artilheiros_equipe_casa']
-            gols_equipe_visitante = gols_partida['gols_equipe_visitante']
-            artilheiros_equipe_visitante = gols_partida['artilheiros_equipe_visitante']
+        codigo_partida = self.__tela_partida.seleciona_partida()
+        partida = self.pega_partida_por_codigo(codigo_partida)
+        if partida:
+            if not partida.partida_realizada:
+                gols_partida = self.tela_partida.pega_gols_partida(partida)
+                gols_equipe_casa = gols_partida['gols_equipe_casa']
+                artilheiros_equipe_casa = gols_partida['artilheiros_equipe_casa']
+                gols_equipe_visitante = gols_partida['gols_equipe_visitante']
+                artilheiros_equipe_visitante = gols_partida['artilheiros_equipe_visitante']
 
-            if isinstance(gols_equipe_casa, int) and isinstance(gols_equipe_visitante, int) and all(isinstance(artilheiro, Aluno) for artilheiro in artilheiros_equipe_casa) and all(isinstance(artilheiro, Aluno) for artilheiro in artilheiros_equipe_visitante):
-                partida.gols_equipe_casa(gols_equipe_casa)
-                partida.artilheiros_equipe_casa(artilheiros_equipe_casa)
-                partida.gols_equipe_visitante(gols_equipe_visitante)
-                partida.artilheiros_equipe_visitante(artilheiros_equipe_visitante)
-                partida.partida_realizada(True)
-                partida.resultado('Equipe Casa {gols_equipe_casa}X{gols_equipe_visitante} Equipe Visitante')
+                if isinstance(gols_equipe_casa, int) and isinstance(gols_equipe_visitante, int) and all(isinstance(artilheiro, Aluno) for artilheiro in artilheiros_equipe_casa) and all(isinstance(artilheiro, Aluno) for artilheiro in artilheiros_equipe_visitante):
+                    print(partida)
+                    partida.gols_equipe_casa = gols_equipe_casa
+                    partida.artilheiros_equipe_casa = artilheiros_equipe_casa
+                    partida.gols_equipe_visitante = gols_equipe_visitante
+                    partida.artilheiros_equipe_visitante = artilheiros_equipe_visitante
+                    partida.partida_realizada = True
+                    partida.resultado = 'Equipe Casa {self.__gols_equipe_casa}X{self.__gols_equipe_visitante} Equipe Visitante'
 
-            self.gera_dados_partida(partida)
+                self.gera_dados_partida(partida)
+            else:
+                self.__tela_partida.mostra_mensagem('\nATENÇÃO: essa Partida já foi realizada e não pode ser editada!\n')
         else:
-            self.__tela_partida.mostra_mensagem('\nATENÇÃO: essa PArtida já foi realizada e não pode ser editada!\n')
+            self.__tela_partida.mostra_mensagem('\nATENÇÃO: Partida não encontrada!\n')
     
     def gera_dados_partida(self, partida:Partida):
         if partida.gols_equipe_casa > partida.gols_equipe_visitante:
@@ -73,10 +83,10 @@ class ControladorPartidas:
         self.__controlador_sistema.controlador_equipes.pega_equipe_por_codigo(partida.equipe_visitante.codigo).adiciona_gols_sofridos(partida.gols_equipe_casa)
 
         for aluno in partida.artilheiros_equipe_casa:
-            self.controlador_sistema.controlador_alunos.adiciona_gol(aluno.cpf)
+            self.controlador_sistema.controlador_alunos.adiciona_gol(aluno.matricula)
 
         for aluno in partida.artilheiros_equipe_visitante:
-            self.controlador_sistema.controlador_alunos.adiciona_gol(aluno.cpf)
+            self.controlador_sistema.controlador_alunos.adiciona_gol(aluno.matricula)
 
     def retorna(self):
         self.__controlador_sistema.abre_tela()

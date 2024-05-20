@@ -1,4 +1,4 @@
-from random import random
+from random import randint
 from controlador_alunos import ControladorAlunos
 from controlador_arbitros import ControladorArbitros
 from controlador_campeonatos import ControladorCampeonatos
@@ -63,11 +63,10 @@ class ControladorSistema:
         return self.__controlador_partidas.abre_tela()
     
     def inicia_campeonato(self):
-        codigo_aleatorio = random.randint(1, 100)
+        codigo_aleatorio = randint(1, 100)
         equipes = self.__controlador_equipes.equipes
         self.__controlador_campeonatos.inclui_campeonato(codigo_aleatorio, equipes)
-        self.__tela_sistema.mostra_mensagem('\nCampeonato iniciado com sucesso! As partidas foram geradas e agora só basta adicionar os resultados!\n')
-        return self.__controlador_partidas.abre_tela()
+        return self.__tela_sistema.mostra_mensagem('\nCampeonato iniciado com sucesso! As partidas foram geradas e agora só basta adicionar os resultados!\n')
     
     def finaliza_campeonato(self):
         return self.__controlador_campeonatos.finaliza_campeonato()

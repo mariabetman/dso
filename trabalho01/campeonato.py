@@ -8,6 +8,7 @@ class Campeonato:
                 self.__codigo = codigo
                 self.__equipes = equipes
                 self.__partidas = []
+                self.__campeonato_iniciado = False
             
     @property
     def codigo(self):
@@ -41,3 +42,12 @@ class Campeonato:
     @property
     def artilharia(self):
         return self.__artilharia
+    
+    @property
+    def campeonato_iniciado(self):
+        return self.__campeonato_iniciado
+    
+    @campeonato_iniciado.setter
+    def campeonato_iniciado(self, campeonato_iniciado:bool):
+        if isinstance(campeonato_iniciado, bool):
+            self.__campeonato_iniciado = campeonato_iniciado

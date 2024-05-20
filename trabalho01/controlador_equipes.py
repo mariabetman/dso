@@ -29,7 +29,7 @@ class ControladorEquipes:
             self.__tela_equipe.mostra_mensagem('----- EQUIPES CADASTRADAS -----')
             for equipe in self.__equipes:
                 self.__tela_equipe.mostra_equipe({'curso': equipe.curso.nome, 'nome': equipe.nome, 'codigo': equipe.codigo})
-    ##Devemos listar os alunos de equipe?
+                self.mostra_alunos_equipe(equipe.codigo)
 
     def inclui_equipe(self):
         dados_equipe = self.__tela_equipe.pega_dados_equipe()
@@ -78,14 +78,15 @@ class ControladorEquipes:
     def adiciona_aluno_na_equipe(self):
         codigo_equipe = self.__tela_equipe.seleciona_equipe()
         equipe = self.pega_equipe_por_codigo(codigo_equipe)
-        cpf_aluno = self.__controlador_sistema.controlador_alunos.tela_aluno.seleciona_aluno()
-        aluno = self.__controlador_sistema.controlador_alunos.pega_aluno_por_cpf(cpf_aluno)
+        self.__controlador_sistema.controlador_alunos.lista_alunos()
+        matricula_aluno = self.__controlador_sistema.controlador_alunos.tela_aluno.seleciona_aluno()
+        aluno = self.__controlador_sistema.controlador_alunos.pega_aluno_por_matricula(matricula_aluno)
 
         if aluno.curso.codigo != equipe.curso.codigo:
             self.__tela_equipe.mostra_mensagem('ATENÇÃO: O Aluno deve ser do mesmo curso que a Equipe!')
             return None
         for _aluno in equipe.alunos:
-            if _aluno.cpf == cpf_aluno:
+            if _aluno.matricula == matricula_aluno:
                 self.__tela_equipe.mostra_mensagem('ATENÇÃO: O Aluno já está cadastrado na equipe!')
                 return None
         if isinstance(equipe, Equipe) and isinstance(aluno, Aluno):
@@ -99,12 +100,12 @@ class ControladorEquipes:
         codigo_equipe = self.__tela_equipe.seleciona_equipe()
         equipe = self.pega_equipe_por_codigo(codigo_equipe)
         self.mostra_alunos_equipe(codigo_equipe)
-        cpf_aluno = self.__controlador_sistema.controlador_alunos.tela_aluno.seleciona_aluno()
-        aluno = self.__controlador_sistema.controlador_alunos.pega_aluno_por_cpf(cpf_aluno)
+        matricula_aluno = self.__controlador_sistema.controlador_alunos.tela_aluno.seleciona_aluno()
+        aluno = self.__controlador_sistema.controlador_alunos.pega_aluno_por_matricula(matricula_aluno)
 
         if isinstance(equipe, Equipe) and isinstance(aluno, Aluno):
             for _aluno in equipe.alunos:
-                if _aluno.cpf == cpf_aluno:
+                if _aluno.matricula == matricula_aluno:
                     equipe.remove_aluno(aluno)
                     self.__tela_equipe.mostra_mensagem('Aluno removido com sucesso!')
                     return Aluno

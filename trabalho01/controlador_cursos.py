@@ -7,7 +7,11 @@ class ControladorCursos:
         self.__cursos = []
         self.__tela_curso = TelaCurso(self)
         self.__controlador_sistema = controlador_sistema
-        
+
+    @property
+    def cursos(self):
+        return self.__cursos
+
     @property
     def tela_curso(self):
         return self.__tela_curso
