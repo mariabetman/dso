@@ -6,7 +6,7 @@ class TelaArbitro:
         self.__controlador_arbitros = controlador_arbitros
 
     def tela_opcoes(self):
-        print('---------- Árbitros ----------')
+        print('\n---------- Árbitros ----------')
         print('1 - Incluir Árbitro')
         print('2 - Editar Árbitro')
         print('3 - Listar Árbitros')
@@ -16,10 +16,13 @@ class TelaArbitro:
         opcao = (input('\nEscolha uma opção: '))
         return opcao
     
-    def pega_dados_arbitro(self):
+    def pega_dados_arbitro(self, editando=False):
         print('---------- DADOS ÁRBITRO ----------')
         nome = input('Nome: ')
-        cpf = input('CPF: ')
+        if not editando:
+            cpf = input('CPF: ')
+        else:
+            cpf = None
         data_nasc = datetime.strptime(input('Data de Nascimento no formato DD/MM/AAAA: '), "%d/%m/%Y")
         
         return {'nome': nome, 'cpf': cpf, 'data_nasc': data_nasc}
@@ -36,4 +39,4 @@ class TelaArbitro:
         return cpf
     
     def mostra_mensagem(self, msg):
-        print(msg)
+        print(f'\n{msg}')

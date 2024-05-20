@@ -84,7 +84,13 @@ class ControladorAlunos:
                         '0': self.retorna}
         
         while True:
-            lista_opcoes[self.__tela_aluno.tela_opcoes()]()
+            opcao_escolhida = self.__tela_aluno.tela_opcoes()
+            if opcao_escolhida in lista_opcoes:
+                funcao_escolhida = lista_opcoes[opcao_escolhida]
+                funcao_escolhida()
+            else:
+                self.__tela_aluno.mostra_mensagem('ERRO: Opção inválida!\n')
+
 
 
 if __name__ == '__main__':

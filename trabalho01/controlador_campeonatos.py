@@ -125,4 +125,10 @@ class ControladorCampeonatos:
                         '9': self.gera_relatorio,
                         '0': self.retorna}
         while True:
-            lista_opcoes[self.__tela_aluno.tela_opcoes()]()
+            opcao_escolhida = self.__tela_campeonato.tela_opcoes()
+            if opcao_escolhida in lista_opcoes:
+                funcao_escolhida = lista_opcoes[opcao_escolhida]
+                funcao_escolhida()
+            else:
+                self.__tela_campeonato.mostra_mensagem('ERRO: Opção inválida!\n')
+

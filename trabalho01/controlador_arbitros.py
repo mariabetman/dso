@@ -30,25 +30,23 @@ class ControladorArbitros:
         arbitro = Arbitro(dados_arbitro['nome'], dados_arbitro['cpf'], dados_arbitro['data_nasc'])
         if not self.pega_arbitro_por_cpf(arbitro.cpf):
             self.__arbitros.append(arbitro)
-            self.__tela_arbitro.mostra_mensagem('\nÁrbitro cadastrado com sucesso!\n')
+            self.__tela_arbitro.mostra_mensagem('Árbitro cadastrado com sucesso!')
         else:
-            self.__tela_arbitro.mostra_mensagem('\nATENÇÃO: Árbitro já cadastrado!\n')
+            self.__tela_arbitro.mostra_mensagem('ATENÇÃO: Árbitro já cadastrado!')
     
     def altera_arbitro(self):
         cpf_arbitro =  self.__tela_arbitro.seleciona_arbitro()
         arbitro = self.pega_arbitro_por_cpf(cpf_arbitro)
         
         if arbitro:
-            novos_dados_arbitro = self.__tela_arbitro.pega_dados_arbitro()
+            novos_dados_arbitro = self.__tela_arbitro.pega_dados_arbitro(editando=True)
             if isinstance(novos_dados_arbitro['nome'], str):
                 arbitro.nome = novos_dados_arbitro['nome']
-            if isinstance(novos_dados_arbitro['cpf'], str):
-                arbitro.cpf = novos_dados_arbitro['cpf']
             if isinstance(novos_dados_arbitro['data_nasc'], datetime):
                 arbitro.cpf = novos_dados_arbitro['cpf']
-            self.lista_arbitros()
+            self.__tela_arbitro.mostra_mensagem('Árbitro editado com sucesso!')
         else:
-            self.__tela_arbitro.mostra_mensagem('\nATENÇÃO: Árbitro não encontrado!\n')
+            self.__tela_arbitro.mostra_mensagem('ATENÇÃO: Árbitro não encontrado!')
     
     def exclui_arbitro(self):
         cpf_arbitro = self.__tela_arbitro.seleciona_arbitro()
@@ -56,9 +54,9 @@ class ControladorArbitros:
         
         if arbitro:
             self.__arbitros.remove(arbitro)
-            self.__tela_arbitro.mostra_mensagem('\nÁrbitro excluído com sucesso!\n')
+            self.__tela_arbitro.mostra_mensagem('Árbitro excluído com sucesso!')
         else:
-            self.__tela_arbitro.mostra_mensagem('\nATENÇÃO: Árbitro não encontrado!\n')
+            self.__tela_arbitro.mostra_mensagem('ATENÇÃO: Árbitro não encontrado!')
         
     def pega_arbitro_por_cpf(self, cpf:str):
         for arbitro in self.__arbitros:
@@ -77,4 +75,9 @@ class ControladorArbitros:
                         '0': self.retorna}
         
         while True:
-            lista_opcoes[self.__tela_arbitro.tela_opcoes()]()
+            opcao_escolhida = self.__tela_arbitro.tela_opcoes()
+            if opcao_escolhida in lista_opcoes:
+                funcao_escolhida = lista_opcoes[opcao_escolhida]
+                funcao_escolhida()
+            else:
+                self.__tela_arbitro.mostra_mensagem('ERRO: Opção inválida!\n')

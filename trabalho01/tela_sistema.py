@@ -3,7 +3,7 @@ class TelaSistema:
         self.__controlador_sistema = controlador_sistema
 
     def tela_opcoes(self):
-        print('---------- MENU PRINCIPAL ----------')
+        print('\n---------- MENU PRINCIPAL ----------')
         print('1 - Menu de Cursos')
         print('2 - Menu de Alunos')
         print('3 - Menu de Equipes')

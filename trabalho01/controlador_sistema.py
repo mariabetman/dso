@@ -43,7 +43,7 @@ class ControladorSistema:
         return self.__controlador_partidas
 
     def inicializa_sistema(self):
-        self.__tela_sistema.mostra_mensagem('Bem-vindo ao sistema de gerenciamento de campeonato universitário!\n')
+        self.__tela_sistema.mostra_mensagem('Bem-vindo ao sistema de gerenciamento de campeonato universitário!')
         self.abre_tela()
 
     def abre_tela_curso(self):

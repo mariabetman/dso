@@ -3,32 +3,33 @@ class TelaEquipe:
         self.__controlador_equipes = controlador_equipes
         
     def tela_opcoes(self):
-        print('---------- EQUIPES ----------')
+        print('\n---------- EQUIPES ----------')
         print('1 - Incluir Equipe')
         print('2 - Editar Equipe')
         print('3 - Listar Equipes')
         print('4 - Excluir Equipe')
         print('5 - Adicionar Aluno na Equipe')
         print('6 - Remover Aluno da Equipe')
+        print('7 - Listar Alunos da Equipe')
         print('0 - Retornar')
         
         opcao = (input('\nEscolha uma opção: '))
         return opcao
     
-    def pega_dados_equipe(self):
+    def pega_dados_equipe(self, editando=False):
         print('---------- DADOS EQUIPE ----------')
-        codigo_curso =  self.__controlador_equipes.controlador_sistema.controlador_cursos.tela_curso.seleciona_curso()
-        curso = self.__controlador_equipes.controlador_sistema.controlador_cursos.pega_curso_por_codigo(codigo_curso)
+        if not editando:
+            codigo = int(input('Código: '))
+            codigo_curso =  self.__controlador_equipes.controlador_sistema.controlador_cursos.tela_curso.seleciona_curso()
+            curso = self.__controlador_equipes.controlador_sistema.controlador_cursos.pega_curso_por_codigo(codigo_curso)      
+        else:
+            codigo = None
+            curso = None 
         nome = input('Nome da Equipe: ')
-        codigo = int(input('Código: '))
-        
         return {'curso': curso, 'nome': nome, 'codigo': codigo}
     
     def mostra_equipe(self, dados_equipe):
-        print(dados_equipe)
-        print('Curso da Equipe: ', dados_equipe['curso'])
-        print('Nome da Equipe: ', dados_equipe['nome'])
-        print('Código da Equipe: ', dados_equipe['codigo'])
+        print(f"{dados_equipe['codigo']} - {dados_equipe['nome']} - {dados_equipe['curso']}")
         print('-------------------------------------------------------')
         
     def seleciona_equipe(self):
@@ -37,6 +38,6 @@ class TelaEquipe:
         return codigo
     
     def mostra_mensagem(self, msg):
-        print(msg)
+        print(f'\n{msg}')
 
 
