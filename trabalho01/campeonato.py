@@ -1,35 +1,23 @@
-from aluno import Aluno
 from equipe import Equipe
 from partida import Partida
 
 
 class Campeonato:
-    def __init__(self, codigo:int, nome:str):
-        if isinstance(codigo, int):
-            self.__codigo = codigo
-            self.__nome = nome
-            self.__equipes = []
-            self.__partidas = []
-            self.__artilharia = {}
+    def __init__(self, codigo:int, equipes):
+            if isinstance(codigo, int) and all(isinstance(equipe, Equipe) for equipe in equipes):
+                self.__codigo = codigo
+                self.__equipes = equipes
+                self.__partidas = []
             
     @property
     def codigo(self):
         return self.__codigo
-
+    
     @codigo.setter
-    def codigo(self, codigo:int):
+    def codigo(self, codigo):
         if isinstance(codigo, int):
             self.__codigo = codigo
     
-    @property
-    def nome(self):
-        return self.__nome
-
-    @nome.setter
-    def nome(self, nome:str):
-        if isinstance(nome, str):
-            self.__nome = nome
-            
     @property
     def equipes(self):
         return self.__equipes
@@ -53,15 +41,3 @@ class Campeonato:
     @property
     def artilharia(self):
         return self.__artilharia
-
-    def adiciona_gols_artilharia(self, gols:int, aluno:Aluno):
-        if self.__artilharia[aluno]:
-            gols_atuais = self.__artilharia[aluno]
-            self.__artilharia[aluno] = self.__artilharia[aluno] + gols_atuais
-        else:
-            self.__artilharia[aluno] = gols
-    
-    def remove_gols_artilharia(self, gols:int, aluno:Aluno):
-        if self.__artilharia[aluno]:
-            gols_atuais = self.__artilharia[aluno]
-            self.__artilharia[aluno] = self.__artilharia[aluno] - gols_atuais

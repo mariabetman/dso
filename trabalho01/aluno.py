@@ -33,10 +33,8 @@ class Aluno(Pessoa):
     def num_gols(self):
         return self.__num_gols
 
-    def adiciona_gols(self, gols:int):
-        if isinstance(gols, int):
-            self.__num_gols += gols
+    def adiciona_gols(self):
+        self.__num_gols += 1
     
-    def remove_gols(self, gols:int):
-        if isinstance(gols, int):
-            self.__num_gols -= gols
+    def remove_gols(self):
+        self.__num_gols -= 1

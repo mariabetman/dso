@@ -11,6 +11,10 @@ class ControladorEquipes:
         self.__controlador_sistema = controlador_sistema
     
     @property
+    def equipes(self):
+        return self.__equipes
+    
+    @property
     def tela_equipe(self):
         return self.__tela_equipe
     

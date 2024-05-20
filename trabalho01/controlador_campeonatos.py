@@ -1,129 +1,92 @@
+from datetime import datetime, timedelta
+from random import random
 from campeonato import Campeonato
 from tela_campeonato import TelaCampeonato
 from equipe import Equipe
-
+from partida import Partida
 
 class ControladorCampeonatos:
     def __init__(self, controlador_sistema):
-        self.__campeonatos = []
+        self.__campeonato = None
         self.__tela_campeonato = TelaCampeonato(self)
         self.__controlador_sistema = controlador_sistema
     
     @property
-    def tela_campeonato(self):
-        return self.__tela_campeonato
-    
-    @property
     def controlador_sistema(self):
         return self.__controlador_sistema
-    
-    def lista_campeonatos(self):
-        if len(self.__campeonatos) == 0:
-            self.__tela_campeonato.mostra_mensagem('Nenhum Campeonato cadastrado!')
-        else:
-            self.__tela_campeonato.mostra_mensagem('----- CAMPEONATOS CADASTRADOS -----')
-            for campeonato in self.__campeonatos:
-                self.__tela_campeonato.mostra_campeonato({'codigo': campeonato.codigo})
         
-    def inclui_campeonato(self):
-        dados_campeonato = self.tela_campeonato.pega_dados_campeonato()
-        campeonato =  Campeonato(int(dados_campeonato['codigo']))
+    def inclui_campeonato(self, codigo:int , equipes):
+        campeonato = Campeonato(codigo, equipes)
+        self.__campeonato = campeonato
+        self.__tela_campeonato.mostra_mensagem('\nCampeonato cadastrado com sucesso!\n')
+        self.cria_partidas_do_campeonato()
+    
+    def cria_partidas_do_campeonato(self):
+        if self.__campeonato and len(self.__campeonato.equipes) > 1:
+            equipes = self.__campeonato.equipes
+            num_equipes = len(equipes)
+            partidas_geradas = []
 
-        if not self.pega_campeonato_por_codigo(campeonato.codigo):
-            self.__campeonato.append(campeonato)
-            self.__tela_campeonato.mostra_mensagem('\nCampeonato cadastrado com sucesso!\n')
+            for i in range(num_equipes):
+                for j in range(i + 1, num_equipes):
+                    data_aleatoria = datetime.now() + timedelta(days=random.randint(1, 30))
+                    arbitro_aleatorio = random.choice(self.__controlador_sistema.controlador_arbitros.arbitros)
+                    partida = Partida(
+                        codigo = len(partidas_geradas) + 1,
+                        data_partida = data_aleatoria,
+                        equipe_casa = equipes[i],
+                        equipe_visitante = equipes[j],
+                        arbitro = arbitro_aleatorio
+                    )
+                    self.__campeonato.adiciona_partida(partida)
+
+            self.__tela_campeonato.mostra_mensagem('\nPartidas geradas com sucesso!\n')
         else:
-            self.__tela_campeonato.mostra_mensagem('\nATENÇÃO: Campeonato já cadastrado!\n')
-    
-    def altera_campeonato(self):
-        codigo_campeonato =  self.__tela_campeonato.seleciona_campeonato()
-        campeonato = self.pega_campeonato_por_codigo(codigo_campeonato)
-        
-        if campeonato:
-            novos_dados_campeonato = self.__tela_campeonato.pega_dados_campeonato()
-            if isinstance(novos_dados_campeonato['nome'], int):
-                campeonato.nome = novos_dados_campeonato['nome']
-            self.lista_campeonatos()
-        else:
-            self.__tela_campeonato.mostra_mensagem('\nATENÇÃO: Campeonato não encontrado!\n')
-    
-    def exclui_campeonato(self):
-        codigo_campeonato = self.__tela_campeonato.seleciona_campeonato()
-        campeonato = self.pega_campeonato_por_codigo(codigo_campeonato)
-        
-        if campeonato:
-            self.__campeonatos.remove(campeonato)
-            self.__tela_campeonato.mostra_mensagem('\nCampeonato excluído com sucesso!\n')
-        else:
-            self.__tela_campeonato.mostra_mensagem('\nATENÇÃO: Campeonato não encontrado!\n')
-        
-    def pega_campeonato_por_codigo(self, codigo:int):
-        for campeonato in self.__campeonatos:
-            if campeonato.codigo == codigo:
-                return campeonato
-        return None
-    
-    def adiciona_equipe_no_campeonato(self):
-        codigo_campeonato = self.__tela_campeonato.seleciona_campeonato()
-        campeonato = self.pega_campeonato_por_codigo(codigo_campeonato)
-        codigo_equipe = self.__controlador_sistema.controlador_equipes.tela_equipe.seleciona_equipe()
-        equipe = self.__controlador_sistema.controlador_equipes.pega_equipe_por_codigo(codigo_equipe)
-
-        if isinstance(campeonato, Campeonato) and isinstance(equipe, Equipe):
-            for equipe_cadastrada in self.__equipes:
-                if equipe_cadastrada.codigo == equipe.codigo:
-                    self.__tela_campeonato.mostra_mensagem('\nEquipe já adicionada nesse Campeonato!\n')
-                    return
-            campeonato.adiciona_equipe(equipe)
-            self.__tela_campeonato.mostra_mensagem('\nEquipe adicionada com sucesso!\n')
-    
-    def remove_equipe_do_campeonato(self):
-        codigo_campeonato = self.__tela_campeonato.seleciona_campeonato()
-        campeonato = self.pega_campeonato_por_codigo(codigo_campeonato)
-        codigo_equipe = self.__controlador_sistema.controlador_equipes.tela_campeonato.seleciona_equipe()
-        equipe = self.__controlador_sistema.controlador_equipes.pega_equipe_por_codigo(codigo_equipe)
-
-        if isinstance(campeonato, Campeonato) and isinstance(equipe, Equipe):
-            for equipe_cadastrada in self.__equipes:
-                if equipe_cadastrada.codigo == equipe.codigo:
-                    campeonato.remove_equipe(equipe)
-                    self.__tela_campeonato.mostra_mensagem('\nEquipe removida com sucesso!\n')
-    
-    def adiciona_partida_no_campeonato(self):
-        pass
-    
-    def remove_partida_do_campeonato(self):
-        pass
-
-    def adiciona_gols_artilharia_no_campeonato(self):
-        pass
-    
-    def remove_gols_artilharia_do_campeonato(self):
-        pass
-
-    def inicia_campeonato(self):
-        pass
+            self.__tela_campeonato.mostra_mensagem('\nNão há equipes suficientes no campeonato para gerar partidas.\n')
+            self.__retorna()
 
     def finaliza_campeonato(self):
-        pass
+        todas_partidas_realizadas = True
+        for partida in self.__campeonato.partidas:
+            if not partida.partida_realizada:
+                todas_partidas_realizadas = False
+
+        if todas_partidas_realizadas:
+            self.gera_relatorio(self.__campeonato)
+            self.__controlador_sistema.tela.mostra_mensagem('\nCampeonato finalizado com sucesso!\n')
+            self.__controlador_sistema.encerra_sistema()
+        else:
+            self.__tela_campeonato.mostra_mensagem('\nAinda faltam partidas a serem realizadas!\n')
+            self.retorna()
 
     def gera_relatorio(self):
-        pass
+        campeonato = self.__campeonato
+
+        equipes = campeonato.equipes
+        jogadores = {aluno for equipe in equipes for aluno in equipe.jogadores}
+        equipes_ordenadas = sorted(equipes, key=lambda e: (e.pontos, e.gols_marcados), reverse=True)
+
+        ganhadores = equipes_ordenadas[:3]
+        mais_gols_marcados = max(equipes, key=lambda e: e.gols_marcados)
+        mais_gols_sofridos = max(equipes, key=lambda e: e.gols_sofridos)
+        artilheiros = sorted(jogadores, key=lambda j: j.gols, reverse=True)[:3]
+
+        relatorio = f"""
+        Relatório do Campeonato:
+        
+        1º Lugar: {ganhadores[0].nome} com {ganhadores[0].pontos} pontos e {ganhadores[0].gols_marcados}
+        2º Lugar: {ganhadores[1].nome} com {ganhadores[1].pontos} pontos e {ganhadores[1].gols_marcados}
+        3º Lugar: {ganhadores[2].nome} com {ganhadores[2].pontos} pontos e {ganhadores[2].gols_marcados}
+
+        Equipe com mais gols marcados: {mais_gols_marcados.nome} com {mais_gols_marcados.gols_marcados} gols
+        Equipe que levou mais gols: {mais_gols_sofridos.nome} com {mais_gols_sofridos.gols_sofridos} gols
+
+        Jogadores com mais gols marcados:
+        1. {artilheiros[0].nome} com {artilheiros[0].gols} gols
+        2. {artilheiros[1].nome} com {artilheiros[1].gols} gols
+        3. {artilheiros[2].nome} com {artilheiros[2].gols} gols
+        """
+        self.__tela_campeonato.mostra_mensagem(relatorio)
 
     def retorna(self):
         self.__controlador_sistema.abre_tela()
-    
-    def abre_tela(self):
-        lista_opcoes = {1: self.inclui_campeonato,
-                        2: self.altera_campeonato,
-                        3: self.lista_campeonatos,
-                        4: self.exclui_campeonato,
-                        5: self.adiciona_equipe_no_campeonato,
-                        6: self.remove_equipe_do_campeonato,
-                        7: self.inicia_campeonato,
-                        8: self.finaliza_campeonato,
-                        9: self.gera_relatorio,
-                        0: self.retorna}
-        
-        while True:
-            lista_opcoes[self.__tela_aluno.tela_opcoes()]()

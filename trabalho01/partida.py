@@ -1,4 +1,5 @@
 from datetime import datetime
+from aluno import Aluno
 from equipe import Equipe
 from arbitro import Arbitro
 
@@ -11,7 +12,9 @@ class Partida:
         self.__equipe_visitante = equipe_visitante
         self.__arbitro = arbitro
         self.__gols_equipe_casa = None
+        self.__artilheiros_equipe_casa = None
         self.__gols_equipe_visitante = None
+        self.__artilheiros_equipe_visitante = None
         self.__resultado = None
         self.__partida_realizada = False
         
@@ -64,6 +67,15 @@ class Partida:
         if isinstance(gols_equipe_casa, int):
             self.__gols_equipe_casa = gols_equipe_casa
       
+    @property     
+    def artilheiros_equipe_casa(self):
+        return self.__artilheiros_equipe_casa
+
+    @artilheiros_equipe_casa.setter
+    def artilheiros_equipe_casa(self, artilheiros_equipe_casa):
+        if all(isinstance(artilheiro, Aluno) for artilheiro in artilheiros_equipe_casa):
+            self.__artilheiros_equipe_casa = artilheiros_equipe_casa
+
     @property      
     def gols_equipe_visitante(self):
         return self.__gols_equipe_visitante
@@ -72,6 +84,15 @@ class Partida:
     def gols_equipe_visitante(self, gols_equipe_visitante):
         if isinstance(gols_equipe_visitante, int):
             self.__gols_equipe_visitante = gols_equipe_visitante
+    
+    @property     
+    def artilheiros_equipe_visitante(self):
+        return self.__artilheiros_equipe_visitante
+
+    @artilheiros_equipe_visitante.setter
+    def artilheiros_equipe_visitante(self, artilheiros_equipe_visitante):
+        if all(isinstance(artilheiro, Aluno) for artilheiro in artilheiros_equipe_visitante):
+            self.__artilheiros_equipe_visitante = artilheiros_equipe_visitante
       
     @property      
     def resultado(self):

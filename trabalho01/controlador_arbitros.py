@@ -10,6 +10,10 @@ class ControladorArbitros:
         self.__controlador_sistema = controlador_sistema
     
     @property
+    def arbitros(self):
+        return self.__arbitros
+    
+    @property
     def tela_arbitro(self):
         return self.__tela_arbitro
     

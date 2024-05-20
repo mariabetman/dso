@@ -1,3 +1,4 @@
+from random import random
 from controlador_alunos import ControladorAlunos
 from controlador_arbitros import ControladorArbitros
 from controlador_campeonatos import ControladorCampeonatos
@@ -57,18 +58,25 @@ class ControladorSistema:
     def abre_tela_arbitro(self):
         return self.__controlador_arbitros.abre_tela()
     
-    def abre_tela_campeonato(self):
-        return self.__controlador_campeonatos.abre_tela()
-    
     def abre_tela_partida(self):
         return self.__controlador_partidas.abre_tela()
+    
+    def inicia_campeonato(self):
+        codigo_aleatorio = random.randint(1, 100)
+        equipes = self.__controlador_equipes.equipes
+        self.__controlador_campeonatos.inclui_campeonato(codigo_aleatorio, equipes)
+        self.__tela_sistema.mostra_mensagem('\nCampeonato iniciado com sucesso! As partidas foram geradas e agora só basta adicionar os resultados!\n')
+        return self.__controlador_partidas.abre_tela()
+    
+    def finaliza_campeonato(self):
+        return self.__controlador_campeonatos.finaliza_campeonato()
 
     def encerra_sistema(self):
         exit(0)
 
     def abre_tela(self):
         lista_opcoes = {1: self.abre_tela_curso, 2: self.abre_tela_aluno, 3: self.abre_tela_equipe,
-                        4: self.abre_tela_arbitro, 5: self.abre_tela_campeonato, 6: self.abre_tela_partida, 0: self.encerra_sistema}
+                        4: self.abre_tela_arbitro, 5: self.inicia_campeonato, 6: self.finaliza_campeonato, 0: self.encerra_sistema}
 
         while True:
             opcao_escolhida = self.__tela_sistema.tela_opcoes()
