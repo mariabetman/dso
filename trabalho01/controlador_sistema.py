@@ -44,6 +44,7 @@ class ControladorSistema:
         return self.__controlador_partidas
 
     def inicializa_sistema(self):
+        self.__tela_sistema.mostra_mensagem('Bem-vindo ao sistema de gerenciamento de campeonato universitário!')
         self.abre_tela()
 
     def abre_tela_curso(self):
@@ -72,16 +73,20 @@ class ControladorSistema:
         return self.__controlador_campeonatos.finaliza_campeonato()
 
     def encerra_sistema(self):
+        self.__tela_sistema.mostra_mensagem('Até logo!')
         exit(0)
 
     def abre_tela(self):
-        lista_opcoes = {1: self.abre_tela_curso, 2: self.abre_tela_aluno, 3: self.abre_tela_equipe,
-                        4: self.abre_tela_arbitro, 5: self.inicia_campeonato, 6: self.finaliza_campeonato, 0: self.encerra_sistema}
+        lista_opcoes = {'1': self.abre_tela_curso, '2': self.abre_tela_aluno, '3': self.abre_tela_equipe,
+                        '4': self.abre_tela_arbitro, '5': self.inicia_campeonato, '6': self.finaliza_campeonato, '0': self.encerra_sistema}
 
         while True:
             opcao_escolhida = self.__tela_sistema.tela_opcoes()
-            funcao_escolhida = lista_opcoes[opcao_escolhida]
-            funcao_escolhida()
+            if opcao_escolhida in lista_opcoes:
+                funcao_escolhida = lista_opcoes[opcao_escolhida]
+                funcao_escolhida()
+            else:
+                self.__tela_sistema.mostra_mensagem('ERRO: Opção inválida!\n')
 
 if __name__ == '__main__':
     ctrl = ControladorSistema()

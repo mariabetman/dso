@@ -82,8 +82,14 @@ class ControladorPartidas:
         self.__controlador_sistema.abre_tela()
     
     def abre_tela(self):
-        lista_opcoes = {1: self.lista_partidas,
-                        2: self.adiciona_gols_partida}
-        
+        lista_opcoes = {'1': self.lista_partidas,
+                        '2': self.adiciona_gols_partida,
+                        '0': self.retorna}
         while True:
-            lista_opcoes[self.__tela_partida.tela_opcoes()]()
+            opcao_escolhida = self.__tela_partida.tela_opcoes()
+            if opcao_escolhida in lista_opcoes:
+                funcao_escolhida = lista_opcoes[opcao_escolhida]
+                funcao_escolhida()
+            else:
+                self.__tela_partida.mostra_mensagem('ERRO: Opção inválida!\n')
+

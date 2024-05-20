@@ -14,8 +14,8 @@ class TelaSistema:
         print('6 - Finalizar Campeonato')
         print('0 - Encerrar Programa')
 
-        opcao = int(input('\nEscolha sua opção: '))
+        opcao = (input('\nEscolha sua opção: '))
         return opcao
         
     def mostra_mensagem(self, msg):
-        print(msg)
+        print(f'\n{msg}')
