@@ -1,9 +1,10 @@
+from datetime import datetime
 from equipe import Equipe
 from arbitro import Arbitro
 
 
 class Partida:
-    def __init__(self, codigo:int, data_partida:str, equipe_casa:Equipe, equipe_visitante:Equipe, arbitro:Arbitro):
+    def __init__(self, codigo:int, data_partida:datetime, equipe_casa:Equipe, equipe_visitante:Equipe, arbitro:Arbitro):
         self.__codigo = codigo
         self.__data_partida = data_partida
         self.__equipe_casa = equipe_casa
@@ -17,11 +18,6 @@ class Partida:
     @property
     def codigo(self):
         return self.__codigo
-
-    @codigo.setter
-    def codigo(self, codigo):
-        if isinstance(codigo, int):
-            self.__codigo = codigo
     
     @property
     def data_partida(self):
@@ -29,7 +25,7 @@ class Partida:
 
     @data_partida.setter
     def data_partida(self, data_partida):
-        if isinstance(data_partida, str):
+        if isinstance(data_partida, datetime):
             self.__data_partida = data_partida
     
     @property        

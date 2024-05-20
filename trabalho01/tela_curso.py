@@ -1,12 +1,12 @@
 class TelaCurso:
-    def __init__(self, controlador_curso):
-        self.__controlador_curso = controlador_curso
+    def __init__(self, controlador_cursos):
+        self.__controlador_cursos = controlador_cursos
 
     def tela_opcoes(self):
         print('---------- Cursos ----------')
         print('1 - Incluir Curso')
         print('2 - Editar Curso')
-        print('3 - Listar Curso')
+        print('3 - Listar Cursos')
         print('4 - Excluir Curso')
         print('0 - Retornar')
         
@@ -26,7 +26,7 @@ class TelaCurso:
         print()
         
     def seleciona_curso(self):
-        self.__controlador_curso.lista_cursos()
+        self.__controlador_cursos.lista_cursos()
         codigo = int(input('Digite o código do curso que deseja selecionar: '))
         return codigo
     
