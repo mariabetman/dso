@@ -12,7 +12,7 @@ class TelaEquipe:
         print('6 - Remover Aluno da Equipe')
         print('0 - Retornar')
         
-        opcao = int(input('\nEscolha uma opção: '))
+        opcao = (input('\nEscolha uma opção: '))
         return opcao
     
     def pega_dados_equipe(self):

@@ -47,9 +47,8 @@ class ControladorPartidas:
         self.__controlador_sistema.abre_tela()
     
     def abre_tela(self):
-        lista_opcoes = {1: self.lista_partidas,
-                        2: self.adiciona_gols_partida,
-                        0: self.retorna}
-        
+        lista_opcoes = {'1': self.lista_partidas,
+                        '2': self.adiciona_gols_partida,
+                        '0': self.retorna}
         while True:
             lista_opcoes[self.__tela_partida.tela_opcoes()]()

@@ -114,16 +114,15 @@ class ControladorCampeonatos:
         self.__controlador_sistema.abre_tela()
     
     def abre_tela(self):
-        lista_opcoes = {1: self.inclui_campeonato,
-                        2: self.altera_campeonato,
-                        3: self.lista_campeonatos,
-                        4: self.exclui_campeonato,
-                        5: self.adiciona_equipe_no_campeonato,
-                        6: self.remove_equipe_do_campeonato,
-                        7: self.inicia_campeonato,
-                        8: self.finaliza_campeonato,
-                        9: self.gera_relatorio,
-                        0: self.retorna}
-        
+        lista_opcoes = {'1': self.inclui_campeonato,
+                        '2': self.altera_campeonato,
+                        '3': self.lista_campeonatos,
+                        '4': self.exclui_campeonato,
+                        '5': self.adiciona_equipe_no_campeonato,
+                        '6': self.remove_equipe_do_campeonato,
+                        '7': self.inicia_campeonato,
+                        '8': self.finaliza_campeonato,
+                        '9': self.gera_relatorio,
+                        '0': self.retorna}
         while True:
             lista_opcoes[self.__tela_aluno.tela_opcoes()]()

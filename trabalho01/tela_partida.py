@@ -8,7 +8,7 @@ class TelaPartida:
         print('2 - Adicionar gols da partida')
         print('0 - Retornar')
         
-        opcao = int(input('\nEscolha sua opção: '))
+        opcao = input('\nEscolha sua opção: ')
         return opcao
     
     def pega_gols_partida(self):
