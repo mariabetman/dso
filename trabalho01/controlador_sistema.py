@@ -86,10 +86,3 @@ class ControladorSistema:
                 funcao_escolhida()
             else:
                 self.__tela_sistema.mostra_mensagem('ERRO: Opção inválida!\n')
-
-if __name__ == '__main__':
-    ctrl = ControladorSistema()
-    print(ctrl.controlador_cursos)
-    print(ctrl.controlador_cursos.controlador_sistema)
-    print(ctrl.controlador_cursos.controlador_sistema.controlador_cursos)
-    print(ctrl.controlador_cursos.controlador_sistema.controlador_cursos.controlador_sistema)

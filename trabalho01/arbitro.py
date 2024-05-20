@@ -17,5 +17,3 @@ class Arbitro(Pessoa):
     
     def remove_partida(self):
         self.__num_partidas -= 1
-
-    '''def adicionar_partida(self): # Ver se aqui vale a pena manter um registro das partidas ou somente a quantidade mesmo'''

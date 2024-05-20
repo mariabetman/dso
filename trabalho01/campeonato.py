@@ -38,10 +38,6 @@ class Campeonato:
     
     def remove_partida(self, partida:Partida):
         self.__partidas.remove(partida)
-            
-    @property
-    def artilharia(self):
-        return self.__artilharia
     
     @property
     def campeonato_iniciado(self):

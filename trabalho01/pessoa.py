@@ -36,4 +36,3 @@ class Pessoa(ABC):
     def data_nasc(self, data_nasc: datetime):
         if isinstance(data_nasc, datetime):
             self.__data_nasc = data_nasc
-

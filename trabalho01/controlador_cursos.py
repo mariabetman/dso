@@ -82,10 +82,3 @@ class ControladorCursos:
                 funcao_escolhida()
             else:
                 self.__tela_curso.mostra_mensagem('ERRO: Opção inválida!')
-
-if __name__ == '__main__':
-    ctrl = ControladorCursos(123)
-    ctrl.listar_cursos()
-    ctrl.incluir_curso()
-    ctrl.incluir_curso()
-    ctrl.listar_cursos()

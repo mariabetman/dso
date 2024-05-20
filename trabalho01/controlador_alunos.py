@@ -94,9 +94,3 @@ class ControladorAlunos:
                 funcao_escolhida()
             else:
                 self.__tela_aluno.mostra_mensagem('ERRO: Opção inválida!\n')
-
-
-
-if __name__ == '__main__':
-    ctrl = ControladorAlunos(1)
-    ctrl.inclui_aluno()

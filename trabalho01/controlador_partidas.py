@@ -102,4 +102,3 @@ class ControladorPartidas:
                 funcao_escolhida()
             else:
                 self.__tela_partida.mostra_mensagem('ERRO: Opção inválida!\n')
-
