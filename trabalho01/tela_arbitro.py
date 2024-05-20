@@ -2,8 +2,8 @@ from datetime import datetime
 
 
 class TelaArbitro:
-    def __init__(self, controlador_arbitro):
-        self.__controlador_arbitro = controlador_arbitro
+    def __init__(self, controlador_arbitros):
+        self.__controlador_arbitros = controlador_arbitros
 
     def tela_opcoes(self):
         print('---------- Árbitros ----------')
@@ -31,7 +31,7 @@ class TelaArbitro:
         print()
         
     def seleciona_arbitro(self):
-        self.__controlador_arbitro.lista_arbitros()
+        self.__controlador_arbitros.lista_arbitros()
         cpf = input('Digite o CPF do Árbitro que deseja selecionar: ')
         return cpf
     

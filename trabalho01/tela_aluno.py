@@ -2,14 +2,14 @@ from datetime import datetime
 
 
 class TelaAluno:
-    def __init__(self, controlador_aluno):
-        self.__controlador_aluno = controlador_aluno
+    def __init__(self, controlador_alunos):
+        self.__controlador_alunos = controlador_alunos
         
     def tela_opcoes(self):
         print('\n---------- ALUNOS ----------')
         print('1 - Incluir Aluno')
         print('2 - Editar Aluno')
-        print('3 - Listar Aluno')
+        print('3 - Listar Alunos')
         print('4 - Excluir Aluno')
         print('0 - Retornar')
         
@@ -21,8 +21,8 @@ class TelaAluno:
         if not editando:
             cpf = input('CPF: ')
             matricula = int(input('Matrícula: '))
-            codigo_curso =  self.__controlador_aluno.controlador_sistema.controlador_cursos.tela_curso.seleciona_curso()
-            curso = self.__controlador_aluno.controlador_sistema.controlador_cursos.pega_curso_por_codigo(codigo_curso)
+            codigo_curso =  self.__controlador_alunos.controlador_sistema.controlador_cursos.tela_curso.seleciona_curso()
+            curso = self.__controlador_alunos.controlador_sistema.controlador_cursos.pega_curso_por_codigo(codigo_curso)
         else:
             cpf = None
             matricula = None
@@ -41,7 +41,7 @@ class TelaAluno:
         print('-------------------------------------------------------')
         
     def seleciona_aluno(self):
-        self.__controlador_aluno.lista_alunos()
+        self.__controlador_alunos.lista_alunos()
         cpf = input('Digite o CPF do Aluno que deseja selecionar: ')
         return cpf
     

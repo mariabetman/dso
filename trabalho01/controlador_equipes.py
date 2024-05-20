@@ -20,9 +20,9 @@ class ControladorEquipes:
 
     def lista_equipes(self):
         if len(self.__equipes) == 0:
-            self.__tela_equipe.mostra_mensagem('Nenhuma equipe cadastrada!')
+            self.__tela_equipe.mostra_mensagem('Nenhuma Equipe cadastrada!')
         else:
-            self.__tela_equipe.mostra_mensagem('----- EQUIPES CADASTRADaS -----')
+            self.__tela_equipe.mostra_mensagem('----- EQUIPES CADASTRADAS -----')
             for equipe in self.__equipes:
                 self.__tela_equipe.mostra_equipe({'curso': equipe.curso.nome, 'nome': equipe.nome, 'codigo': equipe.codigo})
     ##Devemos listar os alunos de equipe?

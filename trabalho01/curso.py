@@ -9,7 +9,7 @@ class Curso:
         return self.__codigo
 
     @codigo.setter
-    def codigo(self, codigo: int):
+    def codigo(self, codigo:int):
         if isinstance(codigo, int):
             self.__codigo = codigo
 
@@ -18,6 +18,6 @@ class Curso:
         return self.__nome
 
     @nome.setter
-    def nome(self, nome: str):
+    def nome(self, nome:str):
         if isinstance(nome, str):
             self.__nome = nome

@@ -16,7 +16,7 @@ class Aluno(Pessoa):
         return self.__matricula
 
     @matricula.setter
-    def matricula(self, matricula):
+    def matricula(self, matricula:int):
         if isinstance(matricula, int):
             self.__matricula = matricula
     
@@ -25,7 +25,7 @@ class Aluno(Pessoa):
         return self.__curso
 
     @curso.setter
-    def curso(self, curso):
+    def curso(self, curso:Curso):
         if isinstance(curso, Curso):
             self.__curso = curso
 

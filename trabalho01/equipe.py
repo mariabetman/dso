@@ -18,7 +18,7 @@ class Equipe:
         return self.__curso
     
     @curso.setter
-    def curso(self, curso):
+    def curso(self, curso:Curso):
         if isinstance(curso, Curso):
             self.__curso = curso
 
@@ -39,7 +39,7 @@ class Equipe:
         return self.__codigo
     
     @codigo.setter
-    def codigo(self, codigo):
+    def codigo(self, codigo:int):
         if isinstance(codigo, int):
             self.__codigo = codigo
              
@@ -48,7 +48,7 @@ class Equipe:
         return self.__nome
     
     @nome.setter
-    def nome(self, nome):
+    def nome(self, nome:str):
         if isinstance(nome, str):
             self.__nome = nome
           
