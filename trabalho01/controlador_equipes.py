@@ -75,12 +75,19 @@ class ControladorEquipes:
         cpf_aluno = self.__controlador_sistema.controlador_alunos.tela_aluno.seleciona_aluno()
         aluno = self.__controlador_sistema.controlador_alunos.pega_aluno_por_cpf(cpf_aluno)
 
-        if aluno.curso.codigo == equipe.curso.codigo:
-            if isinstance(equipe, Equipe) and isinstance(aluno, Aluno):
-                equipe.adiciona_aluno(aluno)
-                self.__tela_equipe.mostra_mensagem('\nAluno adicionado com sucesso!\n')
-        else:
+        if aluno.curso.codigo != equipe.curso.codigo:
             self.__tela_equipe.mostra_mensagem('\nATENÇÃO: O Aluno deve ser do mesmo curso que a Equipe!\n')
+            return None
+        for _aluno in equipe.alunos:
+            if _aluno.cpf == cpf_aluno:
+                self.__tela_equipe.mostra_mensagem('\nATENÇÃO: O Aluno já está cadastrado na equipe!\n')
+                return None
+        if isinstance(equipe, Equipe) and isinstance(aluno, Aluno):
+            equipe.adiciona_aluno(aluno)
+            self.__tela_equipe.mostra_mensagem('\nAluno adicionado com sucesso!\n')
+        else:
+            self.__tela_equipe.mostra_mensagem('\nERRO: Um erro aconteceu ao tentar cadastrar o aluno na equipe!\n')
+            
 
     def remove_aluno_da_equipe(self):
         codigo_equipe = self.__tela_equipe.seleciona_equipe()
