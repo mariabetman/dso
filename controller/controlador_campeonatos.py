@@ -22,10 +22,10 @@ class ControladorCampeonatos:
             cursos_com_equipes = {curso.codigo: False for curso in self.__controlador_sistema.controlador_cursos.cursos}
         
             for equipe in equipes:
-                ##if len(equipe.alunos) < 11:
-                ##    self.__tela_campeonato.mostra_mensagem('\nUma ou mais equipes têm menos de 11 alunos. Campeonato não pode ser iniciado!\n')
-                ##    self.retorna()
-                ##    return
+                if len(equipe.alunos) < 11:
+                    self.__tela_campeonato.mostra_mensagem('\nUma ou mais equipes têm menos de 11 alunos. Campeonato não pode ser iniciado!\n')
+                    self.retorna()
+                    return
 
                 if equipe.curso.codigo in cursos_com_equipes:
                     cursos_com_equipes[equipe.curso.codigo] = True
@@ -59,6 +59,7 @@ class ControladorCampeonatos:
                     dados_partida =  {'codigo': len(partidas_geradas) + 1, 'data_partida': data_aleatoria, 'equipe_casa': equipes[i], 'equipe_visitante': equipes[j], 'arbitro': arbitro_aleatorio}
                     partida = self.__controlador_sistema.controlador_partidas.inclui_partida(dados_partida)
                     self.adiciona_partida_campeonato(partida)
+                    partidas_geradas.append(partida)
 
             self.__tela_campeonato.mostra_mensagem('\nPartidas geradas com sucesso!\n')
             self.__controlador_sistema.controlador_partidas.abre_tela()

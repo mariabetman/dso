@@ -1,3 +1,4 @@
+import json
 from model.arbitro import Arbitro
 from view.tela_arbitro import TelaArbitro
 from datetime import datetime
@@ -5,9 +6,16 @@ from datetime import datetime
 
 class ControladorArbitros:
     def __init__(self, controlador_sistema):
+        with open('data/data_arbitros.json', 'r', encoding='utf-8') as arquivo:
+            dados = json.load(arquivo)
+        self.__arbitros_iniciais = dados
         self.__arbitros = []
         self.__tela_arbitro = TelaArbitro(self)
         self.__controlador_sistema = controlador_sistema
+        for arbitro in self.__arbitros_iniciais:
+            data_nasc = datetime.strptime(arbitro["data_nasc"], "%d/%m/%Y")
+            arbitro_novo = Arbitro(arbitro["nome"], arbitro["cpf"], data_nasc)
+            self.__arbitros.append(arbitro_novo)
     
     @property
     def arbitros(self):

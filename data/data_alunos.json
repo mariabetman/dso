@@ -1,0 +1,310 @@
+[
+    {
+        "matricula": 1,
+        "codigo_curso": 1,
+        "nome": "Aluno 1",
+        "cpf": "1",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 2,
+        "codigo_curso": 1,
+        "nome": "Aluno 2",
+        "cpf": "2",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 3,
+        "codigo_curso": 1,
+        "nome": "Aluno 3",
+        "cpf": "3",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 4,
+        "codigo_curso": 1,
+        "nome": "Aluno 4",
+        "cpf": "4",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 5,
+        "codigo_curso": 1,
+        "nome": "Aluno 5",
+        "cpf": "5",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 6,
+        "codigo_curso": 1,
+        "nome": "Aluno 6",
+        "cpf": "6",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 7,
+        "codigo_curso": 1,
+        "nome": "Aluno 7",
+        "cpf": "7",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 8,
+        "codigo_curso": 1,
+        "nome": "Aluno 8",
+        "cpf": "8",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 9,
+        "codigo_curso": 1,
+        "nome": "Aluno 9",
+        "cpf": "9",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 10,
+        "codigo_curso": 1,
+        "nome": "Aluno 10",
+        "cpf": "10",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 11,
+        "codigo_curso": 1,
+        "nome": "Aluno 11",
+        "cpf": "11",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 12,
+        "codigo_curso": 2,
+        "nome": "Aluno 12",
+        "cpf": "12",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 13,
+        "codigo_curso": 2,
+        "nome": "Aluno 13",
+        "cpf": "13",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 14,
+        "codigo_curso": 2,
+        "nome": "Aluno 14",
+        "cpf": "14",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 15,
+        "codigo_curso": 2,
+        "nome": "Aluno 15",
+        "cpf": "15",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 16,
+        "codigo_curso": 2,
+        "nome": "Aluno 16",
+        "cpf": "16",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 17,
+        "codigo_curso": 2,
+        "nome": "Aluno 17",
+        "cpf": "17",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 18,
+        "codigo_curso": 2,
+        "nome": "Aluno 18",
+        "cpf": "18",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 19,
+        "codigo_curso": 2,
+        "nome": "Aluno 19",
+        "cpf": "19",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 20,
+        "codigo_curso": 2,
+        "nome": "Aluno 20",
+        "cpf": "20",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 21,
+        "codigo_curso": 2,
+        "nome": "Aluno 21",
+        "cpf": "21",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 22,
+        "codigo_curso": 2,
+        "nome": "Aluno 22",
+        "cpf": "22",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 23,
+        "codigo_curso": 3,
+        "nome": "Aluno 23",
+        "cpf": "23",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 24,
+        "codigo_curso": 3,
+        "nome": "Aluno 24",
+        "cpf": "24",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 25,
+        "codigo_curso": 3,
+        "nome": "Aluno 25",
+        "cpf": "25",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 26,
+        "codigo_curso": 3,
+        "nome": "Aluno 26",
+        "cpf": "26",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 27,
+        "codigo_curso": 3,
+        "nome": "Aluno 27",
+        "cpf": "27",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 28,
+        "codigo_curso": 3,
+        "nome": "Aluno 28",
+        "cpf": "28",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 29,
+        "codigo_curso": 3,
+        "nome": "Aluno 29",
+        "cpf": "29",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 30,
+        "codigo_curso": 3,
+        "nome": "Aluno 30",
+        "cpf": "30",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 31,
+        "codigo_curso": 3,
+        "nome": "Aluno 31",
+        "cpf": "31",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 32,
+        "codigo_curso": 3,
+        "nome": "Aluno 32",
+        "cpf": "32",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 33,
+        "codigo_curso": 3,
+        "nome": "Aluno 33",
+        "cpf": "33",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 34,
+        "codigo_curso": 4,
+        "nome": "Aluno 34",
+        "cpf": "34",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 35,
+        "codigo_curso": 4,
+        "nome": "Aluno 35",
+        "cpf": "35",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 36,
+        "codigo_curso": 4,
+        "nome": "Aluno 36",
+        "cpf": "36",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 37,
+        "codigo_curso": 4,
+        "nome": "Aluno 37",
+        "cpf": "37",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 38,
+        "codigo_curso": 4,
+        "nome": "Aluno 38",
+        "cpf": "38",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 39,
+        "codigo_curso": 4,
+        "nome": "Aluno 39",
+        "cpf": "39",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 40,
+        "codigo_curso": 4,
+        "nome": "Aluno 40",
+        "cpf": "40",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 41,
+        "codigo_curso": 4,
+        "nome": "Aluno 41",
+        "cpf": "41",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 42,
+        "codigo_curso": 4,
+        "nome": "Aluno 42",
+        "cpf": "42",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 43,
+        "codigo_curso": 4,
+        "nome": "Aluno 43",
+        "cpf": "43",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "matricula": 44,
+        "codigo_curso": 4,
+        "nome": "Aluno 44",
+        "cpf": "44",
+        "data_nasc": "21/04/1997"
+    }
+]

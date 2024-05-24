@@ -1,0 +1,22 @@
+[
+    {
+        "nome": "Árbitro 1",
+        "cpf": "45",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "nome": "Árbitro 2",
+        "cpf": "46",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "nome": "Árbitro 3",
+        "cpf": "47",
+        "data_nasc": "21/04/1997"
+    },
+    {
+        "nome": "Árbitro 4",
+        "cpf": "48",
+        "data_nasc": "21/04/1997"
+    }
+]

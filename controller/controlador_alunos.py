@@ -1,3 +1,4 @@
+import json
 from model.aluno import Aluno
 from view.tela_aluno import TelaAluno
 from model.curso import Curso
@@ -6,9 +7,17 @@ from datetime import datetime
 
 class ControladorAlunos:
     def __init__(self, controlador_sistema):
+        with open('data/data_alunos.json', 'r', encoding='utf-8') as arquivo:
+            dados = json.load(arquivo)
+        self.__alunos_iniciais = dados
         self.__alunos = []
         self.__tela_aluno = TelaAluno(self)
         self.__controlador_sistema = controlador_sistema
+        for aluno in self.__alunos_iniciais:
+            curso = self.__controlador_sistema.controlador_cursos.pega_curso_por_codigo(aluno["codigo_curso"])
+            data_nasc = datetime.strptime(aluno["data_nasc"], "%d/%m/%Y")
+            aluno_novo = Aluno(aluno["matricula"], curso, aluno["nome"], aluno["cpf"], data_nasc)
+            self.__alunos.append(aluno_novo)
         
     @property
     def tela_aluno(self):

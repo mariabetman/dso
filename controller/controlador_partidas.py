@@ -30,6 +30,11 @@ class ControladorPartidas:
     
     def inclui_partida(self, dados_partida):
         if isinstance(dados_partida['codigo'], int) and isinstance(dados_partida['data_partida'], datetime) and isinstance(dados_partida['equipe_casa'], Equipe) and isinstance(dados_partida['equipe_visitante'], Equipe) and isinstance(dados_partida['arbitro'], Arbitro):
+            print(dados_partida['codigo'])
+            print(dados_partida['data_partida'])
+            print(dados_partida['equipe_casa'])
+            print(dados_partida['equipe_visitante'])
+            print(dados_partida['arbitro'])
             partida =  Partida(dados_partida['codigo'], dados_partida['data_partida'], dados_partida['equipe_casa'], dados_partida['equipe_visitante'], dados_partida['arbitro'])
             if not self.pega_partida_por_codigo(partida.codigo):
                 self.__partidas.append(partida)
