@@ -1,19 +1,11 @@
-import json
 from model.curso import Curso
 from view.tela_curso import TelaCurso
 
 
 class ControladorCursos:
     def __init__(self, controlador_sistema):
-        with open('data/data_cursos.json', 'r', encoding='utf-8') as arquivo:
-            dados = json.load(arquivo)
-        self.__cursos_iniciais = dados
-        self.__cursos = []
         self.__tela_curso = TelaCurso(self)
         self.__controlador_sistema = controlador_sistema
-        for curso in self.__cursos_iniciais:
-            curso_novo = Curso(curso["codigo"], curso["nome"])
-            self.__cursos.append(curso_novo)
 
     @property
     def cursos(self):
