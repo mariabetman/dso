@@ -2,6 +2,7 @@ import json
 from model.arbitro import Arbitro
 from view.tela_arbitro import TelaArbitro
 from datetime import datetime
+from DAOs.arbitro_dao import ArbitroDAO
 
 
 class ControladorArbitros:
@@ -9,17 +10,17 @@ class ControladorArbitros:
         with open('data/data_arbitros.json', 'r', encoding='utf-8') as arquivo:
             dados = json.load(arquivo)
         self.__arbitros_iniciais = dados
-        self.__arbitros = []
+        self.__arbitro_dao = ArbitroDAO()
         self.__tela_arbitro = TelaArbitro(self)
         self.__controlador_sistema = controlador_sistema
         for arbitro in self.__arbitros_iniciais:
             data_nasc = datetime.strptime(arbitro["data_nasc"], "%d/%m/%Y")
             arbitro_novo = Arbitro(arbitro["nome"], arbitro["cpf"], data_nasc)
-            self.__arbitros.append(arbitro_novo)
+            #self.__arbitros.append(arbitro_novo)
     
     @property
     def arbitros(self):
-        return self.__arbitros
+        return self.__arbitro_dao
     
     @property
     def tela_arbitro(self):
@@ -30,11 +31,11 @@ class ControladorArbitros:
         return self.__controlador_sistema
 
     def lista_arbitros(self):
-        if len(self.__arbitros) == 0:
+        if len(self.__arbitro_dao.get_all()) == 0:
             self.__tela_arbitro.mostra_mensagem('Nenhum árbitro cadastrado!')
         else:
             self.__tela_arbitro.mostra_mensagem('----- ÁRBITROS CADASTRADOS -----')
-            for arbitro in self.__arbitros:
+            for arbitro in self.__arbitro_dao.get_all():
                 self.__tela_arbitro.mostra_arbitro({'nome': arbitro.nome, 'cpf': arbitro.cpf, 'data_nasc': arbitro.data_nasc})
     
     def inclui_arbitro(self):
@@ -42,7 +43,7 @@ class ControladorArbitros:
         if isinstance(dados_arbitro['nome'], str) and isinstance(dados_arbitro['cpf'], str) and isinstance(dados_arbitro['data_nasc'], datetime):
             arbitro = Arbitro(dados_arbitro['nome'], dados_arbitro['cpf'], dados_arbitro['data_nasc'])
             if not self.pega_arbitro_por_cpf(arbitro.cpf):
-                self.__arbitros.append(arbitro)
+                self.__arbitro_dao.add(arbitro)
                 self.__tela_arbitro.mostra_mensagem('Árbitro cadastrado com sucesso!')
             else:
                 self.__tela_arbitro.mostra_mensagem('ATENÇÃO: Árbitro já cadastrado!')
@@ -68,13 +69,13 @@ class ControladorArbitros:
         arbitro = self.pega_arbitro_por_cpf(cpf_arbitro)
         
         if arbitro:
-            self.__arbitros.remove(arbitro)
+            self.__arbitro_dao.remove(arbitro.cpf)
             self.__tela_arbitro.mostra_mensagem('Árbitro excluído com sucesso!')
         else:
             self.__tela_arbitro.mostra_mensagem('ATENÇÃO: Árbitro não encontrado!')
         
     def pega_arbitro_por_cpf(self, cpf:str):
-        for arbitro in self.__arbitros:
+        for arbitro in self.__arbitro_dao.get_all():
             if arbitro.cpf == cpf:
                 return arbitro
         return None
