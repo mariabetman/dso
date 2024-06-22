@@ -76,11 +76,13 @@ class ControladorAlunos:
         aluno = self.pega_aluno_por_matricula(matricula)
         if aluno:
             aluno.adiciona_gol()
+            self.__aluno_DAO.update(aluno)
     
     def remove_gol(self, matricula:int):
         aluno = self.pega_aluno_por_matricula(matricula)
         if aluno:
             aluno.remove_gol()
+            self.__aluno_DAO.update(aluno)
     
     def retorna(self):
         self.__controlador_sistema.abre_tela()

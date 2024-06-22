@@ -2,16 +2,18 @@ from model.equipe import Equipe
 from view.tela_equipe import TelaEquipe
 from model.curso import Curso
 from model.aluno import Aluno
+from DAOs.equipe_dao import EquipeDAO
 
 
 class ControladorEquipes:
     def __init__(self, controlador_sistema):
+        self.__equipe_DAO = EquipeDAO()
         self.__tela_equipe = TelaEquipe(self)
         self.__controlador_sistema = controlador_sistema
     
     @property
     def equipes(self):
-        return self.__equipes
+        return self.__equipe_DAO.get_all()
     
     @property
     def tela_equipe(self):
@@ -22,11 +24,11 @@ class ControladorEquipes:
         return self.__controlador_sistema
 
     def lista_equipes(self):
-        if len(self.__equipes) == 0:
+        if len(self.__equipe_DAO.get_all()) == 0:
             self.__tela_equipe.mostra_mensagem('Nenhuma Equipe cadastrada!')
         else:
             self.__tela_equipe.mostra_mensagem('----- EQUIPES CADASTRADAS -----')
-            for equipe in self.__equipes:
+            for equipe in self.__equipe_DAO.get_all():
                 self.__tela_equipe.mostra_equipe({'curso': equipe.curso.nome, 'nome': equipe.nome, 'codigo': equipe.codigo})
                 self.mostra_alunos_equipe(equipe.codigo)
 
@@ -35,7 +37,7 @@ class ControladorEquipes:
         if isinstance(dados_equipe['curso'], Curso) and isinstance(dados_equipe['nome'], str) and isinstance(dados_equipe['codigo'], int):
             equipe = Equipe(dados_equipe['curso'], dados_equipe['nome'], dados_equipe['codigo'])
             if not self.pega_equipe_por_codigo(equipe.codigo):
-                self.__equipes.append(equipe)
+                self.__equipe_DAO.add(equipe)
                 self.__tela_equipe.mostra_mensagem('Equipe cadastrada com sucesso!')
             else:
                 self.__tela_equipe.mostra_mensagem('ATENÇÃO: Equipe já cadastrada!')
@@ -50,6 +52,7 @@ class ControladorEquipes:
             novos_dados_equipe = self.__tela_equipe.pega_dados_equipe(editando=True)
             if isinstance(novos_dados_equipe['nome'], str):
                 equipe.nome = novos_dados_equipe['nome']
+            self.__equipe_DAO.update()
             self.lista_equipes()
         else:
             self.__tela_equipe.mostra_mensagem('ATENÇÃO: Equipe não encontrada!')
@@ -59,13 +62,13 @@ class ControladorEquipes:
         equipe = self.pega_equipe_por_codigo(codigo_equipe)
         
         if equipe:
-            self.__equipes.remove(equipe)
+            self.__equipe_DAO.remove(equipe)
             self.__tela_equipe.mostra_mensagem('Equipe excluída com sucesso!')
         else:
             self.__tela_equipe.mostra_mensagem('ATENÇÃO: Equipe não encontrada!')
         
     def pega_equipe_por_codigo(self, codigo:int):
-        for equipe in self.__equipes:
+        for equipe in self.__equipe_DAO.get_all():
             if equipe.codigo == codigo:
                 return equipe
         return None
@@ -94,6 +97,7 @@ class ControladorEquipes:
         if isinstance(equipe, Equipe) and isinstance(aluno, Aluno):
             equipe.adiciona_aluno(aluno)
             self.__tela_equipe.mostra_mensagem('Aluno adicionado com sucesso!')
+            self.__equipe_DAO.update(equipe)
         else:
             self.__tela_equipe.mostra_mensagem('ERRO: Um erro aconteceu ao tentar cadastrar o aluno na equipe!')
             
@@ -110,6 +114,7 @@ class ControladorEquipes:
                 if _aluno.matricula == matricula_aluno:
                     equipe.remove_aluno(aluno)
                     self.__tela_equipe.mostra_mensagem('Aluno removido com sucesso!')
+                    self.__equipe_DAO.update(equipe)
                     return Aluno
             self.tela_equipe.mostra_mensagem('ERRO: Aluno não encontrado!')
             return None
@@ -117,26 +122,32 @@ class ControladorEquipes:
     def adiciona_pontos_na_equipe(self, equipe:Equipe, pontos:int):
         if isinstance(equipe, Equipe) and isinstance(pontos, int):
             equipe.adiciona_pontos(pontos)
+            self.__equipe_DAO.update(equipe)
 
     def remove_pontos_da_equipe(self, equipe:Equipe, pontos:int):
         if isinstance(equipe, Equipe) and isinstance(pontos, int):
             equipe.remove_pontos(pontos)
+            self.__equipe_DAO.update(equipe)
     
     def adiciona_gols_marcados_na_equipe(self, equipe:Equipe, gols:int):
         if isinstance(equipe, Equipe) and isinstance(gols, int):
             equipe.adiciona_gols_marcados(gols)
+            self.__equipe_DAO.update(equipe)
 
     def remove_gols_marcados_da_equipe(self, equipe:Equipe, gols:int):
         if isinstance(equipe, Equipe) and isinstance(gols, int):
             equipe.remove_gols_marcados(gols)
+            self.__equipe_DAO.update(equipe)
     
     def adiciona_gols_sofridos_na_equipe(self, equipe:Equipe, gols:int):
         if isinstance(equipe, Equipe) and isinstance(gols, int):
             equipe.adiciona_gols_sofridos(gols)
+            self.__equipe_DAO.update(equipe)
 
     def remove_gols_sofridos_da_equipe(self, equipe:Equipe, gols:int):
         if isinstance(equipe, Equipe) and isinstance(gols, int):
             equipe.remove_gols_sofridos(gols)
+            self.__equipe_DAO.update(equipe)
             
     def retorna(self):
         self.__controlador_sistema.abre_tela()

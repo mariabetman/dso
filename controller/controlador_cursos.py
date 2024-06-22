@@ -1,15 +1,17 @@
 from model.curso import Curso
 from view.tela_curso import TelaCurso
+from DAOs.curso_dao import CursoDAO
 
 
 class ControladorCursos:
     def __init__(self, controlador_sistema):
+        self.__curso_DAO = CursoDAO()
         self.__tela_curso = TelaCurso(self)
         self.__controlador_sistema = controlador_sistema
 
     @property
-    def cursos(self):
-        return self.__cursos
+    def curso_DAO(self):
+        return self.__curso_DAO.get_all()
 
     @property
     def tela_curso(self):
@@ -20,11 +22,11 @@ class ControladorCursos:
         return self.__controlador_sistema
     
     def lista_cursos(self):
-        if len(self.__cursos) == 0:
+        if len(self.__curso_DAO.get_all()) == 0:
             self.__tela_curso.mostra_mensagem('Nenhum curso cadastrado!')
         else:
             self.__tela_curso.mostra_mensagem('----- CURSOS CADASTRADOS -----')
-            for curso in self.__cursos:
+            for curso in self.__curso_DAO.get_all():
                 self.__tela_curso.mostra_curso({'codigo': curso.codigo, 'nome': curso.nome})
     
     def inclui_curso(self):
@@ -32,7 +34,7 @@ class ControladorCursos:
         if isinstance(dados_curso['codigo'], int) and isinstance(dados_curso['nome'], str):
             curso =  Curso(dados_curso['codigo'], dados_curso['nome'])
             if not self.pega_curso_por_codigo(curso.codigo):
-                self.__cursos.append(curso)
+                self.__curso_DAO.add(curso)
                 self.__tela_curso.mostra_mensagem('Curso cadastrado com sucesso!')
             else:
                 self.__tela_curso.mostra_mensagem('\nATENÇÃO: Curso já cadastrado!\n')
@@ -47,6 +49,7 @@ class ControladorCursos:
             novos_dados_curso = self.__tela_curso.pega_dados_curso(editando=True)
             if isinstance(novos_dados_curso['nome'], str):
                 curso.nome = novos_dados_curso['nome']
+            self.__curso_DAO.update(curso)
             self.lista_cursos()
         else:
             self.__tela_curso.mostra_mensagem('ATENÇÃO: Curso não encontrado!')
@@ -56,13 +59,13 @@ class ControladorCursos:
         curso = self.pega_curso_por_codigo(codigo_curso)
         
         if curso:
-            self.__cursos.remove(curso)
+            self.__curso_DAO.remove(curso)
             self.__tela_curso.mostra_mensagem('Curso excluído com sucesso!')
         else:
             self.__tela_curso.mostra_mensagem('ATENÇÃO: Curso não encontrado!')
     
     def pega_curso_por_codigo(self, codigo:int):
-        for curso in self.__cursos:
+        for curso in self.__curso_DAO.get_all():
             if curso.codigo == codigo:
                 return curso
         return None

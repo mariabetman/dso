@@ -4,11 +4,12 @@ from view.tela_partida import TelaPartida
 from model.aluno import Aluno
 from model.equipe import Equipe
 from model.arbitro import Arbitro
+from DAOs.partida_dao import PartidaDAO
 
 
 class ControladorPartidas:
     def __init__(self, controlador_sistema):
-        self.__partidas = []
+        self.__partida_DAO = PartidaDAO()
         self.__tela_partida = TelaPartida(self)
         self.__controlador_sistema = controlador_sistema
     
@@ -21,24 +22,24 @@ class ControladorPartidas:
         return self.__controlador_sistema
 
     def lista_partidas(self):
-        if len(self.__partidas) == 0:
+        if len(self.__partida_DAO.get_all()) == 0:
             self.__tela_partida.mostra_mensagem('Nenhuma Partida cadastrada!')
         else:
             self.__tela_partida.mostra_mensagem('----- PARTIDAS CADASTRADOS -----')
-            for partida in self.__partidas:
+            for partida in self.__partida_DAO.get_all():
                 self.__tela_partida.mostra_partida({'codigo': partida.codigo, 'data_partida': partida.data_partida, 'equipe_casa': partida.equipe_casa.nome, 'equipe_visitante': partida.equipe_visitante.nome, 'arbitro': partida.arbitro.nome, 'gols_equipe_casa': partida.gols_equipe_casa, 'gols_equipe_visitante': partida.gols_equipe_visitante, 'resultado': partida.resultado, 'partida_realizada': partida.partida_realizada})
     
     def inclui_partida(self, dados_partida):
         if isinstance(dados_partida['codigo'], int) and isinstance(dados_partida['data_partida'], datetime) and isinstance(dados_partida['equipe_casa'], Equipe) and isinstance(dados_partida['equipe_visitante'], Equipe) and isinstance(dados_partida['arbitro'], Arbitro):
             partida =  Partida(dados_partida['codigo'], dados_partida['data_partida'], dados_partida['equipe_casa'], dados_partida['equipe_visitante'], dados_partida['arbitro'])
             if not self.pega_partida_por_codigo(partida.codigo):
-                self.__partidas.append(partida)
+                self.__partida_DAO.add(partida)
                 return partida
         else:
             self.__tela_partida.mostra_mensagem('ATENÇÃO: Algo de errado ocorreu durante o cadastro! Tente novamente!')
         
     def pega_partida_por_codigo(self, codigo:int):
-        for partida in self.__partidas:
+        for partida in self.__partida_DAO.get_all():
             if partida.codigo == codigo:
                 return partida
         return None
@@ -63,6 +64,7 @@ class ControladorPartidas:
                     partida.partida_realizada = True
                     partida.resultado = 'Equipe Casa {self.__gols_equipe_casa}X{self.__gols_equipe_visitante} Equipe Visitante'
                     self.gera_dados_partida(partida)
+                    self.__partida_DAO.update(partida)
 
                 else:
                     self.__tela_partida.mostra_mensagem('ATENÇÃO: Algo de errado ocorreu durante o cadastro! Tente novamente!')
