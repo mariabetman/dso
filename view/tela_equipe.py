@@ -24,13 +24,16 @@ class TelaEquipe:
             except:
                 self.mostra_mensagem('\nDigite um valor válido!\n')
                 return self.__controlador_equipes.abre_tela()
-            codigo_curso =  self.__controlador_equipes.controlador_sistema.controlador_cursos.tela_curso.seleciona_curso()
-            curso = self.__controlador_equipes.controlador_sistema.controlador_cursos.pega_curso_por_codigo(codigo_curso)      
+            try:
+                codigo_curso = int(input('Código do curso: '))
+            except:
+                self.mostra_mensagem('\nDigite um valor válido!\n')
+                return self.__controlador_equipes.abre_tela()     
         else:
             codigo = None
-            curso = None 
+            codigo_curso = None 
         nome = input('Nome da Equipe: ')
-        return {'curso': curso, 'nome': nome, 'codigo': codigo}
+        return {'codigo_curso': codigo_curso, 'nome': nome, 'codigo': codigo}
     
     def mostra_equipe(self, dados_equipe):
         print(f"{dados_equipe['codigo']} - {dados_equipe['nome']} - {dados_equipe['curso']}")

@@ -10,7 +10,7 @@ class ControladorCursos:
         self.__controlador_sistema = controlador_sistema
 
     @property
-    def curso_DAO(self):
+    def cursos(self):
         return self.__curso_DAO.get_all()
 
     @property
@@ -32,8 +32,8 @@ class ControladorCursos:
     def inclui_curso(self):
         dados_curso = self.__tela_curso.pega_dados_curso()
         if isinstance(dados_curso['codigo'], int) and isinstance(dados_curso['nome'], str):
-            curso =  Curso(dados_curso['codigo'], dados_curso['nome'])
-            if not self.pega_curso_por_codigo(curso.codigo):
+            if not self.pega_curso_por_codigo(dados_curso['codigo']):
+                curso =  Curso(dados_curso['codigo'], dados_curso['nome'])
                 self.__curso_DAO.add(curso)
                 self.__tela_curso.mostra_mensagem('Curso cadastrado com sucesso!')
             else:

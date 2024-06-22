@@ -1,7 +1,7 @@
 from model.arbitro import Arbitro
 from view.tela_arbitro import TelaArbitro
-from datetime import datetime
 from DAOs.arbitro_dao import ArbitroDAO
+from datetime import datetime
 
 
 class ControladorArbitros:
@@ -12,7 +12,7 @@ class ControladorArbitros:
     
     @property
     def arbitros(self):
-        return self.__arbitro_dao
+        return self.__arbitro_dao.get_all()
     
     @property
     def tela_arbitro(self):
@@ -33,8 +33,8 @@ class ControladorArbitros:
     def inclui_arbitro(self):
         dados_arbitro = self.__tela_arbitro.pega_dados_arbitro()
         if isinstance(dados_arbitro['nome'], str) and isinstance(dados_arbitro['cpf'], str) and isinstance(dados_arbitro['data_nasc'], datetime):
-            arbitro = Arbitro(dados_arbitro['nome'], dados_arbitro['cpf'], dados_arbitro['data_nasc'])
-            if not self.pega_arbitro_por_cpf(arbitro.cpf):
+            if not self.pega_arbitro_por_cpf(dados_arbitro['cpf']):
+                arbitro = Arbitro(dados_arbitro['nome'], dados_arbitro['cpf'], dados_arbitro['data_nasc'])
                 self.__arbitro_dao.add(arbitro)
                 self.__tela_arbitro.mostra_mensagem('Árbitro cadastrado com sucesso!')
             else:

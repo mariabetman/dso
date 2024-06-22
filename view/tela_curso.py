@@ -28,9 +28,6 @@ class TelaCurso:
         return {'codigo': codigo, 'nome': nome}
     
     def mostra_curso(self, dados_curso):
-        '''print('Código do Curso: ', dados_curso['codigo'])
-        print('Nome do Curso: ', dados_curso['nome'])
-        print()'''
         print(f"{dados_curso['codigo']} - {dados_curso['nome']}")
         
     def seleciona_curso(self):

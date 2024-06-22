@@ -29,13 +29,17 @@ class ControladorAlunos:
     
     def inclui_aluno(self):
         dados_aluno = self.__tela_aluno.pega_dados_aluno()
-        if isinstance(dados_aluno['matricula'], int) and isinstance(dados_aluno['curso'], Curso) and isinstance(dados_aluno['nome'], str) and isinstance(dados_aluno['cpf'], str) and isinstance(dados_aluno['data_nasc'], datetime):
-            aluno =  Aluno(dados_aluno['matricula'], dados_aluno['curso'], dados_aluno['nome'], dados_aluno['cpf'], dados_aluno['data_nasc'])
-            if not self.pega_aluno_por_matricula(aluno.matricula):
-                self.__aluno_DAO.add(aluno)
-                self.__tela_aluno.mostra_mensagem('Aluno cadastrado com sucesso!')
-            else:
-                self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno já cadastrado!')
+        if isinstance(dados_aluno['matricula'], int) and isinstance(dados_aluno['codigo_curso'], int) and isinstance(dados_aluno['nome'], str) and isinstance(dados_aluno['cpf'], str) and isinstance(dados_aluno['data_nasc'], datetime):
+            curso = self.__controlador_sistema.controlador_cursos.pega_curso_por_codigo(dados_aluno['codigo_curso'])
+            if curso:
+                if not self.pega_aluno_por_matricula(dados_aluno['matricula']):
+                    aluno =  Aluno(dados_aluno['matricula'], dados_aluno['curso'], dados_aluno['nome'], dados_aluno['cpf'], dados_aluno['data_nasc'])
+                    self.__aluno_DAO.add(aluno)
+                    self.__tela_aluno.mostra_mensagem('Aluno cadastrado com sucesso!')
+                else:
+                    self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno já cadastrado!')
+            else: 
+                self.__tela_aluno.mostra_mensagem('ATENÇÃO: Código do curso inválido!')
         else:
             self.__tela_aluno.mostra_mensagem('ATENÇÃO: Algo de errado ocorreu durante o cadastro! Tente novamente!')
         

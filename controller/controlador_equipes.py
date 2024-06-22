@@ -34,13 +34,17 @@ class ControladorEquipes:
 
     def inclui_equipe(self):
         dados_equipe = self.__tela_equipe.pega_dados_equipe()
-        if isinstance(dados_equipe['curso'], Curso) and isinstance(dados_equipe['nome'], str) and isinstance(dados_equipe['codigo'], int):
-            equipe = Equipe(dados_equipe['curso'], dados_equipe['nome'], dados_equipe['codigo'])
-            if not self.pega_equipe_por_codigo(equipe.codigo):
-                self.__equipe_DAO.add(equipe)
-                self.__tela_equipe.mostra_mensagem('Equipe cadastrada com sucesso!')
+        if isinstance(dados_equipe['codigo_curso'], int) and isinstance(dados_equipe['nome'], str) and isinstance(dados_equipe['codigo'], int):
+            curso = self.__controlador_sistema.controlador_cursos.pega_curso_por_codigo(dados_equipe['codigo_curso'])
+            if curso:
+                if not self.pega_equipe_por_codigo(dados_equipe['codigo']):
+                    equipe = Equipe(dados_equipe['curso'], dados_equipe['nome'], dados_equipe['codigo'])
+                    self.__equipe_DAO.add(equipe)
+                    self.__tela_equipe.mostra_mensagem('Equipe cadastrada com sucesso!')
+                else:
+                    self.__tela_equipe.mostra_mensagem('ATENÇÃO: Equipe já cadastrada!')
             else:
-                self.__tela_equipe.mostra_mensagem('ATENÇÃO: Equipe já cadastrada!')
+                self.__tela_equipe.mostra_mensagem('ATENÇÃO: Código do curso inválido!')
         else:
             self.__tela_equipe.mostra_mensagem('ATENÇÃO: Algo de errado ocorreu durante o cadastro! Tente novamente!')
     

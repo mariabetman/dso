@@ -26,8 +26,7 @@ class TelaAluno:
                 self.mostra_mensagem('\nDigite um valor válido!\n')
                 self.__controlador_alunos.abre_tela()
             try:
-                codigo_curso =  self.__controlador_alunos.controlador_sistema.controlador_cursos.tela_curso.seleciona_curso()
-                curso = self.__controlador_alunos.controlador_sistema.controlador_cursos.pega_curso_por_codigo(codigo_curso)
+                codigo_curso = int(input('Código do curso: '))
             except:
                 self.mostra_mensagem('\nDigite um valor válido!\n')
                 self.__controlador_alunos.abre_tela()
