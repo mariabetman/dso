@@ -1,4 +1,5 @@
 from datetime import datetime
+import PySimpleGUI as psg
 
 
 class TelaArbitro:
@@ -15,22 +16,20 @@ class TelaArbitro:
         
         opcao = (input('\nEscolha uma opção: '))
         return opcao
-    
-    def pega_dados_arbitro(self, editando=False):
-        print('---------- DADOS ÁRBITRO ----------')
-        nome = input('Nome: ')
-        if not editando:
-            cpf = input('CPF: ')
-        else:
-            cpf = None
-        try:
-            data_nasc = datetime.strptime(input('Data de Nascimento no formato DD/MM/AAAA: '), "%d/%m/%Y")
-        except:
-            self.mostra_mensagem('\nDigite um valor válido!\n')
-            return self.__controlador_arbitros.abre_tela()
-        
-        return {'nome': nome, 'cpf': cpf, 'data_nasc': data_nasc}
-    
+
+    def pega_dados_arbitro(self):
+        psg.set_options(font=('Arial Bold', 16))
+        layout = [
+            [psg.Text('Nome ', size=(15,1)),psg.Input(expand_x=True, key='nome')],
+            [psg.Text('CPF ', size=(15,1)), psg.Input(expand_x=True, key='cpf')],
+            [psg.Text('Data de Nascimento ', size=(15,1)), psg.Input(expand_x=True, key='data_nasc')],
+            [psg.OK(), psg.Cancel()]
+        ]
+        window = psg.Window('Form', layout, size=(715,207))
+        event, values = window.read()
+        window.close()
+        return {'nome': values['nome'], 'cpf': values['cpf'], 'data_nasc': datetime.strptime(values['data_nasc'],  "%d/%m/%Y")}
+
     def mostra_arbitro(self, dados_arbitro):
         print('Nome do Árbitro: ', dados_arbitro['nome'])
         print('CPF do Árbitro: ', dados_arbitro['cpf'])
