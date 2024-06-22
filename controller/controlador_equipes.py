@@ -1,4 +1,3 @@
-import json
 from model.equipe import Equipe
 from view.tela_equipe import TelaEquipe
 from model.curso import Curso
@@ -7,19 +6,8 @@ from model.aluno import Aluno
 
 class ControladorEquipes:
     def __init__(self, controlador_sistema):
-        with open('data/data_equipes.json', 'r', encoding='utf-8') as arquivo:
-            dados = json.load(arquivo)
-        self.__equipes_iniciais = dados
-        self.__equipes = []
         self.__tela_equipe = TelaEquipe(self)
         self.__controlador_sistema = controlador_sistema
-        for equipe in self.__equipes_iniciais:
-            curso = self.__controlador_sistema.controlador_cursos.pega_curso_por_codigo(equipe["codigo_curso"])
-            equipe_nova = Equipe(curso, equipe["nome"], equipe["codigo"])
-            for matricula_aluno in equipe["matricula_alunos"]:
-                aluno_novo_na_equipe = self.__controlador_sistema.controlador_alunos.pega_aluno_por_matricula(matricula_aluno)
-                equipe_nova.adiciona_aluno(aluno_novo_na_equipe)
-            self.__equipes.append(equipe_nova)
     
     @property
     def equipes(self):

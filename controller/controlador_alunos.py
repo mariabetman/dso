@@ -1,23 +1,15 @@
-import json
 from model.aluno import Aluno
 from view.tela_aluno import TelaAluno
 from model.curso import Curso
 from datetime import datetime
+from DAOs.aluno_dao import AlunoDAO
 
 
 class ControladorAlunos:
     def __init__(self, controlador_sistema):
-        with open('data/data_alunos.json', 'r', encoding='utf-8') as arquivo:
-            dados = json.load(arquivo)
-        self.__alunos_iniciais = dados
-        self.__alunos = []
+        self.__aluno_DAO = AlunoDAO()
         self.__tela_aluno = TelaAluno(self)
         self.__controlador_sistema = controlador_sistema
-        for aluno in self.__alunos_iniciais:
-            curso = self.__controlador_sistema.controlador_cursos.pega_curso_por_codigo(aluno["codigo_curso"])
-            data_nasc = datetime.strptime(aluno["data_nasc"], "%d/%m/%Y")
-            aluno_novo = Aluno(aluno["matricula"], curso, aluno["nome"], aluno["cpf"], data_nasc)
-            self.__alunos.append(aluno_novo)
         
     @property
     def tela_aluno(self):
@@ -28,11 +20,11 @@ class ControladorAlunos:
         return self.__controlador_sistema
     
     def lista_alunos(self):
-        if len(self.__alunos) == 0:
+        if len(self.__aluno_DAO.get_all()) == 0:
             self.__tela_aluno.mostra_mensagem('Nenhum aluno cadastrado!')
         else:
             self.__tela_aluno.mostra_mensagem('----- ALUNOS CADASTRADOS -----')
-            for aluno in self.__alunos:
+            for aluno in self.__aluno_DAO.get_all():
                 self.__tela_aluno.mostra_aluno({'matricula': aluno.matricula, 'curso': aluno.curso.nome, 'nome': aluno.nome, 'cpf': aluno.cpf, 'data_nasc': aluno.data_nasc})
     
     def inclui_aluno(self):
@@ -40,7 +32,7 @@ class ControladorAlunos:
         if isinstance(dados_aluno['matricula'], int) and isinstance(dados_aluno['curso'], Curso) and isinstance(dados_aluno['nome'], str) and isinstance(dados_aluno['cpf'], str) and isinstance(dados_aluno['data_nasc'], datetime):
             aluno =  Aluno(dados_aluno['matricula'], dados_aluno['curso'], dados_aluno['nome'], dados_aluno['cpf'], dados_aluno['data_nasc'])
             if not self.pega_aluno_por_matricula(aluno.matricula):
-                self.__alunos.append(aluno)
+                self.__aluno_DAO.add(aluno)
                 self.__tela_aluno.mostra_mensagem('Aluno cadastrado com sucesso!')
             else:
                 self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno já cadastrado!')
@@ -58,6 +50,7 @@ class ControladorAlunos:
                 aluno.nome = novos_dados_aluno['nome']
             if isinstance(novos_dados_aluno['data_nasc'], datetime):
                 aluno.data_nasc = novos_dados_aluno['data_nasc']
+            self.__aluno_DAO.update(aluno)
             self.lista_alunos()
         else:
             self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno não encontrado!')
@@ -68,13 +61,13 @@ class ControladorAlunos:
         aluno = self.pega_aluno_por_matricula(matricula)
         
         if aluno:
-            self.__alunos.remove(aluno)
+            self.__aluno_DAO.remove(aluno.matricula)
             self.__tela_aluno.mostra_mensagem('Aluno excluído com sucesso!')
         else:
             self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno não encontrado!')
 
     def pega_aluno_por_matricula(self, matricula:int):
-        for aluno in self.__alunos:
+        for aluno in self.__aluno_DAO.get_all():
             if aluno.matricula == matricula:
                 return aluno
         return None
