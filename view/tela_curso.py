@@ -1,18 +1,34 @@
+import PySimpleGUI as psg
+
+
 class TelaCurso:
     def __init__(self, controlador_cursos):
         self.__controlador_cursos = controlador_cursos
 
     def tela_opcoes(self):
-        print('\n---------- Cursos ----------')
-        print('1 - Incluir Curso')
-        print('2 - Editar Curso')
-        print('3 - Listar Cursos')
-        print('4 - Excluir Curso')
-        print('0 - Retornar')
-        
-        opcao = (input('\nEscolha uma opção: '))
-        return opcao
-    
+        layout = [
+            [psg.Text('---------- Cursos ----------')],
+            [psg.Text('Escolha uma opção')],
+            [psg.Text('1 - Incluir Curso')],
+            [psg.Text('2 - Editar Curso')],
+            [psg.Text('3 - Listar Cursos')],
+            [psg.Text('4 - Excluir Curso')],
+            [psg.Text('0 - Retornar')],
+            [psg.Input(key='OPCAO', size=(10, 1), do_not_clear=False, focus=True)],
+            [psg.Button('Confirmar', bind_return_key=True)]
+        ]
+
+        window = psg.Window('Tela Curso', layout)
+        event, values = window.read()
+
+        if event == psg.WIN_CLOSED:
+            window.close()
+            return '0'
+        else:
+            opcao = values['OPCAO']
+            window.close()
+            return opcao
+
     def pega_dados_curso(self, editando=False):
         print('\n---------- DADOS CURSO ----------')
         if not editando:
@@ -40,4 +56,4 @@ class TelaCurso:
             return self.__controlador_cursos.abre_tela()
     
     def mostra_mensagem(self, msg):
-        print(f'\n{msg}')
+        psg.popup(msg)

@@ -1,3 +1,4 @@
+import PySimpleGUI as psg
 from model.partida import Partida
 
 
@@ -6,13 +7,28 @@ class TelaPartida:
         self.__controlador_partidas = controlador_partidas
 
     def tela_opcoes(self):
-        print('---------- PARTIDAS ----------')
-        print('1 - Listar Partidas')
-        print('2 - Adicionar gols da partida')
-        print('0 - Retornar')
-        
-        opcao = input('\nEscolha sua opção: ')
-        return opcao
+        layout = [
+            [psg.Text('---------- Partidas ----------')],
+            [psg.Text('Escolha uma opção')],
+            [psg.Text('1 - Incluir Partida')],
+            [psg.Text('2 - Editar Partida')],
+            [psg.Text('3 - Listar Partidas')],
+            [psg.Text('4 - Excluir Partida')],
+            [psg.Text('0 - Retornar')],
+            [psg.Input(key='OPCAO', size=(10, 1), do_not_clear=False, focus=True)],
+            [psg.Button('Confirmar', bind_return_key=True)]
+        ]
+
+        window = psg.Window('Tela Partida', layout)
+        event, values = window.read()
+
+        if event == psg.WIN_CLOSED:
+            window.close()
+            return '0'
+        else:
+            opcao = values['OPCAO']
+            window.close()
+            return opcao
     
     def pega_gols_partida(self, partida:Partida):
         print('---------- GOLS PARTIDA ----------')
@@ -75,4 +91,4 @@ class TelaPartida:
             return self.__controlador_partidas.abre_tela()
     
     def mostra_mensagem(self, msg):
-        print(msg)
+        psg.popup(msg)

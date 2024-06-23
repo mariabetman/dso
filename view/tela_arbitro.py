@@ -1,5 +1,5 @@
-from datetime import datetime
 import PySimpleGUI as psg
+from datetime import datetime
 
 
 class TelaArbitro:
@@ -7,28 +7,48 @@ class TelaArbitro:
         self.__controlador_arbitros = controlador_arbitros
 
     def tela_opcoes(self):
-        print('\n---------- Árbitros ----------')
-        print('1 - Incluir Árbitro')
-        print('2 - Editar Árbitro')
-        print('3 - Listar Árbitros')
-        print('4 - Excluir Árbitro')
-        print('0 - Retornar')
-        
-        opcao = (input('\nEscolha uma opção: '))
-        return opcao
+        layout = [
+            [psg.Text('---------- Árbitros ----------')],
+            [psg.Text('Escolha uma opção')],
+            [psg.Text('1 - Incluir Árbitro')],
+            [psg.Text('2 - Editar Árbitro')],
+            [psg.Text('3 - Listar Árbitros')],
+            [psg.Text('4 - Excluir Árbitro')],
+            [psg.Text('0 - Retornar')],
+            [psg.Input(key='OPCAO', size=(10, 1), do_not_clear=False, focus=True)],
+            [psg.Button('Confirmar', bind_return_key=True)]
+        ]
+
+        window = psg.Window('Tela Árbitro', layout)
+        event, values = window.read()
+
+        if event == psg.WIN_CLOSED:
+            window.close()
+            return '0'
+        else:
+            opcao = values['OPCAO']
+            window.close()
+            return opcao
 
     def pega_dados_arbitro(self):
-        psg.set_options(font=('Arial Bold', 16))
         layout = [
-            [psg.Text('Nome ', size=(15,1)),psg.Input(expand_x=True, key='nome')],
-            [psg.Text('CPF ', size=(15,1)), psg.Input(expand_x=True, key='cpf')],
+            [psg.Text('Preencha os dados do árbitro')],
+            [psg.Text('Nome: ', size=(15,1)),psg.Input(expand_x=True, key='nome', focus=True)],
+            [psg.Text('CPF: ', size=(15,1)), psg.Input(expand_x=True, key='cpf')],
             [psg.Text('Data de Nascimento ', size=(15,1)), psg.Input(expand_x=True, key='data_nasc')],
-            [psg.OK(), psg.Cancel()]
+            [psg.Button('Adicionar', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
         ]
-        window = psg.Window('Form', layout, size=(715,207))
+
+        window = psg.Window('Formulário Árbitro', layout, size=(715,207))
         event, values = window.read()
-        window.close()
-        return {'nome': values['nome'], 'cpf': values['cpf'], 'data_nasc': datetime.strptime(values['data_nasc'],  "%d/%m/%Y")}
+
+        if event == psg.WIN_CLOSED or event == 'Cancelar':
+            window.close()
+            self.__controlador_arbitros.abre_tela()
+        else:
+            window.close()
+            ##Falta verificar a dat de nascimento
+            return {'nome': values['nome'], 'cpf': values['cpf'], 'data_nasc': datetime.strptime(values['data_nasc'],  "%d/%m/%Y")}
 
     def mostra_arbitro(self, dados_arbitro):
         print('Nome do Árbitro: ', dados_arbitro['nome'])
@@ -42,4 +62,4 @@ class TelaArbitro:
         return cpf
     
     def mostra_mensagem(self, msg):
-        print(f'\n{msg}')
+        psg.popup(msg)

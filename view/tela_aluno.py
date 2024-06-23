@@ -1,3 +1,4 @@
+import PySimpleGUI as psg
 from datetime import datetime
 
 
@@ -6,15 +7,28 @@ class TelaAluno:
         self.__controlador_alunos = controlador_alunos
         
     def tela_opcoes(self):
-        print('\n---------- ALUNOS ----------')
-        print('1 - Incluir Aluno')
-        print('2 - Editar Aluno')
-        print('3 - Listar Alunos')
-        print('4 - Excluir Aluno')
-        print('0 - Retornar')
-        
-        opcao = (input('\nEscolha uma opção: '))
-        return opcao
+        layout = [
+            [psg.Text('---------- Alunos ----------')],
+            [psg.Text('Escolha uma opção')],
+            [psg.Text('1 - Incluir Aluno')],
+            [psg.Text('2 - Editar Aluno')],
+            [psg.Text('3 - Listar Alunos')],
+            [psg.Text('4 - Excluir Aluno')],
+            [psg.Text('0 - Retornar')],
+            [psg.Input(key='OPCAO', size=(10, 1), do_not_clear=False, focus=True)],
+            [psg.Button('Confirmar', bind_return_key=True)]
+        ]
+
+        window = psg.Window('Tela Aluno', layout)
+        event, values = window.read()
+
+        if event == psg.WIN_CLOSED:
+            window.close()
+            return '0'
+        else:
+            opcao = values['OPCAO']
+            window.close()
+            return opcao
     
     def pega_dados_aluno(self, editando=False):
         print('---------- DADOS ALUNO ----------')
@@ -60,4 +74,4 @@ class TelaAluno:
             self.__controlador_alunos.abre_tela()
     
     def mostra_mensagem(self, msg):
-        print(f'\n{msg}\n')
+        psg.popup(msg)
