@@ -6,6 +6,8 @@ from controller.controlador_cursos import ControladorCursos
 from controller.controlador_equipes import ControladorEquipes
 from controller.controlador_partidas import ControladorPartidas
 
+from exceptions.opcao_invalida_exception import OpcaoInvalidaException
+
 from view.tela_sistema import TelaSistema
 
 
@@ -79,9 +81,13 @@ class ControladorSistema:
                         '4': self.abre_tela_arbitro, '5': self.inicia_campeonato, '6': self.finaliza_campeonato, '0': self.encerra_sistema}
 
         while True:
-            opcao_escolhida = self.__tela_sistema.tela_opcoes()
-            if opcao_escolhida in lista_opcoes:
-                funcao_escolhida = lista_opcoes[opcao_escolhida]
-                funcao_escolhida()
-            else:
-                self.__tela_sistema.mostra_mensagem('ERRO: Opção inválida!\n')
+            try:
+                opcao_escolhida = self.__tela_sistema.tela_opcoes()
+                if opcao_escolhida in lista_opcoes:
+                    funcao_escolhida = lista_opcoes[opcao_escolhida]
+                    funcao_escolhida()
+                else:
+                    raise OpcaoInvalidaException()
+            except OpcaoInvalidaException as e:
+                self.__tela_sistema.mostra_mensagem(str(e))
+                
