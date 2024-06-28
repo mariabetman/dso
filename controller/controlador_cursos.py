@@ -2,6 +2,7 @@ from model.curso import Curso
 from view.tela_curso import TelaCurso
 from DAOs.curso_dao import CursoDAO
 
+from exceptions.opcao_invalida_exception import OpcaoInvalidaException
 
 class ControladorCursos:
     def __init__(self, controlador_sistema):
@@ -81,9 +82,12 @@ class ControladorCursos:
                         '0': self.retorna}
         
         while True:
-            opcao_escolhida = self.__tela_curso.tela_opcoes()
-            if opcao_escolhida in lista_opcoes:
-                funcao_escolhida = lista_opcoes[opcao_escolhida]
-                funcao_escolhida()
-            else:
-                self.__tela_curso.mostra_mensagem('ERRO: Opção inválida!')
+            try:
+                opcao_escolhida = self.__tela_curso.tela_opcoes()
+                if opcao_escolhida in lista_opcoes:
+                    funcao_escolhida = lista_opcoes[opcao_escolhida]
+                    funcao_escolhida()
+                else:
+                    raise OpcaoInvalidaException()
+            except OpcaoInvalidaException as e:
+                self.__tela_curso.mostra_mensagem(str(e))

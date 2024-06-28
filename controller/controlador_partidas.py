@@ -6,7 +6,7 @@ from model.equipe import Equipe
 from model.arbitro import Arbitro
 from DAOs.partida_dao import PartidaDAO
 
-
+from exceptions.opcao_invalida_exception import OpcaoInvalidaException
 class ControladorPartidas:
     def __init__(self, controlador_sistema):
         self.__partida_DAO = PartidaDAO()
@@ -106,9 +106,12 @@ class ControladorPartidas:
                         '2': self.adiciona_gols_partida,
                         '0': self.retorna}
         while True:
-            opcao_escolhida = self.__tela_partida.tela_opcoes()
-            if opcao_escolhida in lista_opcoes:
-                funcao_escolhida = lista_opcoes[opcao_escolhida]
-                funcao_escolhida()
-            else:
-                self.__tela_partida.mostra_mensagem('ERRO: Opção inválida!\n')
+            try:
+                opcao_escolhida = self.__tela_partida.tela_opcoes()
+                if opcao_escolhida in lista_opcoes:
+                    funcao_escolhida = lista_opcoes[opcao_escolhida]
+                    funcao_escolhida()
+                else:
+                    raise OpcaoInvalidaException()
+            except OpcaoInvalidaException as e:
+                self.__tela_partida.mostra_mensagem(str(e))
