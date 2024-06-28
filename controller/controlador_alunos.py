@@ -5,6 +5,9 @@ from datetime import datetime
 from DAOs.aluno_dao import AlunoDAO
 
 from exceptions.opcao_invalida_exception import OpcaoInvalidaException
+from exceptions.cadastro_duplicado_exception import CadastroDuplicadoException
+from exceptions.tipo_invalido_exception import TipoInvalidoException
+from exceptions.cadastro_nao_encontrado_exception import CadastroNaoEncontradoException
 class ControladorAlunos:
     def __init__(self, controlador_sistema):
         self.__aluno_DAO = AlunoDAO()
@@ -29,46 +32,55 @@ class ControladorAlunos:
     
     def inclui_aluno(self):
         dados_aluno = self.__tela_aluno.pega_dados_aluno()
-        if isinstance(dados_aluno['matricula'], int) and isinstance(dados_aluno['codigo_curso'], int) and isinstance(dados_aluno['nome'], str) and isinstance(dados_aluno['cpf'], str) and isinstance(dados_aluno['data_nasc'], datetime):
-            curso = self.__controlador_sistema.controlador_cursos.pega_curso_por_codigo(dados_aluno['codigo_curso'])
-            if curso:
-                if not self.pega_aluno_por_matricula(dados_aluno['matricula']):
-                    aluno =  Aluno(dados_aluno['matricula'], dados_aluno['curso'], dados_aluno['nome'], dados_aluno['cpf'], dados_aluno['data_nasc'])
-                    self.__aluno_DAO.add(aluno)
-                    self.__tela_aluno.mostra_mensagem('Aluno cadastrado com sucesso!')
+        try:
+            if isinstance(dados_aluno['matricula'], int) and isinstance(dados_aluno['codigo_curso'], int) and isinstance(dados_aluno['nome'], str) and isinstance(dados_aluno['cpf'], str) and isinstance(dados_aluno['data_nasc'], datetime):
+                curso = self.__controlador_sistema.controlador_cursos.pega_curso_por_codigo(dados_aluno['codigo_curso'])
+                if curso:
+                    if not self.pega_aluno_por_matricula(dados_aluno['matricula']):
+                        aluno =  Aluno(dados_aluno['matricula'], curso, dados_aluno['nome'], dados_aluno['cpf'], dados_aluno['data_nasc'])
+                        self.__aluno_DAO.add(aluno)
+                        self.__tela_aluno.mostra_mensagem('Aluno cadastrado com sucesso!')
+                    else:
+                        raise CadastroDuplicadoException('Aluno(a)')
                 else:
-                    self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno já cadastrado!')
-            else: 
-                self.__tela_aluno.mostra_mensagem('ATENÇÃO: Código do curso inválido!')
-        else:
-            self.__tela_aluno.mostra_mensagem('ATENÇÃO: Algo de errado ocorreu durante o cadastro! Tente novamente!')
+                    raise CadastroNaoEncontradoException('Curso')
+            else:
+                raise TipoInvalidoException()
+        except (CadastroNaoEncontradoException, CadastroDuplicadoException, TipoInvalidoException) as e:
+            self.__tela_aluno.mostra_mensagem(str(e))
+
         
     def altera_aluno(self):
         self.lista_alunos()
         matricula =  self.__tela_aluno.seleciona_aluno()
         aluno = self.pega_aluno_por_matricula(matricula)
         
-        if aluno:
-            novos_dados_aluno = self.__tela_aluno.pega_dados_aluno(editando=True)
-            if isinstance(novos_dados_aluno['nome'], str):
-                aluno.nome = novos_dados_aluno['nome']
-            if isinstance(novos_dados_aluno['data_nasc'], datetime):
-                aluno.data_nasc = novos_dados_aluno['data_nasc']
-            self.__aluno_DAO.update(aluno)
-            self.lista_alunos()
-        else:
-            self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno não encontrado!')
+        try:
+            if aluno:
+                novos_dados_aluno = self.__tela_aluno.pega_dados_aluno(editando=True)
+                if isinstance(novos_dados_aluno['nome'], str):
+                    aluno.nome = novos_dados_aluno['nome']
+                if isinstance(novos_dados_aluno['data_nasc'], datetime):
+                    aluno.data_nasc = novos_dados_aluno['data_nasc']
+                self.__aluno_DAO.update(aluno)
+                self.lista_alunos()
+            else:
+                raise CadastroNaoEncontradoException('Aluno(a)')
+        except CadastroNaoEncontradoException as e:
+            self.__tela_aluno.mostra_mensagem(str(e))
     
     def exclui_aluno(self):
         self.lista_alunos()
         matricula = self.__tela_aluno.seleciona_aluno()
         aluno = self.pega_aluno_por_matricula(matricula)
-        
-        if aluno:
-            self.__aluno_DAO.remove(aluno.matricula)
-            self.__tela_aluno.mostra_mensagem('Aluno excluído com sucesso!')
-        else:
-            self.__tela_aluno.mostra_mensagem('ATENÇÃO: Aluno não encontrado!')
+        try:
+            if aluno:
+                self.__aluno_DAO.remove(aluno.matricula)
+                self.__tela_aluno.mostra_mensagem('Aluno excluído com sucesso!')
+            else:
+                raise CadastroNaoEncontradoException('Aluno(a)')
+        except CadastroNaoEncontradoException as e:
+            self.__tela_aluno.mostra_mensagem(str(e))
 
     def pega_aluno_por_matricula(self, matricula:int):
         for aluno in self.__aluno_DAO.get_all():

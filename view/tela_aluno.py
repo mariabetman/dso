@@ -55,7 +55,7 @@ class TelaAluno:
             self.mostra_mensagem('\nDigite um valor válido!\n')
             return self.__controlador_alunos.abre_tela()
         
-        return {'matricula': matricula, 'curso': curso, 'nome': nome, 'cpf': cpf, 'data_nasc': data_nasc}
+        return {'matricula': matricula, 'codigo_curso': codigo_curso, 'nome': nome, 'cpf': cpf, 'data_nasc': data_nasc}
     
     def mostra_aluno(self, dados_aluno):
         print('Matrícula do Aluno: ', dados_aluno['matricula'])
