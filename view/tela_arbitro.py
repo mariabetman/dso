@@ -30,26 +30,47 @@ class TelaArbitro:
             window.close()
             return opcao
 
-    def pega_dados_arbitro(self):
-        layout = [
-            [psg.Text('Preencha os dados do árbitro')],
-            [psg.Text('Nome: ', size=(15,1)),psg.Input(expand_x=True, key='nome', focus=True)],
-            [psg.Text('CPF: ', size=(15,1)), psg.Input(expand_x=True, key='cpf')],
-            [psg.Text('Data de Nascimento ', size=(15,1)), psg.Input(expand_x=True, key='data_nasc')],
-            [psg.Button('Adicionar', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
-        ]
+    def pega_dados_arbitro(self, editando=False):
+        if not editando:
+            layout = [
+                [psg.Text('Preencha os dados do árbitro')],
+                [psg.Text('Nome: ', size=(15,1)),psg.Input(expand_x=True, key='nome', focus=True)],
+                [psg.Text('CPF: ', size=(15,1)), psg.Input(expand_x=True, key='cpf')],
+                [psg.Text('Data de Nascimento ', size=(15,1)), psg.Input(expand_x=True, key='data_nasc')],
+                [psg.Button('Adicionar', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+            ]
+        else:
+            layout = [
+                [psg.Text('Preencha os dados do árbitro')],
+                [psg.Text('Nome: ', size=(15,1)),psg.Input(expand_x=True, key='nome', focus=True)],
+                [psg.Text('Data de Nascimento ', size=(15,1)), psg.Input(expand_x=True, key='data_nasc')],
+                [psg.Button('Adicionar', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+            ]
 
         window = psg.Window('Formulário Árbitro', layout, size=(715,207))
         event, values = window.read()
 
-        if event == psg.WIN_CLOSED or event == 'Cancelar':
+        if event in (psg.WIN_CLOSED, 'Cancelar'):
             window.close()
             self.__controlador_arbitros.abre_tela()
-        else:
-            window.close()
-            ##Falta verificar a dat de nascimento
-            return {'nome': values['nome'], 'cpf': values['cpf'], 'data_nasc': datetime.strptime(values['data_nasc'],  "%d/%m/%Y")}
+            return None
 
+        nome = values['nome']
+        if not editando:
+            cpf = None
+        else:
+            cpf = values['cpf']
+        try:
+            data_nasc = datetime.strptime(values['data_nasc'], "%d/%m/%Y")
+        except ValueError:
+            window.close()
+            self.mostra_mensagem('\nDigite um valor válido para a data de nascimento!\n')
+            self.__controlador_arbitros.abre_tela()
+            return None
+
+        window.close()
+        return {'nome': nome, 'cpf': cpf, 'data_nasc': data_nasc}
+        
     def mostra_arbitro(self, dados_arbitro):
         print('Nome do Árbitro: ', dados_arbitro['nome'])
         print('CPF do Árbitro: ', dados_arbitro['cpf'])
