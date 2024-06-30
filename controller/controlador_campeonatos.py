@@ -4,11 +4,8 @@ from model.campeonato import Campeonato
 from view.tela_campeonato import TelaCampeonato
 from model.partida import Partida
 
-from exceptions.opcao_invalida_exception import OpcaoInvalidaException
-from exceptions.tipo_invalido_exception import TipoInvalidoException
-from exceptions.cadastro_nao_encontrado_exception import CadastroNaoEncontradoException
+
 from exceptions.erro_inesperado import ErroInesperadoException
-from exceptions.partida_realizada_exception import PartidaRealizadaException
 from exceptions.campeonato_jah_iniciado_exception import CampeonatoJahIniciadoException
 from exceptions.alunos_insuficientes_na_equipe_exception import AlunosInsuficientesNaEquipeException
 from exceptions.curso_sem_equipe_exception import CursoSemEquipeException
