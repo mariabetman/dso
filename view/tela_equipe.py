@@ -76,7 +76,7 @@ class TelaEquipe:
             window.close()
             return {'codigo': codigo, 'codigo_curso': codigo_curso, 'nome': nome}
     
-    def mostra_equipe(self, equipes):
+    def mostra_equipes(self, equipes):
         layout = [
             [psg.Text('Equipes cadastradas')],
             [psg.Multiline(default_text='', size=(60, 15), key='LISTA_EQUIPES', disabled=True)],

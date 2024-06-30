@@ -89,7 +89,7 @@ class TelaAluno:
             window.close()
             return {'matricula': matricula, 'codigo_curso': codigo_curso, 'nome': nome, 'cpf': cpf, 'data_nasc': data_nasc}
     
-    def mostra_aluno(self, alunos):
+    def mostra_alunos(self, alunos):
         layout = [
             [psg.Text('Alunos cadastrados')],
             [psg.Multiline(default_text='', size=(60, 15), key='LISTA_ALUNOS', disabled=True)],

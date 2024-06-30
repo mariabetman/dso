@@ -29,7 +29,7 @@ class ControladorCursos:
         if len(self.__curso_DAO.get_all()) == 0:
             self.__tela_curso.mostra_mensagem('Nenhum curso cadastrado!')
         else:
-           self.__tela_curso.mostra_curso(self.__curso_DAO.get_all())
+           self.__tela_curso.mostra_cursos(self.__curso_DAO.get_all())
     
     def inclui_curso(self):
         dados_curso = self.__tela_curso.pega_dados_curso()

@@ -25,9 +25,7 @@ class ControladorPartidas:
         if len(self.__partida_DAO.get_all()) == 0:
             self.__tela_partida.mostra_mensagem('Nenhuma Partida cadastrada!')
         else:
-            self.__tela_partida.mostra_mensagem('----- PARTIDAS CADASTRADOS -----')
-            for partida in self.__partida_DAO.get_all():
-                self.__tela_partida.mostra_partida({'codigo': partida.codigo, 'data_partida': partida.data_partida, 'equipe_casa': partida.equipe_casa.nome, 'equipe_visitante': partida.equipe_visitante.nome, 'arbitro': partida.arbitro.nome, 'gols_equipe_casa': partida.gols_equipe_casa, 'gols_equipe_visitante': partida.gols_equipe_visitante, 'resultado': partida.resultado, 'partida_realizada': partida.partida_realizada})
+            self.__tela_partida.mostra_partidas(self.__partida_DAO.get_all())
     
     def inclui_partida(self, dados_partida):
         if isinstance(dados_partida['codigo'], int) and isinstance(dados_partida['data_partida'], datetime) and isinstance(dados_partida['equipe_casa'], Equipe) and isinstance(dados_partida['equipe_visitante'], Equipe) and isinstance(dados_partida['arbitro'], Arbitro):

@@ -67,7 +67,7 @@ class TelaCurso:
             window.close()
             return {'codigo': codigo, 'nome': nome}
     
-    def mostra_curso(self, cursos):
+    def mostra_cursos(self, cursos):
         layout = [
             [psg.Text('Cursos cadastrados')],
             [psg.Multiline(default_text='', size=(60, 15), key='LISTA_CURSOS', disabled=True)],
@@ -76,7 +76,7 @@ class TelaCurso:
 
         window = psg.Window('Lista de Cursos', layout, finalize=True)
 
-        lista_alunos = ""
+        lista_cursos = ""
         for curso in cursos:
             lista_cursos += f"Código: {curso.codigo}\n"
             lista_cursos += f"Nome: {curso.nome}\n"
@@ -84,14 +84,14 @@ class TelaCurso:
 
         window['LISTA_CURSOS'].update(lista_cursos)
 
-        while True:
-            event = window.read()
-            if event == psg.WIN_CLOSED or event == 'Fechar':
-                window.close()
-                self.__controlador_cursos.abre_tela()
+        event = window.read()
+
+        if event == psg.WIN_CLOSED or event == 'Fechar':
+            window.close()
+            self.abre_tela()
         
     def seleciona_curso(self):
-        self.__controlador_cursos.lista_alunos()
+        self.__controlador_cursos.lista_cursos()
         
         layout = [
             [psg.Text('Digite o código do Curso que deseja selecionar:')],

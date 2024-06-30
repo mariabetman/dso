@@ -106,27 +106,73 @@ class TelaPartida:
             'artilheiros_equipe_visitante': artilheiros_equipe_visitante
         }
 
-    def mostra_partida(self, dados_partida):
-        print('Código da partida: ', dados_partida['codigo'])
-        print('Data da partida: ', dados_partida['data_partida'])
-        print('Equipe Casa: ', dados_partida['equipe_casa'])
-        print('Equipe Visitante: ', dados_partida['equipe_visitante'])
-        print('Árbitro da Partida: ', dados_partida['arbitro'])
-        print('Partida Realizada?: ', dados_partida['partida_realizada'])
-        if dados_partida['partida_realizada']:
-            print('Gols da Equipe Casa: ', dados_partida['gols_equipe_casa'])
-            print('Gols da Equipe Visitante: ', dados_partida['gols_equipe_visitante'])
-            print('Resultado da Partida: ', dados_partida['resultado'])
-        print('-------------------------------------------------------')
+    def mostra_partidas(self, partidas):
+        layout = [
+            [psg.Text('Partidas cadastradas')],
+            [psg.Multiline(default_text='', size=(60, 15), key='LISTA_PARTIDAS', disabled=True)],
+            [psg.Button('Fechar', bind_return_key=True)]
+        ]
+
+        window = psg.Window('Lista de Partidas', layout, finalize=True)
+
+        lista_partidas = ""
+        for partida in partidas:
+            lista_partidas += f"Código: {partida.codigo}\n"
+            lista_partidas += f"Data da partida: {partida.data_partida.strftime('%d/%m/%Y')}\n"
+            lista_partidas += f"Equipe Casa: {partida.equipe_casa}\n"
+            lista_partidas += f"Equipe Visitante: {partida.equipe_visitante}\n"
+            lista_partidas += f"Árbitro: {partida.arbitro}\n"
+            lista_partidas += f"Partida realizada: {'Sim' if partida.partida_realizada else 'Não'}\n"
+            lista_partidas += f"Gols equipe casa: {partida.gols_equipe_casa if partida.gols_equipe_casa else '-'}\n"
+            lista_partidas += f"Gols equipe visitante: {partida.gols_equipe_visitante if partida.gols_equipe_visitante else '-'}\n"
+    
+            if partida.partida_realizada:
+                lista_partidas += "Artilheiros equipe casa:\n"
+                for artilheiro in partida.artilheiros_equipe_casa:
+                    lista_partidas += f" - {artilheiro.nome}\n"
+                    
+            if partida.partida_realizada:
+                lista_partidas += "Artilheiros equipe visitante:\n"
+                for artilheiro in partida.artilheiros_equipe_visitante:
+                    lista_partidas += f" - {artilheiro.nome}\n"
+                    lista_partidas += "-" * 40 + "\n"
+
+                window['LISTA_PARTIDAS'].update(lista_partidas)
+
+        while True:
+            event = window.read()
+            if event == psg.WIN_CLOSED or event == 'Fechar':
+                window.close()
+                self.__controlador_partidas.abre_tela()
         
     def seleciona_partida(self):
         self.__controlador_partidas.lista_partidas()
-        try:
-            codigo = int(input('Digite o código da Partida que deseja selecionar: '))
-            return codigo
-        except:
-            self.mostra_mensagem('\nDigite um valor válido!\n')
-            return self.__controlador_partidas.abre_tela()
+        
+        layout = [
+            [psg.Text('Digite o códgio da Partida que deseja selecionar:')],
+            [psg.Input(key='codigo', focus=True)],
+            [psg.Button('Ok', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+        ]
+        
+        window = psg.Window('Seleciona Partida', layout, finalize=True)
+        
+        event, values = window.read()
+
+        if event == psg.WIN_CLOSED  or event == 'Cancelar':
+            window.close()
+            self.__controlador_partidas.abre_tela()
+            return None
+        else:
+            try:
+                codigo = int(values['codigo'])
+                window.close()
+                self.__controlador_partidas.abre_tela()
+                return None
+            except:
+                self.mostra_mensagem('\nDigite um valor válido!\n')
+                window.close()
+                self.__controlador_partidas.abre_tela()
+                return None
     
     def mostra_mensagem(self, msg):
         psg.popup(msg)

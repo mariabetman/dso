@@ -29,7 +29,7 @@ class ControladorArbitros:
         if len(self.__arbitro_dao.get_all()) == 0:
             self.__tela_arbitro.mostra_mensagem('Nenhum árbitro cadastrado!')
         else:
-            self.__tela_arbitro.mostra_arbitro(self.__arbitro_dao.get_all())
+            self.__tela_arbitro.mostra_arbitros(self.__arbitro_dao.get_all())
     
     def inclui_arbitro(self):
         dados_arbitro = self.__tela_arbitro.pega_dados_arbitro()

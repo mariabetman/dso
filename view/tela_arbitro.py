@@ -71,7 +71,7 @@ class TelaArbitro:
             window.close()
             return {'nome': nome, 'cpf': cpf, 'data_nasc': data_nasc}
             
-    def mostra_arbitro(self, arbitros):
+    def mostra_arbitros(self, arbitros):
         layout = [
             [psg.Text('Árbitros cadastrados')],
             [psg.Multiline(default_text='', size=(60, 15), key='LISTA_ARBITROS', disabled=True)],

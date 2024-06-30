@@ -78,8 +78,7 @@ class ControladorEquipes:
         if not codigo_equipe:
             codigo_equipe = self.__tela_equipe.seleciona_equipe()
         equipe = self.pega_equipe_por_codigo(codigo_equipe)
-        for aluno in equipe.alunos:
-            self.controlador_sistema.controlador_alunos.tela_aluno.mostra_aluno({'matricula': aluno.matricula, 'curso': aluno.curso.nome, 'nome': aluno.nome, 'cpf': aluno.cpf, 'data_nasc': aluno.data_nasc})
+        self.controlador_sistema.controlador_alunos.tela_aluno.mostra_alunos(equipe.alunos)
 
     def adiciona_aluno_na_equipe(self):
         codigo_equipe = self.__tela_equipe.seleciona_equipe()
@@ -95,6 +94,11 @@ class ControladorEquipes:
             if _aluno.matricula == matricula_aluno:
                 self.__tela_equipe.mostra_mensagem('ATENÇÃO: O Aluno já está cadastrado na equipe!')
                 return None
+        for equipe_existente in self.__equipe_DAO.get_all():
+            for _aluno in equipe_existente.alunos:
+                if _aluno.matricula == matricula_aluno:
+                    self.__tela_equipe.mostra_mensagem('ATENÇÃO: O Aluno já está cadastrado em outra equipe!')
+                    return None
         if isinstance(equipe, Equipe) and isinstance(aluno, Aluno):
             equipe.adiciona_aluno(aluno)
             self.__tela_equipe.mostra_mensagem('Aluno adicionado com sucesso!')
