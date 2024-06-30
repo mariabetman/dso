@@ -5,6 +5,12 @@ from model.aluno import Aluno
 from DAOs.equipe_dao import EquipeDAO
 
 from exceptions.opcao_invalida_exception import OpcaoInvalidaException
+from exceptions.cadastro_duplicado_exception import CadastroDuplicadoException
+from exceptions.tipo_invalido_exception import TipoInvalidoException
+from exceptions.cadastro_nao_encontrado_exception import CadastroNaoEncontradoException
+from exceptions.aluno_de_curso_diferente_da_equipe_exception import AlunoDeCursoDiferenteDaEquipeException
+from exceptions.aluno_jah_cadastrado_na_equipe_exception import AlunoJahCadastradoNaEquipeException
+from exceptions.erro_inesperado import ErroInesperadoException
 class ControladorEquipes:
     def __init__(self, controlador_sistema):
         self.__equipe_DAO = EquipeDAO()
@@ -31,43 +37,51 @@ class ControladorEquipes:
 
     def inclui_equipe(self):
         dados_equipe = self.__tela_equipe.pega_dados_equipe()
-        if isinstance(dados_equipe['codigo_curso'], int) and isinstance(dados_equipe['nome'], str) and isinstance(dados_equipe['codigo'], int):
-            curso = self.__controlador_sistema.controlador_cursos.pega_curso_por_codigo(dados_equipe['codigo_curso'])
-            if curso:
-                if not self.pega_equipe_por_codigo(dados_equipe['codigo']):
-                    equipe = Equipe(dados_equipe['curso'], dados_equipe['nome'], dados_equipe['codigo'])
-                    self.__equipe_DAO.add(equipe)
-                    self.__tela_equipe.mostra_mensagem('Equipe cadastrada com sucesso!')
+        try:
+            if isinstance(dados_equipe['codigo_curso'], int) and isinstance(dados_equipe['nome'], str) and isinstance(dados_equipe['codigo'], int):
+                curso = self.__controlador_sistema.controlador_cursos.pega_curso_por_codigo(dados_equipe['codigo_curso'])
+                if curso:
+                    if not self.pega_equipe_por_codigo(dados_equipe['codigo']):
+                        equipe = Equipe(dados_equipe['curso'], dados_equipe['nome'], dados_equipe['codigo'])
+                        self.__equipe_DAO.add(equipe)
+                        self.__tela_equipe.mostra_mensagem('Equipe cadastrada com sucesso!')
+                    else:
+                        raise CadastroDuplicadoException('Equipe')
                 else:
-                    self.__tela_equipe.mostra_mensagem('ATENÇÃO: Equipe já cadastrada!')
+                    raise CadastroNaoEncontradoException('Curso')
             else:
-                self.__tela_equipe.mostra_mensagem('ATENÇÃO: Código do curso inválido!')
-        else:
-            self.__tela_equipe.mostra_mensagem('ATENÇÃO: Algo de errado ocorreu durante o cadastro! Tente novamente!')
-    
+                raise TipoInvalidoException()
+        except (CadastroDuplicadoException, TipoInvalidoException, CadastroDuplicadoException) as e:
+            self.__tela_equipe.mostra_mensagem(str(e))
+
     def altera_equipe(self):
         codigo_equipe = self.__tela_equipe.seleciona_equipe()
         equipe = self.pega_equipe_por_codigo(codigo_equipe)
         
-        if equipe:
-            novos_dados_equipe = self.__tela_equipe.pega_dados_equipe(editando=True)
-            if isinstance(novos_dados_equipe['nome'], str):
-                equipe.nome = novos_dados_equipe['nome']
-            self.__equipe_DAO.update()
-            self.lista_equipes()
-        else:
-            self.__tela_equipe.mostra_mensagem('ATENÇÃO: Equipe não encontrada!')
+        try:
+            if equipe:
+                novos_dados_equipe = self.__tela_equipe.pega_dados_equipe(editando=True)
+                if isinstance(novos_dados_equipe['nome'], str):
+                    equipe.nome = novos_dados_equipe['nome']
+                self.__equipe_DAO.update()
+                self.lista_equipes()
+            else:
+                raise CadastroNaoEncontradoException('Equipe')
+        except CadastroNaoEncontradoException as e:
+            self.__tela_equipe.mostra_mensagem(str(e))       
     
     def exclui_equipe(self):
         codigo_equipe = self.__tela_equipe.seleciona_equipe()
         equipe = self.pega_equipe_por_codigo(codigo_equipe)
-        
-        if equipe:
-            self.__equipe_DAO.remove(equipe)
-            self.__tela_equipe.mostra_mensagem('Equipe excluída com sucesso!')
-        else:
-            self.__tela_equipe.mostra_mensagem('ATENÇÃO: Equipe não encontrada!')
-        
+        try:
+            if equipe:
+                self.__equipe_DAO.remove(equipe)
+                self.__tela_equipe.mostra_mensagem('Equipe excluída com sucesso!')
+            else:
+                raise CadastroNaoEncontradoException('Equipe')
+        except CadastroNaoEncontradoException as e:
+            self.__tela_equipe.mostra_mensagem(str(e))
+            
     def pega_equipe_por_codigo(self, codigo:int):
         for equipe in self.__equipe_DAO.get_all():
             if equipe.codigo == codigo:
@@ -86,27 +100,37 @@ class ControladorEquipes:
         self.__controlador_sistema.controlador_alunos.lista_alunos()
         matricula_aluno = self.__controlador_sistema.controlador_alunos.tela_aluno.seleciona_aluno()
         aluno = self.__controlador_sistema.controlador_alunos.pega_aluno_por_matricula(matricula_aluno)
-
-        if aluno.curso.codigo != equipe.curso.codigo:
-            self.__tela_equipe.mostra_mensagem('ATENÇÃO: O Aluno deve ser do mesmo curso que a Equipe!')
-            return None
-        for _aluno in equipe.alunos:
-            if _aluno.matricula == matricula_aluno:
-                self.__tela_equipe.mostra_mensagem('ATENÇÃO: O Aluno já está cadastrado na equipe!')
+        try:
+            if aluno.curso.codigo != equipe.curso.codigo:
+                raise AlunoDeCursoDiferenteDaEquipeException()
+            else:
+                pass
+        except AlunoDeCursoDiferenteDaEquipeException as e:
+                self.__tela_equipe.mostra_mensagem(str(e))
                 return None
+        try:
+            for _aluno in equipe.alunos:
+                if _aluno.matricula == matricula_aluno:
+                    raise AlunoJahCadastradoNaEquipeException(codigo_equipe)
+        except AlunoDeCursoDiferenteDaEquipeException as e:
+                    self.__tela_equipe.mostra_mensagem(str(e))
+                    return None
         for equipe_existente in self.__equipe_DAO.get_all():
             for _aluno in equipe_existente.alunos:
                 if _aluno.matricula == matricula_aluno:
                     self.__tela_equipe.mostra_mensagem('ATENÇÃO: O Aluno já está cadastrado em outra equipe!')
                     return None
-        if isinstance(equipe, Equipe) and isinstance(aluno, Aluno):
-            equipe.adiciona_aluno(aluno)
-            self.__tela_equipe.mostra_mensagem('Aluno adicionado com sucesso!')
-            self.__equipe_DAO.update(equipe)
-        else:
-            self.__tela_equipe.mostra_mensagem('ERRO: Um erro aconteceu ao tentar cadastrar o aluno na equipe!')
+        try:
+            if isinstance(equipe, Equipe) and isinstance(aluno, Aluno):
+                equipe.adiciona_aluno(aluno)
+                self.__tela_equipe.mostra_mensagem('Aluno adicionado com sucesso!')
+                self.__equipe_DAO.update(equipe)
+            else:
+                raise TipoInvalidoException()
+        except TipoInvalidoException:
+            self.__tela_equipe.mostra_mensagem(str(e))
+            return None
             
-
     def remove_aluno_da_equipe(self):
         codigo_equipe = self.__tela_equipe.seleciona_equipe()
         equipe = self.pega_equipe_por_codigo(codigo_equipe)
@@ -114,45 +138,80 @@ class ControladorEquipes:
         matricula_aluno = self.__controlador_sistema.controlador_alunos.tela_aluno.seleciona_aluno()
         aluno = self.__controlador_sistema.controlador_alunos.pega_aluno_por_matricula(matricula_aluno)
 
-        if isinstance(equipe, Equipe) and isinstance(aluno, Aluno):
-            for _aluno in equipe.alunos:
-                if _aluno.matricula == matricula_aluno:
-                    equipe.remove_aluno(aluno)
-                    self.__tela_equipe.mostra_mensagem('Aluno removido com sucesso!')
-                    self.__equipe_DAO.update(equipe)
-                    return Aluno
-            self.tela_equipe.mostra_mensagem('ERRO: Aluno não encontrado!')
-            return None
+        try:
+            if isinstance(equipe, Equipe) and isinstance(aluno, Aluno):
+                for _aluno in equipe.alunos:
+                    if _aluno.matricula == matricula_aluno:
+                        equipe.remove_aluno(aluno)
+                        self.__tela_equipe.mostra_mensagem('Aluno removido com sucesso!')
+                        self.__equipe_DAO.update(equipe)
+                        return aluno
+                raise CadastroNaoEncontradoException('Aluno')
+            else:
+                raise TipoInvalidoException()
+        except (CadastroNaoEncontradoException, TipoInvalidoException) as e:
+                self.__tela_equipe.mostra_mensagem(str(e))
+                return None
     
     def adiciona_pontos_na_equipe(self, equipe:Equipe, pontos:int):
-        if isinstance(equipe, Equipe) and isinstance(pontos, int):
-            equipe.adiciona_pontos(pontos)
-            self.__equipe_DAO.update(equipe)
+        try:
+            if isinstance(equipe, Equipe) and isinstance(pontos, int):
+                equipe.adiciona_pontos(pontos)
+                self.__equipe_DAO.update(equipe)
+            else:
+                raise ErroInesperadoException('adicionar pontos.')
+        except ErroInesperadoException as e:
+            self.__tela_equipe.mostra_mensagem(str(e))
 
     def remove_pontos_da_equipe(self, equipe:Equipe, pontos:int):
-        if isinstance(equipe, Equipe) and isinstance(pontos, int):
-            equipe.remove_pontos(pontos)
-            self.__equipe_DAO.update(equipe)
+        try:
+            if isinstance(equipe, Equipe) and isinstance(pontos, int):
+                equipe.remove_pontos(pontos)
+                self.__equipe_DAO.update(equipe)
+            else:
+                raise ErroInesperadoException('remover pontos.')
+        except ErroInesperadoException as e:
+            self.__tela_equipe.mostra_mensagem(str(e))
     
     def adiciona_gols_marcados_na_equipe(self, equipe:Equipe, gols:int):
-        if isinstance(equipe, Equipe) and isinstance(gols, int):
-            equipe.adiciona_gols_marcados(gols)
-            self.__equipe_DAO.update(equipe)
+        try:
+            if isinstance(equipe, Equipe) and isinstance(gols, int):
+                equipe.adiciona_gols_marcados(gols)
+                self.__equipe_DAO.update(equipe)
+            else:
+                raise ErroInesperadoException('adicionar gols marcados.')
+        except ErroInesperadoException as e:
+            self.__tela_equipe.mostra_mensagem(str(e))
 
     def remove_gols_marcados_da_equipe(self, equipe:Equipe, gols:int):
-        if isinstance(equipe, Equipe) and isinstance(gols, int):
-            equipe.remove_gols_marcados(gols)
-            self.__equipe_DAO.update(equipe)
+        try:
+            if isinstance(equipe, Equipe) and isinstance(gols, int):
+                equipe.remove_gols_marcados(gols)
+                self.__equipe_DAO.update(equipe)
+            else:
+                raise ErroInesperadoException('remover gols marcados.')
+        except ErroInesperadoException as e:
+            self.__tela_equipe.mostra_mensagem(str(e))
     
     def adiciona_gols_sofridos_na_equipe(self, equipe:Equipe, gols:int):
-        if isinstance(equipe, Equipe) and isinstance(gols, int):
-            equipe.adiciona_gols_sofridos(gols)
-            self.__equipe_DAO.update(equipe)
+        try:
+            if isinstance(equipe, Equipe) and isinstance(gols, int):
+                equipe.adiciona_gols_sofridos(gols)
+                self.__equipe_DAO.update(equipe)
+            else:
+                raise ErroInesperadoException('adicionar gols sofridos')
+        except ErroInesperadoException as e:
+            self.__tela_equipe.mostra_mensagem(str(e))
 
     def remove_gols_sofridos_da_equipe(self, equipe:Equipe, gols:int):
-        if isinstance(equipe, Equipe) and isinstance(gols, int):
-            equipe.remove_gols_sofridos(gols)
-            self.__equipe_DAO.update(equipe)
+        try:
+            if isinstance(equipe, Equipe) and isinstance(gols, int):
+                equipe.remove_gols_sofridos(gols)
+                self.__equipe_DAO.update(equipe)
+            else:
+                raise ErroInesperadoException('remover gols sofridos.')
+        except ErroInesperadoException as e:
+            self.__tela_equipe.mostra_mensagem(str(e))
             
     def retorna(self):
         self.__controlador_sistema.abre_tela()

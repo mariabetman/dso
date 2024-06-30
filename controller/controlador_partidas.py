@@ -7,6 +7,10 @@ from model.arbitro import Arbitro
 from DAOs.partida_dao import PartidaDAO
 
 from exceptions.opcao_invalida_exception import OpcaoInvalidaException
+from exceptions.tipo_invalido_exception import TipoInvalidoException
+from exceptions.cadastro_nao_encontrado_exception import CadastroNaoEncontradoException
+from exceptions.erro_inesperado import ErroInesperadoException
+from exceptions.partida_realizada_exception import PartidaRealizadaException
 class ControladorPartidas:
     def __init__(self, controlador_sistema):
         self.__partida_DAO = PartidaDAO()
@@ -28,14 +32,17 @@ class ControladorPartidas:
             self.__tela_partida.mostra_partidas(self.__partida_DAO.get_all())
     
     def inclui_partida(self, dados_partida):
-        if isinstance(dados_partida['codigo'], int) and isinstance(dados_partida['data_partida'], datetime) and isinstance(dados_partida['equipe_casa'], Equipe) and isinstance(dados_partida['equipe_visitante'], Equipe) and isinstance(dados_partida['arbitro'], Arbitro):
-            partida =  Partida(dados_partida['codigo'], dados_partida['data_partida'], dados_partida['equipe_casa'], dados_partida['equipe_visitante'], dados_partida['arbitro'])
-            if not self.pega_partida_por_codigo(partida.codigo):
-                self.__partida_DAO.add(partida)
-                return partida
-        else:
-            self.__tela_partida.mostra_mensagem('ATENÇÃO: Algo de errado ocorreu durante o cadastro! Tente novamente!')
-        
+        try:
+            if isinstance(dados_partida['codigo'], int) and isinstance(dados_partida['data_partida'], datetime) and isinstance(dados_partida['equipe_casa'], Equipe) and isinstance(dados_partida['equipe_visitante'], Equipe) and isinstance(dados_partida['arbitro'], Arbitro):
+                partida =  Partida(dados_partida['codigo'], dados_partida['data_partida'], dados_partida['equipe_casa'], dados_partida['equipe_visitante'], dados_partida['arbitro'])
+                if not self.pega_partida_por_codigo(partida.codigo):
+                    self.__partida_DAO.add(partida)
+                    return partida
+            else:
+                raise TipoInvalidoException()
+        except TipoInvalidoException as e:
+            self.__tela_partida.mostra_mensagem(str(e))
+            
     def pega_partida_por_codigo(self, codigo:int):
         for partida in self.__partida_DAO.get_all():
             if partida.codigo == codigo:
@@ -46,13 +53,19 @@ class ControladorPartidas:
         codigo_partida = self.__tela_partida.seleciona_partida()
         partida = self.pega_partida_por_codigo(codigo_partida)
 
-        if not partida:
-            self.__tela_partida.mostra_mensagem('\nATENÇÃO: Partida não encontrada!\n')
-            return
+        try:
+            if not partida:
+                raise CadastroNaoEncontradoException('Partida')
+        except CadastroNaoEncontradoException as e:
+                self.__tela_partida.mostra_mensagem(str(e))
+                return
 
-        if partida.partida_realizada:
-            self.__tela_partida.mostra_mensagem('\nATENÇÃO: essa Partida já foi realizada e não pode ser editada!\n')
-            return
+        try:
+            if partida.partida_realizada:
+                raise PartidaRealizadaException()
+        except PartidaRealizadaException as e:
+                self.__tela_partida.mostra_mensagem(str(e))
+                return
 
         alunos_equipe_casa = partida.equipe_casa.alunos
         alunos_equipe_visitante = partida.equipe_visitante.alunos
@@ -64,19 +77,22 @@ class ControladorPartidas:
         gols_equipe_visitante = gols_partida['gols_equipe_visitante']
         artilheiros_equipe_visitante = [self.__controlador_sistema.controlador_alunos.pega_aluno_por_matricula(matricula) for matricula in gols_partida['artilheiros_equipe_visitante']]
 
-        if all(isinstance(artilheiro, Aluno) for artilheiro in artilheiros_equipe_casa) and all(isinstance(artilheiro, Aluno) for artilheiro in artilheiros_equipe_visitante):
-            partida.gols_equipe_casa = gols_equipe_casa
-            partida.artilheiros_equipe_casa = artilheiros_equipe_casa
-            partida.gols_equipe_visitante = gols_equipe_visitante
-            partida.artilheiros_equipe_visitante = artilheiros_equipe_visitante
-            partida.partida_realizada = True
-            partida.resultado = f'Equipe Casa {partida.gols_equipe_casa}X{partida.gols_equipe_visitante} Equipe Visitante'
-            self.gera_dados_partida(partida)
-            self.__partida_DAO.update(partida)
-            self.__tela_partida.mostra_mensagem('Gols cadastrados com sucesso!')
-        else:
-            self.__tela_partida.mostra_mensagem('ATENÇÃO: Algo de errado ocorreu durante o cadastro! Tente novamente!')
-    
+        try:
+            if all(isinstance(artilheiro, Aluno) for artilheiro in artilheiros_equipe_casa) and all(isinstance(artilheiro, Aluno) for artilheiro in artilheiros_equipe_visitante):
+                partida.gols_equipe_casa = gols_equipe_casa
+                partida.artilheiros_equipe_casa = artilheiros_equipe_casa
+                partida.gols_equipe_visitante = gols_equipe_visitante
+                partida.artilheiros_equipe_visitante = artilheiros_equipe_visitante
+                partida.partida_realizada = True
+                partida.resultado = f'Equipe Casa {partida.gols_equipe_casa}X{partida.gols_equipe_visitante} Equipe Visitante'
+                self.gera_dados_partida(partida)
+                self.__partida_DAO.update(partida)
+                self.__tela_partida.mostra_mensagem('Gols cadastrados com sucesso!')
+            else:
+                raise ErroInesperadoException('adicionar gols da partida.')
+        except ErroInesperadoException as e:
+            self.__tela_partida.mostra_mensagem(str(e))
+
     def gera_dados_partida(self, partida:Partida):
         if partida.gols_equipe_casa > partida.gols_equipe_visitante:
             equipe_vencedora = partida.equipe_casa

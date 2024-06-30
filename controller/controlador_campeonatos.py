@@ -4,6 +4,15 @@ from model.campeonato import Campeonato
 from view.tela_campeonato import TelaCampeonato
 from model.partida import Partida
 
+
+from exceptions.erro_inesperado import ErroInesperadoException
+from exceptions.campeonato_jah_iniciado_exception import CampeonatoJahIniciadoException
+from exceptions.alunos_insuficientes_na_equipe_exception import AlunosInsuficientesNaEquipeException
+from exceptions.curso_sem_equipe_exception import CursoSemEquipeException
+from exceptions.nenhum_arbitro_cadastrado_exception import NenhumArbitroCadastradoException
+from exceptions.equipes_insuficientes_exception import EquipesInsuficientesNaEquipeException
+from exceptions.campeonato_nao_iniciado_exception import CampeonatoNaoIniciadoException
+from exceptions.partidas_nao_realizadas_exception import PartidasNaoRealizadasException
 class ControladorCampeonatos:
     def __init__(self, controlador_sistema):
         self.__campeonato = None
@@ -15,40 +24,45 @@ class ControladorCampeonatos:
         return self.__controlador_sistema
         
     def inclui_campeonato(self, codigo:int , equipes):
-        if self.__campeonato:
-            self.__tela_campeonato.mostra_mensagem('\nCampeonato já iniciado!\n')
-            self.retorna()
-        else:
-            cursos_com_equipes = {curso.codigo: False for curso in self.__controlador_sistema.controlador_cursos.cursos}
-        
-            for equipe in equipes:
-                if len(equipe.alunos) < 11:
-                    self.__tela_campeonato.mostra_mensagem('\nUma ou mais equipes têm menos de 11 alunos. Campeonato não pode ser iniciado!\n')
-                    self.retorna()
-                    return
-
-                if equipe.curso.codigo in cursos_com_equipes:
-                    cursos_com_equipes[equipe.curso.codigo] = True
+        quantidade_necessaria_alunos = 11
+        try:
+            if self.__campeonato:
+                raise CampeonatoJahIniciadoException()
+            else:
+                cursos_com_equipes = {curso.codigo: False for curso in self.__controlador_sistema.controlador_cursos.cursos}
             
-            for curso_codigo, tem_equipe in cursos_com_equipes.items():
-                if not tem_equipe:
-                    self.__tela_campeonato.mostra_mensagem(f'\nCurso com código {curso_codigo} não possui equipe. Campeonato não pode ser iniciado!\n')
-                    self.retorna()
-                    return
+                for equipe in equipes:
+                    if len(equipe.alunos) < quantidade_necessaria_alunos:
+                        raise AlunosInsuficientesNaEquipeException(quantidade_necessaria_alunos)
 
-            if len(self.controlador_sistema.controlador_arbitros.arbitros) == 0:
-                self.__tela_campeonato.mostra_mensagem(f'\nAdicione pelo menos um árbitro antes de iniciar o campeonato!\n')
-                self.retorna()
-                return
-            
-            campeonato = Campeonato(codigo, equipes)
-            self.__campeonato = campeonato
-            self.__tela_campeonato.mostra_mensagem('\nCampeonato cadastrado com sucesso!\n')
-            self.cria_partidas_do_campeonato()
+                    if equipe.curso.codigo in cursos_com_equipes:
+                        cursos_com_equipes[equipe.curso.codigo] = True
+                
+                for curso_codigo, tem_equipe in cursos_com_equipes.items():
+                    if not tem_equipe:
+                        raise CursoSemEquipeException(curso_codigo)
+
+                if len(self.controlador_sistema.controlador_arbitros.arbitros) == 0:
+                    raise NenhumArbitroCadastradoException()
+                
+                campeonato = Campeonato(codigo, equipes)
+                self.__campeonato = campeonato
+                self.__tela_campeonato.mostra_mensagem('\nCampeonato cadastrado com sucesso!\n')
+                self.cria_partidas_do_campeonato()
+        except (CampeonatoJahIniciadoException, AlunosInsuficientesNaEquipeException, CursoSemEquipeException, NenhumArbitroCadastradoException) as e:
+            self.__tela_campeonato.mostra_mensagem(str(e))
+            return self.retorna() # Testar 
         
     def cria_partidas_do_campeonato(self):
-        if self.__campeonato and len(self.__campeonato.equipes) > 1:
-            equipes = self.__campeonato.equipes
+        try:
+            if self.__campeonato and len(self.__campeonato.equipes) > 1:
+                equipes = self.__campeonato.equipes
+            else:
+                raise EquipesInsuficientesNaEquipeException()
+        except EquipesInsuficientesNaEquipeException as e:
+                self.__tela_campeonato.mostra_mensagem(str(e))
+                return self.retorna()
+        else:
             num_equipes = len(equipes)
             partidas_geradas = []
 
@@ -63,31 +77,36 @@ class ControladorCampeonatos:
 
             self.__tela_campeonato.mostra_mensagem('\nPartidas geradas com sucesso!\n')
             self.__controlador_sistema.controlador_partidas.abre_tela()
-        else:
-            self.__tela_campeonato.mostra_mensagem('\nNão há equipes suficientes no campeonato para gerar partidas.\n')
-            self.retorna()
 
     def adiciona_partida_campeonato(self, partida):
-        if isinstance(partida, Partida):
-            self.__campeonato.adiciona_partida(partida)
+        try:
+            if isinstance(partida, Partida):
+                self.__campeonato.adiciona_partida(partida)
+            else:
+                raise ErroInesperadoException('adicionar partida no campeonato.')
+        except ErroInesperadoException as e:
+            self.__tela_campeonato.mostra_mensagem(str(e))
 
     def finaliza_campeonato(self):
-        if not self.__campeonato:
-            self.__tela_campeonato.mostra_mensagem('\nO campeonato ainda não foi iniciado!.\n')
-            self.retorna()
-        else:
-            todas_partidas_realizadas = True
-            for partida in self.__campeonato.partidas:
-                if not partida.partida_realizada:
-                    todas_partidas_realizadas = False
-
-            if todas_partidas_realizadas:
-                self.gera_relatorio()
-                self.__tela_campeonato.mostra_mensagem('\nCampeonato finalizado com sucesso!\n')
-                self.__controlador_sistema.encerra_sistema()
+        try:
+            if not self.__campeonato:
+                raise CampeonatoNaoIniciadoException()
             else:
-                self.__tela_campeonato.mostra_mensagem('\nAinda faltam partidas a serem realizadas!\n')
-                self.retorna()
+                todas_partidas_realizadas = True
+                for partida in self.__campeonato.partidas:
+                    if not partida.partida_realizada:
+                        todas_partidas_realizadas = False
+
+                if todas_partidas_realizadas:
+                    self.gera_relatorio()
+                    self.__tela_campeonato.mostra_mensagem('\nCampeonato finalizado com sucesso!\n')
+                    self.__controlador_sistema.encerra_sistema()
+                else:
+                    raise PartidasNaoRealizadasException()
+                    
+        except (CampeonatoNaoIniciadoException, PartidasNaoRealizadasException) as e:
+            self.__tela_campeonato.mostra_mensagem(str(e))
+            return self.retorna()
 
     def gera_relatorio(self):
         campeonato = self.__campeonato
