@@ -6,7 +6,7 @@ from model.equipe import Equipe
 from model.arbitro import Arbitro
 from DAOs.partida_dao import PartidaDAO
 
-
+from exceptions.opcao_invalida_exception import OpcaoInvalidaException
 class ControladorPartidas:
     def __init__(self, controlador_sistema):
         self.__partida_DAO = PartidaDAO()
@@ -47,31 +47,37 @@ class ControladorPartidas:
     def adiciona_gols_partida(self):
         codigo_partida = self.__tela_partida.seleciona_partida()
         partida = self.pega_partida_por_codigo(codigo_partida)
-        if partida:
-            if not partida.partida_realizada:
-                gols_partida = self.tela_partida.pega_gols_partida(partida)
-                gols_equipe_casa = gols_partida['gols_equipe_casa']
-                artilheiros_equipe_casa = gols_partida['artilheiros_equipe_casa']
-                gols_equipe_visitante = gols_partida['gols_equipe_visitante']
-                artilheiros_equipe_visitante = gols_partida['artilheiros_equipe_visitante']
 
-                if isinstance(gols_equipe_casa, int) and isinstance(gols_equipe_visitante, int) and all(isinstance(artilheiro, Aluno) for artilheiro in artilheiros_equipe_casa) and all(isinstance(artilheiro, Aluno) for artilheiro in artilheiros_equipe_visitante):
-                    print(partida)
-                    partida.gols_equipe_casa = gols_equipe_casa
-                    partida.artilheiros_equipe_casa = artilheiros_equipe_casa
-                    partida.gols_equipe_visitante = gols_equipe_visitante
-                    partida.artilheiros_equipe_visitante = artilheiros_equipe_visitante
-                    partida.partida_realizada = True
-                    partida.resultado = 'Equipe Casa {self.__gols_equipe_casa}X{self.__gols_equipe_visitante} Equipe Visitante'
-                    self.gera_dados_partida(partida)
-                    self.__partida_DAO.update(partida)
-
-                else:
-                    self.__tela_partida.mostra_mensagem('ATENÇÃO: Algo de errado ocorreu durante o cadastro! Tente novamente!')
-            else:
-                self.__tela_partida.mostra_mensagem('\nATENÇÃO: essa Partida já foi realizada e não pode ser editada!\n')
-        else:
+        if not partida:
             self.__tela_partida.mostra_mensagem('\nATENÇÃO: Partida não encontrada!\n')
+            return
+
+        if partida.partida_realizada:
+            self.__tela_partida.mostra_mensagem('\nATENÇÃO: essa Partida já foi realizada e não pode ser editada!\n')
+            return
+
+        alunos_equipe_casa = partida.equipe_casa.alunos
+        alunos_equipe_visitante = partida.equipe_visitante.alunos
+        
+        gols_partida = self.__tela_partida.pega_gols_partida(partida)
+        
+        gols_equipe_casa = gols_partida['gols_equipe_casa']
+        artilheiros_equipe_casa = [self.__controlador_sistema.controlador_alunos.pega_aluno_por_matricula(matricula) for matricula in gols_partida['artilheiros_equipe_casa']]
+        gols_equipe_visitante = gols_partida['gols_equipe_visitante']
+        artilheiros_equipe_visitante = [self.__controlador_sistema.controlador_alunos.pega_aluno_por_matricula(matricula) for matricula in gols_partida['artilheiros_equipe_visitante']]
+
+        if all(isinstance(artilheiro, Aluno) for artilheiro in artilheiros_equipe_casa) and all(isinstance(artilheiro, Aluno) for artilheiro in artilheiros_equipe_visitante):
+            partida.gols_equipe_casa = gols_equipe_casa
+            partida.artilheiros_equipe_casa = artilheiros_equipe_casa
+            partida.gols_equipe_visitante = gols_equipe_visitante
+            partida.artilheiros_equipe_visitante = artilheiros_equipe_visitante
+            partida.partida_realizada = True
+            partida.resultado = f'Equipe Casa {partida.gols_equipe_casa}X{partida.gols_equipe_visitante} Equipe Visitante'
+            self.gera_dados_partida(partida)
+            self.__partida_DAO.update(partida)
+            self.__tela_partida.mostra_mensagem('Gols cadastrados com sucesso!')
+        else:
+            self.__tela_partida.mostra_mensagem('ATENÇÃO: Algo de errado ocorreu durante o cadastro! Tente novamente!')
     
     def gera_dados_partida(self, partida:Partida):
         if partida.gols_equipe_casa > partida.gols_equipe_visitante:
@@ -106,9 +112,12 @@ class ControladorPartidas:
                         '2': self.adiciona_gols_partida,
                         '0': self.retorna}
         while True:
-            opcao_escolhida = self.__tela_partida.tela_opcoes()
-            if opcao_escolhida in lista_opcoes:
-                funcao_escolhida = lista_opcoes[opcao_escolhida]
-                funcao_escolhida()
-            else:
-                self.__tela_partida.mostra_mensagem('ERRO: Opção inválida!\n')
+            try:
+                opcao_escolhida = self.__tela_partida.tela_opcoes()
+                if opcao_escolhida in lista_opcoes:
+                    funcao_escolhida = lista_opcoes[opcao_escolhida]
+                    funcao_escolhida()
+                else:
+                    raise OpcaoInvalidaException()
+            except OpcaoInvalidaException as e:
+                self.__tela_partida.mostra_mensagem(str(e))

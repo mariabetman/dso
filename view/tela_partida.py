@@ -29,38 +29,76 @@ class TelaPartida:
             opcao = values['OPCAO']
             window.close()
             return opcao
-    
-    def pega_gols_partida(self, partida:Partida):
-        print('---------- GOLS PARTIDA ----------')
-        print('---------- *Caso a equipe não tenha feito nenhum gol, por favor digite 0! ----------')
+        
+    def pega_gols_partida(self, partida):
+        layout = [
+            [psg.Text('---------- GOLS PARTIDA ----------')],
+            [psg.Text('---------- *Caso a equipe não tenha feito nenhum gol, por favor digite 0! ----------')],
+            [psg.Text('Gols Equipe Casa: '), psg.Input(key='gols_equipe_casa', focus=True)],
+            [psg.Text('Gols Equipe Visitante: '), psg.Input(key='gols_equipe_visitante')],
+            [psg.Button('Ok', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+        ]
+
+        window = psg.Window('Gols da Partida', layout)
+        event, values = window.read()
+
+        if event == 'Cancelar' or event == psg.WIN_CLOSED:
+            window.close()
+            self.__controlador_partidas.abre_tela()
+            return None
+        
         try:
-            gols_equipe_casa = int(input('Gols Equipe Casa: '))
-        except:
-            self.mostra_mensagem('\nDigite um valor válido!\n')
-            return self.__controlador_partidas.abre_tela()
+            gols_equipe_casa = int(values['gols_equipe_casa'])
+            gols_equipe_visitante = int(values['gols_equipe_visitante'])
+        except ValueError:
+            self.mostra_mensagem('Digite um valor válido!')
+            window.close()
+            self.__controlador_partidas.abre_tela()
+            return None
+
         artilheiros_equipe_casa = []
-
+        alunos_equipe_casa = partida.equipe_casa.alunos 
         for i in range(gols_equipe_casa):
-            print(f'Selecione o Artilheiro do {i+1}º gol da Equipe Casa!')
-            self.__controlador_partidas.controlador_sistema.controlador_equipes.mostra_alunos_equipe(partida.equipe_casa.codigo)
-            matricula_artilheiro_gol = self.__controlador_partidas.controlador_sistema.controlador_alunos.tela_aluno.seleciona_aluno()
-            artilheiro_gol = self.__controlador_partidas.controlador_sistema.controlador_alunos.pega_aluno_por_matricula(matricula_artilheiro_gol)
-            artilheiros_equipe_casa.append(artilheiro_gol)
-        
-        try:
-            gols_equipe_visitante = int(input('Gols Equipe Visitante: '))
-        except:
-            self.mostra_mensagem('\nDigite um valor válido!\n')
-            return self.__controlador_partidas.abre_tela()
-        artilheiros_equipe_visitante = []
+            layout = [
+                [psg.Text(f'Selecione o Artilheiro do {i+1}º gol da Equipe Casa!')],
+                [psg.Listbox(values=[f"{aluno.matricula} - {aluno.nome}" for aluno in alunos_equipe_casa], size=(30, 6), key='matricula_artilheiro', select_mode='single')],
+                [psg.Button('Ok', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+            ]
 
+            artilheiro_window = psg.Window('Seleciona Artilheiro', layout)
+            artilheiro_event, artilheiro_values = artilheiro_window.read()
+
+            if artilheiro_event == 'Cancelar' or artilheiro_event == psg.WIN_CLOSED:
+                artilheiro_window.close()
+                self.__controlador_partidas.abre_tela()
+                return None
+            
+            matricula_artilheiro_gol = artilheiro_values['matricula_artilheiro'][0].split(" - ")[0]
+            artilheiros_equipe_casa.append(matricula_artilheiro_gol)
+            artilheiro_window.close()
+
+        artilheiros_equipe_visitante = []
+        alunos_equipe_visitante = partida.equipe_casa.alunos 
         for i in range(gols_equipe_visitante):
-            print(f'Selecione o Artilheiro do {i+1}º gol da Equipe Visitante!')
-            self.__controlador_partidas.controlador_sistema.controlador_equipes.mostra_alunos_equipe(partida.equipe_visitante.codigo)
-            matricula_artilheiro_gol = self.__controlador_partidas.controlador_sistema.controlador_alunos.tela_aluno.seleciona_aluno()
-            artilheiro_gol = self.__controlador_partidas.controlador_sistema.controlador_alunos.pega_aluno_por_matricula(matricula_artilheiro_gol)
-            artilheiros_equipe_casa.append(artilheiro_gol)
+            layout = [
+                [psg.Text(f'Selecione o Artilheiro do {i+1}º gol da Equipe Visitante!')],
+                [psg.Listbox(values=[f"{aluno.matricula} - {aluno.nome}" for aluno in alunos_equipe_visitante], size=(30, 6), key='matricula_artilheiro', select_mode='single')],
+                [psg.Button('Ok', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+            ]
+
+            artilheiro_window = psg.Window('Seleciona Artilheiro', layout)
+            artilheiro_event, artilheiro_values = artilheiro_window.read()
+
+            if artilheiro_event == 'Cancelar' or artilheiro_event == psg.WIN_CLOSED:
+                artilheiro_window.close()
+                self.__controlador_partidas.abre_tela()
+                return None
+            
+            matricula_artilheiro_gol = artilheiro_values['matricula_artilheiro'][0].split(" - ")[0]
+            artilheiros_equipe_visitante.append(matricula_artilheiro_gol)
+            artilheiro_window.close()
         
+        self.__controlador_partidas.abre_tela()
         return {
             'gols_equipe_casa': gols_equipe_casa,
             'artilheiros_equipe_casa': artilheiros_equipe_casa,

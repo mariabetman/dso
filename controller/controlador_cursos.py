@@ -2,6 +2,10 @@ from model.curso import Curso
 from view.tela_curso import TelaCurso
 from DAOs.curso_dao import CursoDAO
 
+from exceptions.opcao_invalida_exception import OpcaoInvalidaException
+from exceptions.cadastro_duplicado_exception import CadastroDuplicadoException
+from exceptions.tipo_invalido_exception import TipoInvalidoException
+from exceptions.cadastro_nao_encontrado_exception import CadastroNaoEncontradoException
 
 class ControladorCursos:
     def __init__(self, controlador_sistema):
@@ -25,44 +29,49 @@ class ControladorCursos:
         if len(self.__curso_DAO.get_all()) == 0:
             self.__tela_curso.mostra_mensagem('Nenhum curso cadastrado!')
         else:
-            self.__tela_curso.mostra_mensagem('----- CURSOS CADASTRADOS -----')
-            for curso in self.__curso_DAO.get_all():
-                self.__tela_curso.mostra_curso({'codigo': curso.codigo, 'nome': curso.nome})
+           self.__tela_curso.mostra_curso(self.__curso_DAO.get_all())
     
     def inclui_curso(self):
         dados_curso = self.__tela_curso.pega_dados_curso()
-        if isinstance(dados_curso['codigo'], int) and isinstance(dados_curso['nome'], str):
-            if not self.pega_curso_por_codigo(dados_curso['codigo']):
-                curso =  Curso(dados_curso['codigo'], dados_curso['nome'])
-                self.__curso_DAO.add(curso)
-                self.__tela_curso.mostra_mensagem('Curso cadastrado com sucesso!')
+        try:
+            if isinstance(dados_curso['codigo'], int) and isinstance(dados_curso['nome'], str):
+                if not self.pega_curso_por_codigo(dados_curso['codigo']):
+                    curso =  Curso(dados_curso['codigo'], dados_curso['nome'])
+                    self.__curso_DAO.add(curso)
+                    self.__tela_curso.mostra_mensagem('Curso cadastrado com sucesso!')
+                else:
+                    raise CadastroDuplicadoException('Curso')       
             else:
-                self.__tela_curso.mostra_mensagem('\nATENÇÃO: Curso já cadastrado!\n')
-        else:
-            self.__tela_curso.mostra_mensagem('ATENÇÃO: Algo de errado ocorreu durante o cadastro! Tente novamente!')
+                raise TipoInvalidoException()
+        except (CadastroDuplicadoException, TipoInvalidoException) as e:
+            self.__tela_curso.mostra_mensagem(str(e))
     
     def altera_curso(self):
         codigo_curso =  self.__tela_curso.seleciona_curso()
         curso = self.pega_curso_por_codigo(codigo_curso)
-        
-        if curso:
-            novos_dados_curso = self.__tela_curso.pega_dados_curso(editando=True)
-            if isinstance(novos_dados_curso['nome'], str):
-                curso.nome = novos_dados_curso['nome']
-            self.__curso_DAO.update(curso)
-            self.lista_cursos()
-        else:
-            self.__tela_curso.mostra_mensagem('ATENÇÃO: Curso não encontrado!')
+        try:
+            if curso:
+                novos_dados_curso = self.__tela_curso.pega_dados_curso(editando=True)
+                if isinstance(novos_dados_curso['nome'], str):
+                    curso.nome = novos_dados_curso['nome']
+                self.__curso_DAO.update(curso)
+                self.lista_cursos()
+            else:
+                raise CadastroNaoEncontradoException('Curso')
+        except CadastroNaoEncontradoException as e:
+            self.__tela_curso.mostra_mensagem(str(e))
     
     def exclui_curso(self):
         codigo_curso = self.__tela_curso.seleciona_curso()
         curso = self.pega_curso_por_codigo(codigo_curso)
-        
-        if curso:
-            self.__curso_DAO.remove(curso)
-            self.__tela_curso.mostra_mensagem('Curso excluído com sucesso!')
-        else:
-            self.__tela_curso.mostra_mensagem('ATENÇÃO: Curso não encontrado!')
+        try:
+            if curso:
+                self.__curso_DAO.remove(curso)
+                self.__tela_curso.mostra_mensagem('Curso excluído com sucesso!')
+            else:
+                raise CadastroNaoEncontradoException('Curso')
+        except CadastroNaoEncontradoException as e:
+            self.__tela_curso.mostra_mensagem(str(e))
     
     def pega_curso_por_codigo(self, codigo:int):
         for curso in self.__curso_DAO.get_all():
@@ -81,9 +90,12 @@ class ControladorCursos:
                         '0': self.retorna}
         
         while True:
-            opcao_escolhida = self.__tela_curso.tela_opcoes()
-            if opcao_escolhida in lista_opcoes:
-                funcao_escolhida = lista_opcoes[opcao_escolhida]
-                funcao_escolhida()
-            else:
-                self.__tela_curso.mostra_mensagem('ERRO: Opção inválida!')
+            try:
+                opcao_escolhida = self.__tela_curso.tela_opcoes()
+                if opcao_escolhida in lista_opcoes:
+                    funcao_escolhida = lista_opcoes[opcao_escolhida]
+                    funcao_escolhida()
+                else:
+                    raise OpcaoInvalidaException()
+            except OpcaoInvalidaException as e:
+                self.__tela_curso.mostra_mensagem(str(e))

@@ -3,7 +3,10 @@ from view.tela_arbitro import TelaArbitro
 from DAOs.arbitro_dao import ArbitroDAO
 from datetime import datetime
 
-
+from exceptions.opcao_invalida_exception import OpcaoInvalidaException
+from exceptions.cadastro_duplicado_exception import CadastroDuplicadoException
+from exceptions.tipo_invalido_exception import TipoInvalidoException
+from exceptions.cadastro_nao_encontrado_exception import CadastroNaoEncontradoException
 class ControladorArbitros:
     def __init__(self, controlador_sistema):
         self.__arbitro_dao = ArbitroDAO()
@@ -26,45 +29,53 @@ class ControladorArbitros:
         if len(self.__arbitro_dao.get_all()) == 0:
             self.__tela_arbitro.mostra_mensagem('Nenhum árbitro cadastrado!')
         else:
-            self.__tela_arbitro.mostra_mensagem('----- ÁRBITROS CADASTRADOS -----')
-            for arbitro in self.__arbitro_dao.get_all():
-                self.__tela_arbitro.mostra_arbitro({'nome': arbitro.nome, 'cpf': arbitro.cpf, 'data_nasc': arbitro.data_nasc})
+            self.__tela_arbitro.mostra_arbitro(self.__arbitro_dao.get_all())
     
     def inclui_arbitro(self):
         dados_arbitro = self.__tela_arbitro.pega_dados_arbitro()
-        if isinstance(dados_arbitro['nome'], str) and isinstance(dados_arbitro['cpf'], str) and isinstance(dados_arbitro['data_nasc'], datetime):
-            if not self.pega_arbitro_por_cpf(dados_arbitro['cpf']):
-                arbitro = Arbitro(dados_arbitro['nome'], dados_arbitro['cpf'], dados_arbitro['data_nasc'])
-                self.__arbitro_dao.add(arbitro)
-                self.__tela_arbitro.mostra_mensagem('Árbitro cadastrado com sucesso!')
-            else:
-                self.__tela_arbitro.mostra_mensagem('ATENÇÃO: Árbitro já cadastrado!')
-        else:
-            self.__tela_arbitro.mostra_mensagem('ATENÇÃO: Algo de errado ocorreu durante o cadastro! Tente novamente!')
+        try:
+            if isinstance(dados_arbitro['nome'], str) and isinstance(dados_arbitro['cpf'], str) and isinstance(dados_arbitro['data_nasc'], datetime):
+                try:
+                    if not self.pega_arbitro_por_cpf(dados_arbitro['cpf']):
+                        arbitro = Arbitro(dados_arbitro['nome'], dados_arbitro['cpf'], dados_arbitro['data_nasc'])
+                    else:
+                        raise CadastroDuplicadoException('CPF')
+                except CadastroDuplicadoException as e:
+                    self.__tela_arbitro.mostra_mensagem(str(e))
+                else:
+                    self.__arbitro_dao.add(arbitro)
+                    self.__tela_arbitro.mostra_mensagem('Árbitro cadastrado com sucesso!')
+        except TipoInvalidoException as e:
+            self.__tela_arbitro.mostra_mensagem(str(e))
+            
     
     def altera_arbitro(self):
         cpf_arbitro =  self.__tela_arbitro.seleciona_arbitro()
-        arbitro = self.pega_arbitro_por_cpf(cpf_arbitro)
-        
-        if arbitro:
-            novos_dados_arbitro = self.__tela_arbitro.pega_dados_arbitro(editando=True)
-            if isinstance(novos_dados_arbitro['nome'], str):
-                arbitro.nome = novos_dados_arbitro['nome']
-            if isinstance(novos_dados_arbitro['data_nasc'], datetime):
-                arbitro.cpf = novos_dados_arbitro['cpf']
-            self.__tela_arbitro.mostra_mensagem('Árbitro editado com sucesso!')
-        else:
-            self.__tela_arbitro.mostra_mensagem('ATENÇÃO: Árbitro não encontrado!')
+        arbitro = self.pega_arbitro_por_cpf(cpf_arbitro) 
+        try:
+            if arbitro:
+                novos_dados_arbitro = self.__tela_arbitro.pega_dados_arbitro(editando=True)
+                if isinstance(novos_dados_arbitro['nome'], str):
+                    arbitro.nome = novos_dados_arbitro['nome']
+                if isinstance(novos_dados_arbitro['data_nasc'], datetime):
+                    arbitro.cpf = novos_dados_arbitro['cpf']
+                self.__tela_arbitro.mostra_mensagem('Árbitro editado com sucesso!')
+            else:
+                raise CadastroNaoEncontradoException('Arbitro')
+        except CadastroNaoEncontradoException as e:
+                    self.__tela_arbitro.mostra_mensagem(str(e)) 
     
     def exclui_arbitro(self):
         cpf_arbitro = self.__tela_arbitro.seleciona_arbitro()
         arbitro = self.pega_arbitro_por_cpf(cpf_arbitro)
-        
-        if arbitro:
-            self.__arbitro_dao.remove(arbitro.cpf)
-            self.__tela_arbitro.mostra_mensagem('Árbitro excluído com sucesso!')
-        else:
-            self.__tela_arbitro.mostra_mensagem('ATENÇÃO: Árbitro não encontrado!')
+        try:
+            if arbitro:
+                self.__arbitro_dao.remove(arbitro.cpf)
+                self.__tela_arbitro.mostra_mensagem('Árbitro excluído com sucesso!')
+            else:
+                raise CadastroNaoEncontradoException('Arbitro')
+        except CadastroNaoEncontradoException as e:
+                    self.__tela_arbitro.mostra_mensagem(str(e)) 
         
     def pega_arbitro_por_cpf(self, cpf:str):
         for arbitro in self.__arbitro_dao.get_all():
@@ -83,9 +94,12 @@ class ControladorArbitros:
                         '0': self.retorna}
         
         while True:
-            opcao_escolhida = self.__tela_arbitro.tela_opcoes()
-            if opcao_escolhida in lista_opcoes:
-                funcao_escolhida = lista_opcoes[opcao_escolhida]
-                funcao_escolhida()
-            else:
-                self.__tela_arbitro.mostra_mensagem('ERRO: Opção inválida!\n')
+            try:
+                opcao_escolhida = self.__tela_arbitro.tela_opcoes()
+                if opcao_escolhida in lista_opcoes:
+                    funcao_escolhida = lista_opcoes[opcao_escolhida]
+                    funcao_escolhida()
+                else:
+                    raise OpcaoInvalidaException()
+            except OpcaoInvalidaException as e:
+                self.__tela_arbitro.mostra_mensagem(str(e))

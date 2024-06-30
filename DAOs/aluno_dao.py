@@ -20,3 +20,4 @@ class AlunoDAO(DAO):
     def remove(self, matricula: int):
         if(isinstance(matricula, int)):
             return super().remove(matricula)
+        

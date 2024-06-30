@@ -3,7 +3,7 @@ from model.curso import Curso
 
 class CursoDAO(DAO):
     def __init__(self):
-        super().__init__('alunos.pkl')
+        super().__init__('cursos.pkl')
 
     def add(self, curso: Curso):
         if((curso is not None) and isinstance(curso, Curso) and isinstance(curso.codigo, int)):

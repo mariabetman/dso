@@ -31,47 +31,118 @@ class TelaAluno:
             return opcao
     
     def pega_dados_aluno(self, editando=False):
-        print('---------- DADOS ALUNO ----------')
         if not editando:
-            cpf = input('CPF: ')
-            try:
-                matricula = int(input('Matrícula: '))
-            except:
-                self.mostra_mensagem('\nDigite um valor válido!\n')
-                self.__controlador_alunos.abre_tela()
-            try:
-                codigo_curso = int(input('Código do curso: '))
-            except:
-                self.mostra_mensagem('\nDigite um valor válido!\n')
-                self.__controlador_alunos.abre_tela()
+            layout = [
+                [psg.Text('Preencha os dados do aluno')],
+                [psg.Text('Matrícula: ', size=(15,1)),psg.Input(expand_x=True, key='matricula', focus=True)],
+                [psg.Text('Código do Curso: ', size=(15,1)),psg.Input(expand_x=True, key='codigo_curso')],
+                [psg.Text('Nome: ', size=(15,1)),psg.Input(expand_x=True, key='nome')],
+                [psg.Text('CPF: ', size=(15,1)), psg.Input(expand_x=True, key='cpf')],
+                [psg.Text('Data de Nascimento (DD/MM/AAAA) ', size=(15,1)), psg.Input(expand_x=True, key='data_nasc')],
+                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+            ]
         else:
-            cpf = None
-            matricula = None
-            curso = None
-        nome = input('Nome do Aluno: ')
-        try:
-            data_nasc = datetime.strptime(input('Data de Nascimento no formato DD/MM/AAAA: '), "%d/%m/%Y")
-        except:
-            self.mostra_mensagem('\nDigite um valor válido!\n')
-            return self.__controlador_alunos.abre_tela()
-        
-        return {'matricula': matricula, 'curso': curso, 'nome': nome, 'cpf': cpf, 'data_nasc': data_nasc}
+            layout = [
+                [psg.Text('Preencha os dados do aluno')],
+                [psg.Text('Nome: ', size=(15,1)),psg.Input(expand_x=True, key='nome', focus=True)],
+                [psg.Text('Data de Nascimento (DD/MM/AAAA) ', size=(15,1)), psg.Input(expand_x=True, key='data_nasc')],
+                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+            ]
+
+        window = psg.Window('Formulário Aluno', layout, size=(715,207))
+        event, values = window.read()
+
+        if event == psg.WIN_CLOSED or event == 'Cancelar':
+            window.close()
+            self.__controlador_alunos.abre_tela()
+            return None
+        else:
+            if not editando:
+                try:
+                    matricula = int(values['matricula'])
+                except ValueError:
+                    window.close()
+                    self.mostra_mensagem('\nDigite um valor válido para a matrícula!\n')
+                    self.__controlador_alunos.abre_tela()
+                    return None
+                try:
+                    codigo_curso = int(values['codigo_curso'])
+                except ValueError:
+                    window.close()
+                    self.mostra_mensagem('\nDigite um valor válido para o código do curso!\n')
+                    self.__controlador_alunos.abre_tela()
+                    return None
+                cpf = values['cpf']
+            else:
+                matricula = None
+                codigo_curso = None
+                cpf = None
+            nome = values['nome']
+            try:
+                data_nasc = datetime.strptime(values['data_nasc'], "%d/%m/%Y")
+            except ValueError:
+                window.close()
+                self.mostra_mensagem('\nDigite um valor válido para a data de nascimento!\n')
+                self.__controlador_alunos.abre_tela()
+                return None
+            
+            window.close()
+            return {'matricula': matricula, 'codigo_curso': codigo_curso, 'nome': nome, 'cpf': cpf, 'data_nasc': data_nasc}
     
-    def mostra_aluno(self, dados_aluno):
-        print('Matrícula do Aluno: ', dados_aluno['matricula'])
-        print('Curso: ', dados_aluno['curso'])
-        print('Nome: ', dados_aluno['nome'])
-        print('CPF: ', dados_aluno['cpf'])
-        print('Data de Nascimento: ', dados_aluno['data_nasc'])
-        print('-------------------------------------------------------')
+    def mostra_aluno(self, alunos):
+        layout = [
+            [psg.Text('Alunos cadastrados')],
+            [psg.Multiline(default_text='', size=(60, 15), key='LISTA_ALUNOS', disabled=True)],
+            [psg.Button('Fechar', bind_return_key=True)]
+        ]
+
+        window = psg.Window('Lista de Alunos', layout, finalize=True)
+
+        lista_alunos = ""
+        for aluno in alunos:
+            lista_alunos += f"Matrícula: {aluno.matricula}\n"
+            lista_alunos += f"Curso: {aluno.curso.nome}\n"
+            lista_alunos += f"Nome: {aluno.nome}\n"
+            lista_alunos += f"CPF: {aluno.cpf}\n"
+            lista_alunos += f"Data de Nascimento: {aluno.data_nasc.strftime('%d/%m/%Y')}\n"
+            lista_alunos += "-" * 40 + "\n"
+
+        window['LISTA_ALUNOS'].update(lista_alunos)
+
+        while True:
+            event = window.read()
+            if event == psg.WIN_CLOSED or event == 'Fechar':
+                window.close()
+                self.__controlador_alunos.abre_tela()
         
     def seleciona_aluno(self):
-        try:
-            matricula = int(input('Digite a matrícula do Aluno que deseja selecionar: '))
-            return matricula
-        except:
-            self.mostra_mensagem('\nDigite um valor válido!\n')
+        self.__controlador_alunos.lista_alunos()
+        
+        layout = [
+            [psg.Text('Digite a matrícula do Aluno que deseja selecionar:')],
+            [psg.Input(key='matricula', focus=True)],
+            [psg.Button('Ok', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+        ]
+        
+        window = psg.Window('Seleciona Aluno', layout, finalize=True)
+        
+        event, values = window.read()
+
+        if event == psg.WIN_CLOSED  or event == 'Cancelar':
+            window.close()
             self.__controlador_alunos.abre_tela()
+            return None
+        else:
+            try:
+                matricula = int(values['matricula'])
+                window.close()
+                self.__controlador_alunos.abre_tela()
+                return None
+            except:
+                self.mostra_mensagem('\nDigite um valor válido!\n')
+                window.close()
+                self.__controlador_alunos.abre_tela()
+                return None
     
     def mostra_mensagem(self, msg):
         psg.popup(msg)

@@ -4,7 +4,7 @@ from model.curso import Curso
 from model.aluno import Aluno
 from DAOs.equipe_dao import EquipeDAO
 
-
+from exceptions.opcao_invalida_exception import OpcaoInvalidaException
 class ControladorEquipes:
     def __init__(self, controlador_sistema):
         self.__equipe_DAO = EquipeDAO()
@@ -27,10 +27,7 @@ class ControladorEquipes:
         if len(self.__equipe_DAO.get_all()) == 0:
             self.__tela_equipe.mostra_mensagem('Nenhuma Equipe cadastrada!')
         else:
-            self.__tela_equipe.mostra_mensagem('----- EQUIPES CADASTRADAS -----')
-            for equipe in self.__equipe_DAO.get_all():
-                self.__tela_equipe.mostra_equipe({'curso': equipe.curso.nome, 'nome': equipe.nome, 'codigo': equipe.codigo})
-                self.mostra_alunos_equipe(equipe.codigo)
+            self.mostra_alunos_equipe(self.__equipe_DAO.get_all())
 
     def inclui_equipe(self):
         dados_equipe = self.__tela_equipe.pega_dados_equipe()
@@ -167,9 +164,12 @@ class ControladorEquipes:
                         '0': self.retorna}
         
         while True:
-            opcao_escolhida = self.__tela_equipe.tela_opcoes()
-            if opcao_escolhida in lista_opcoes:
-                funcao_escolhida = lista_opcoes[opcao_escolhida]
-                funcao_escolhida()
-            else:
-                self.__tela_equipe.mostra_mensagem('ERRO: Opção inválida!\n')
+            try:
+                opcao_escolhida = self.__tela_equipe.tela_opcoes()
+                if opcao_escolhida in lista_opcoes:
+                    funcao_escolhida = lista_opcoes[opcao_escolhida]
+                    funcao_escolhida()
+                else:
+                    raise OpcaoInvalidaException()
+            except OpcaoInvalidaException as e:
+                self.__tela_equipe.mostra_mensagem(str(e))
