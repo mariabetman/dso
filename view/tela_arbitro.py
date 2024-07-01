@@ -112,9 +112,15 @@ class TelaArbitro:
             self.__controlador_arbitros.abre_tela()
             return None
         else:
-            cpf = values['cpf']
-            window.close()
-            return cpf
+            try:
+                cpf = values['cpf']
+                window.close()
+                return cpf
+            except ValueError:
+                self.mostra_mensagem('\nDigite um valor válido!\n')
+                window.close()
+                self.__controlador_arbitros.abre_tela()
+                return None
     
     def mostra_mensagem(self, msg):
         psg.popup(msg)

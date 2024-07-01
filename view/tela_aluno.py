@@ -136,7 +136,7 @@ class TelaAluno:
                 matricula = int(values['matricula'])
                 window.close()
                 return matricula
-            except:
+            except ValueError:
                 self.mostra_mensagem('\nDigite um valor válido!\n')
                 window.close()
                 self.__controlador_alunos.abre_tela()

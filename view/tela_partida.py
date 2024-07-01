@@ -162,7 +162,7 @@ class TelaPartida:
                 codigo = int(values['codigo'])
                 window.close()
                 return codigo
-            except:
+            except ValueError:
                 self.mostra_mensagem('\nDigite um valor válido!\n')
                 window.close()
                 self.__controlador_partidas.abre_tela()
