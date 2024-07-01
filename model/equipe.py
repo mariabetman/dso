@@ -63,6 +63,9 @@ class Equipe:
     def remove_pontos(self, pontos:int):
         if isinstance(pontos, int):
             self.__pontos -= pontos
+    
+    def zera_pontos(self):
+        self.__pontos = 0
             
     @property
     def gols_marcados(self):
@@ -75,6 +78,9 @@ class Equipe:
     def remove_gols_marcados(self, gols:int):
         if isinstance(gols, int):
             self.__gols_marcados -= gols
+    
+    def zera_gols_marcados(self):
+        self.__gols_marcados = 0
             
     @property
     def gols_sofridos(self):
@@ -87,3 +93,6 @@ class Equipe:
     def remove_gols_sofridos(self, gols:int):
         if isinstance(gols, int):
             self.__gols_sofridos -= gols
+    
+    def zera_gols_sofridos(self):
+        self.__gols_sofridos = 0

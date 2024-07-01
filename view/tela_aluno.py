@@ -16,7 +16,7 @@ class TelaAluno:
             [psg.Text('4 - Excluir Aluno')],
             [psg.Text('0 - Retornar')],
             [psg.Input(key='OPCAO', size=(10, 1), do_not_clear=False, focus=True)],
-            [psg.Button('Confirmar', bind_return_key=True)]
+            [psg.Button('Ok', bind_return_key=True)]
         ]
 
         window = psg.Window('Tela Aluno', layout)
@@ -39,14 +39,14 @@ class TelaAluno:
                 [psg.Text('Nome: ', size=(15,1)),psg.Input(expand_x=True, key='nome')],
                 [psg.Text('CPF: ', size=(15,1)), psg.Input(expand_x=True, key='cpf')],
                 [psg.Text('Data de Nascimento (DD/MM/AAAA) ', size=(15,1)), psg.Input(expand_x=True, key='data_nasc')],
-                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar')]
             ]
         else:
             layout = [
                 [psg.Text('Preencha os dados do aluno')],
                 [psg.Text('Nome: ', size=(15,1)),psg.Input(expand_x=True, key='nome', focus=True)],
                 [psg.Text('Data de Nascimento (DD/MM/AAAA) ', size=(15,1)), psg.Input(expand_x=True, key='data_nasc')],
-                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar')]
             ]
 
         window = psg.Window('Formulário Aluno', layout, size=(715,207))
@@ -110,18 +110,17 @@ class TelaAluno:
         window['LISTA_ALUNOS'].update(lista_alunos)
 
         while True:
-            event = window.read()
+            event, values = window.read()
             if event == psg.WIN_CLOSED or event == 'Fechar':
                 window.close()
                 self.__controlador_alunos.abre_tela()
+                return
         
     def seleciona_aluno(self):
-        self.__controlador_alunos.lista_alunos()
-        
         layout = [
             [psg.Text('Digite a matrícula do Aluno que deseja selecionar:')],
             [psg.Input(key='matricula', focus=True)],
-            [psg.Button('Ok', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+            [psg.Button('Ok', bind_return_key=True), psg.Button('Cancelar')]
         ]
         
         window = psg.Window('Seleciona Aluno', layout, finalize=True)
@@ -136,8 +135,7 @@ class TelaAluno:
             try:
                 matricula = int(values['matricula'])
                 window.close()
-                self.__controlador_alunos.abre_tela()
-                return None
+                return matricula
             except:
                 self.mostra_mensagem('\nDigite um valor válido!\n')
                 window.close()

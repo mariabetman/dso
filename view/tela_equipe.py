@@ -13,6 +13,8 @@ class TelaEquipe:
             [psg.Text('2 - Editar Equipe')],
             [psg.Text('3 - Listar Equipes')],
             [psg.Text('4 - Excluir Equipe')],
+            [psg.Text('5 - Adicionar Aluno na Equipe')],
+            [psg.Text('6 - Remover Aluno da Equipe')],
             [psg.Text('0 - Retornar')],
             [psg.Input(key='OPCAO', size=(10, 1), do_not_clear=False, focus=True)],
             [psg.Button('Confirmar', bind_return_key=True)]
@@ -36,13 +38,13 @@ class TelaEquipe:
                 [psg.Text('Código: ', size=(15,1)),psg.Input(expand_x=True, key='codigo', focus=True)],
                 [psg.Text('Código do Curso: ', size=(15,1)),psg.Input(expand_x=True, key='codigo_curso')],
                 [psg.Text('Nome: ', size=(15,1)),psg.Input(expand_x=True, key='nome')],
-                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar')]
             ]
         else:
             layout = [
                 [psg.Text('Preencha os dados da equipe')],
                 [psg.Text('Nome: ', size=(15,1)),psg.Input(expand_x=True, key='nome', focus=True)],
-                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar')]
             ]
 
         window = psg.Window('Formulário Equipe', layout, size=(715,207))
@@ -87,27 +89,47 @@ class TelaEquipe:
 
         lista_equipes = ""
         for equipe in equipes:
-            lista_equipes += f"Matrícula: {equipe.matricula}\n"
+            lista_equipes += f"Código: {equipe.codigo}\n"
             lista_equipes += f"Curso: {equipe.curso.nome}\n"
             lista_equipes += f"Nome: {equipe.nome}\n"
+            for aluno in equipe.alunos:
+                lista_equipes += f"  - Matrícula: {aluno.matricula}, Nome: {aluno.nome}\n"
             lista_equipes += "-" * 40 + "\n"
 
         window['LISTA_EQUIPES'].update(lista_equipes)
 
         while True:
-            event = window.read()
+            event, values = window.read()
             if event == psg.WIN_CLOSED or event == 'Fechar':
                 window.close()
                 self.__controlador_equipes.abre_tela()
+                return
         
     def seleciona_equipe(self):
-        self.__controlador_equipes.lista_equipes()
-        try:
-            codigo = int(input('Digite o Código da Equipe que deseja selecionar: '))
-            return codigo
-        except:
-            self.mostra_mensagem('\nDigite um valor válido!\n')
-            return self.__controlador_equipes.abre_tela()
+        layout = [
+            [psg.Text('Digite o código da Equipe que deseja selecionar:')],
+            [psg.Input(key='codigo', focus=True)],
+            [psg.Button('Ok', bind_return_key=True), psg.Button('Cancelar')]
+        ]
+        
+        window = psg.Window('Seleciona Equipe', layout, finalize=True)
+        
+        event, values = window.read()
+
+        if event == psg.WIN_CLOSED  or event == 'Cancelar':
+            window.close()
+            self.__controlador_equipes.abre_tela()
+            return None
+        else:
+            try:
+                codigo = int(values['codigo'])
+                window.close()
+                return codigo
+            except:
+                self.mostra_mensagem('\nDigite um valor válido!\n')
+                window.close()
+                self.__controlador_alunos.abre_tela()
+                return None
     
     def mostra_mensagem(self, msg):
         psg.popup(msg)

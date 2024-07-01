@@ -55,7 +55,7 @@ class ControladorCursos:
                 if isinstance(novos_dados_curso['nome'], str):
                     curso.nome = novos_dados_curso['nome']
                 self.__curso_DAO.update(curso)
-                self.lista_cursos()
+                self.__tela_curso.mostra_mensagem('Curso editado com sucesso!')
             else:
                 raise CadastroNaoEncontradoException('Curso')
         except CadastroNaoEncontradoException as e:
@@ -66,7 +66,7 @@ class ControladorCursos:
         curso = self.pega_curso_por_codigo(codigo_curso)
         try:
             if curso:
-                self.__curso_DAO.remove(curso)
+                self.__curso_DAO.remove(codigo_curso)
                 self.__tela_curso.mostra_mensagem('Curso excluído com sucesso!')
             else:
                 raise CadastroNaoEncontradoException('Curso')

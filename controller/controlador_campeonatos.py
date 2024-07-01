@@ -51,12 +51,12 @@ class ControladorCampeonatos:
                 self.cria_partidas_do_campeonato()
         except (CampeonatoJahIniciadoException, AlunosInsuficientesNaEquipeException, CursoSemEquipeException, NenhumArbitroCadastradoException) as e:
             self.__tela_campeonato.mostra_mensagem(str(e))
-            return self.retorna() # Testar 
+            return self.retorna()
         
     def cria_partidas_do_campeonato(self):
         try:
             if self.__campeonato and len(self.__campeonato.equipes) > 1:
-                equipes = self.__campeonato.equipes
+                equipes = list(self.__controlador_sistema.controlador_equipes.equipes)
             else:
                 raise EquipesInsuficientesNaEquipeException()
         except EquipesInsuficientesNaEquipeException as e:
@@ -69,7 +69,8 @@ class ControladorCampeonatos:
             for i in range(num_equipes):
                 for j in range(i + 1, num_equipes):
                     data_aleatoria = datetime.now() + timedelta(days=randint(1, 30))
-                    arbitro_aleatorio = choice(self.__controlador_sistema.controlador_arbitros.arbitros)
+                    arbitros_lista = list(self.__controlador_sistema.controlador_arbitros.arbitros)
+                    arbitro_aleatorio = choice(arbitros_lista)
                     dados_partida =  {'codigo': len(partidas_geradas) + 1, 'data_partida': data_aleatoria, 'equipe_casa': equipes[i], 'equipe_visitante': equipes[j], 'arbitro': arbitro_aleatorio}
                     partida = self.__controlador_sistema.controlador_partidas.inclui_partida(dados_partida)
                     self.adiciona_partida_campeonato(partida)
@@ -99,6 +100,15 @@ class ControladorCampeonatos:
 
                 if todas_partidas_realizadas:
                     self.gera_relatorio()
+                    partidas = list(self.__controlador_sistema.controlador_partidas.partidas)
+                    for partida in partidas:
+                        self.__controlador_sistema.controlador_partidas.exclui_partida(partida.codigo)
+                    for equipe in self.__controlador_sistema.controlador_equipes.equipes:
+                        self.__controlador_sistema.controlador_equipes.zera_pontos_na_equipe(equipe)
+                        self.__controlador_sistema.controlador_equipes.zera_gols_marcados_na_equipe(equipe)
+                        self.__controlador_sistema.controlador_equipes.zera_gols_sofridos_na_equipe(equipe)
+                    for aluno in self.__controlador_sistema.controlador_alunos.alunos:
+                        self.__controlador_sistema.controlador_alunos.zera_gols(aluno.matricula)
                     self.__tela_campeonato.mostra_mensagem('\nCampeonato finalizado com sucesso!\n')
                     self.__controlador_sistema.encerra_sistema()
                 else:

@@ -16,13 +16,13 @@ class TelaArbitro:
             [psg.Text('4 - Excluir Árbitro')],
             [psg.Text('0 - Retornar')],
             [psg.Input(key='OPCAO', size=(10, 1), do_not_clear=False, focus=True)],
-            [psg.Button('Ok', bind_return_key=True), psg.Button('Voltar', bind_return_key=True)]
+            [psg.Button('Ok', bind_return_key=True)]
         ]
 
         window = psg.Window('Tela Árbitro', layout)
         event, values = window.read()
 
-        if event == psg.WIN_CLOSED or event == 'Voltar':
+        if event == psg.WIN_CLOSED:
             window.close()
             return '0'
         else:
@@ -37,14 +37,14 @@ class TelaArbitro:
                 [psg.Text('Nome: ', size=(15,1)),psg.Input(expand_x=True, key='nome', focus=True)],
                 [psg.Text('CPF: ', size=(15,1)), psg.Input(expand_x=True, key='cpf')],
                 [psg.Text('Data de Nascimento (DD/MM/AAAA) ', size=(15,1)), psg.Input(expand_x=True, key='data_nasc')],
-                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar')]
             ]
         else:
             layout = [
                 [psg.Text('Preencha os dados do árbitro')],
                 [psg.Text('Nome: ', size=(15,1)),psg.Input(expand_x=True, key='nome', focus=True)],
                 [psg.Text('Data de Nascimento (DD/MM/AAAA) ', size=(15,1)), psg.Input(expand_x=True, key='data_nasc')],
-                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar')]
             ]
 
         window = psg.Window('Formulário Árbitro', layout, size=(715,207))
@@ -90,18 +90,17 @@ class TelaArbitro:
         window['LISTA_ARBITROS'].update(lista_arbitros)
 
         while True:
-            event = window.read()
+            event, values = window.read()
             if event == psg.WIN_CLOSED or event == 'Fechar':
                 window.close()
                 self.__controlador_arbitros.abre_tela()
+                return
             
     def seleciona_arbitro(self):
-        self.__controlador_arbitros.lista_arbitros()
-        
         layout = [
             [psg.Text('Digite o CPF do Árbitro que deseja selecionar:')],
             [psg.Input(key='cpf', focus=True)],
-            [psg.Button('Ok', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+            [psg.Button('Ok', bind_return_key=True), psg.Button('Cancelar')]
         ]
         
         window = psg.Window('Seleciona Árbitro', layout, finalize=True)
@@ -115,7 +114,6 @@ class TelaArbitro:
         else:
             cpf = values['cpf']
             window.close()
-            self.__controlador_arbitros.abre_tela()
             return cpf
     
     def mostra_mensagem(self, msg):

@@ -38,3 +38,6 @@ class Aluno(Pessoa):
     
     def remove_gol(self):
         self.__num_gols -= 1
+    
+    def zera_gols(self):
+        self.__num_gols = 0

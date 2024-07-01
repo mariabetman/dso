@@ -18,6 +18,10 @@ class ControladorPartidas:
         self.__controlador_sistema = controlador_sistema
     
     @property
+    def partidas(self):
+        return self.__partida_DAO.get_all()
+    
+    @property
     def tela_partida(self):
         return self.__tela_partida
     
@@ -38,6 +42,22 @@ class ControladorPartidas:
                 if not self.pega_partida_por_codigo(partida.codigo):
                     self.__partida_DAO.add(partida)
                     return partida
+            else:
+                raise TipoInvalidoException()
+        except TipoInvalidoException as e:
+            self.__tela_partida.mostra_mensagem(str(e))
+    
+    def exclui_partida(self, codigo_partida):
+        try:
+            if isinstance(codigo_partida, int):
+                try:
+                    if self.pega_partida_por_codigo(codigo_partida):
+                        self.__partida_DAO.remove(codigo_partida)
+                        return
+                    else:
+                        raise CadastroNaoEncontradoException('Partida')
+                except CadastroNaoEncontradoException as e:
+                     self.__tela_partida.mostra_mensagem(str(e))
             else:
                 raise TipoInvalidoException()
         except TipoInvalidoException as e:
@@ -66,9 +86,6 @@ class ControladorPartidas:
         except PartidaRealizadaException as e:
                 self.__tela_partida.mostra_mensagem(str(e))
                 return
-
-        alunos_equipe_casa = partida.equipe_casa.alunos
-        alunos_equipe_visitante = partida.equipe_visitante.alunos
         
         gols_partida = self.__tela_partida.pega_gols_partida(partida)
         

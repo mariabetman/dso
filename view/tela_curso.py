@@ -35,13 +35,13 @@ class TelaCurso:
                 [psg.Text('Preencha os dados do curso')],
                 [psg.Text('Código: ', size=(15,1)),psg.Input(expand_x=True, key='codigo', focus=True)],
                 [psg.Text('Nome: ', size=(15,1)),psg.Input(expand_x=True, key='nome')],
-                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar')]
             ]
         else:
             layout = [
                 [psg.Text('Preencha os dados do curso')],
                 [psg.Text('Nome: ', size=(15,1)),psg.Input(expand_x=True, key='nome', focus=True)],
-                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+                [psg.Button('Enviar', bind_return_key=True), psg.Button('Cancelar')]
             ]
 
         window = psg.Window('Formulário Curso', layout, size=(715,207))
@@ -84,35 +84,32 @@ class TelaCurso:
 
         window['LISTA_CURSOS'].update(lista_cursos)
 
-        event = window.read()
-
-        if event == psg.WIN_CLOSED or event == 'Fechar':
-            window.close()
-            self.abre_tela()
+        while True:
+            event, values = window.read()
+            if event == psg.WIN_CLOSED or event == 'Fechar':
+                window.close()
+                self.__controlador_cursos.abre_tela()
+                return
         
     def seleciona_curso(self):
-        self.__controlador_cursos.lista_cursos()
-        
         layout = [
             [psg.Text('Digite o código do Curso que deseja selecionar:')],
             [psg.Input(key='codigo', focus=True)],
-            [psg.Button('Ok', bind_return_key=True), psg.Button('Cancelar', bind_return_key=True)]
+            [psg.Button('Ok', bind_return_key=True), psg.Button('Cancelar')]
         ]
         
         window = psg.Window('Seleciona Curso', layout, finalize=True)
         
         event, values = window.read()
-
         if event == psg.WIN_CLOSED  or event == 'Cancelar':
             window.close()
             self.__controlador_cursos.abre_tela()
             return None
-        else:
+        elif event == 'Ok':
             try:
                 codigo = int(values['codigo'])
                 window.close()
-                self.__controlador_cursos.abre_tela()
-                return None
+                return codigo
             except:
                 self.mostra_mensagem('\nDigite um valor válido!\n')
                 window.close()

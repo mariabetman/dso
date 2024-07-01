@@ -58,7 +58,8 @@ class ControladorArbitros:
                 if isinstance(novos_dados_arbitro['nome'], str):
                     arbitro.nome = novos_dados_arbitro['nome']
                 if isinstance(novos_dados_arbitro['data_nasc'], datetime):
-                    arbitro.cpf = novos_dados_arbitro['cpf']
+                    arbitro.data_nasc = novos_dados_arbitro['data_nasc']
+                self.__curso_DAO.update(arbitro)
                 self.__tela_arbitro.mostra_mensagem('Árbitro editado com sucesso!')
             else:
                 raise CadastroNaoEncontradoException('Arbitro')

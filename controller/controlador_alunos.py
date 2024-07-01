@@ -15,6 +15,10 @@ class ControladorAlunos:
         self.__controlador_sistema = controlador_sistema
         
     @property
+    def alunos(self):
+        return self.__aluno_DAO.get_all()
+    
+    @property
     def tela_aluno(self):
         return self.__tela_aluno
     
@@ -26,7 +30,7 @@ class ControladorAlunos:
         if len(self.__aluno_DAO.get_all()) == 0:
             self.__tela_aluno.mostra_mensagem('Nenhum aluno cadastrado!')
         else:
-            self.__tela_aluno.mostra_aluno(self.__aluno_DAO.get_all())
+            self.__tela_aluno.mostra_alunos(self.__aluno_DAO.get_all())
     
     def inclui_aluno(self):
         dados_aluno = self.__tela_aluno.pega_dados_aluno()
@@ -60,7 +64,7 @@ class ControladorAlunos:
                 if isinstance(novos_dados_aluno['data_nasc'], datetime):
                     aluno.data_nasc = novos_dados_aluno['data_nasc']
                 self.__aluno_DAO.update(aluno)
-                self.lista_alunos()
+                self.__tela_aluno.mostra_mensagem('Aluno editado com sucesso!')
             else:
                 raise CadastroNaoEncontradoException('Aluno(a)')
         except CadastroNaoEncontradoException as e:
@@ -71,7 +75,7 @@ class ControladorAlunos:
         aluno = self.pega_aluno_por_matricula(matricula)
         try:
             if aluno:
-                self.__aluno_DAO.remove(aluno.matricula)
+                self.__aluno_DAO.remove(matricula)
                 self.__tela_aluno.mostra_mensagem('Aluno excluído com sucesso!')
             else:
                 raise CadastroNaoEncontradoException('Aluno(a)')
@@ -94,6 +98,12 @@ class ControladorAlunos:
         aluno = self.pega_aluno_por_matricula(matricula)
         if aluno:
             aluno.remove_gol()
+            self.__aluno_DAO.update(aluno)
+
+    def zera_gols(self, matricula:int):
+        aluno = self.pega_aluno_por_matricula(matricula)
+        if aluno:
+            aluno.zera_gols()
             self.__aluno_DAO.update(aluno)
     
     def retorna(self):
